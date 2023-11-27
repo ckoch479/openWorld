@@ -1,6 +1,6 @@
 #pragma once
 
-#include "includes/glad/gl.h"
+#include "Includes/glad/gl.h"
 #include "GLFW/glfw3.h"
 
 #include <iostream>
@@ -9,6 +9,8 @@
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
+
+#include "lookup_table.h"
 
 struct Material
 {
@@ -59,12 +61,13 @@ struct Camera
 	glm::vec3 Up;
 
 	//projection
-	float FovY;
+	float ZFar;
 	float Aspect;
 	float ZNear;
 };
 
 
+//scene is a database of all objects that need to be drawn. Each object is placed in a table. All parts of each object are contained within tables as well.
 class Scene
 {
 public:
@@ -74,5 +77,27 @@ public:
 	//meshes
 	//cameras
 	//skeletons
+
+	lookup_table<Instance> Instances;
+	lookup_table<Mesh> Meshes;
+	lookup_table<Transform> Transforms;
+	lookup_table<Material> Materials;
+
+	ID MainCameraID;
+
+	void LoadMeshes();
+
+	//returns an instance ID
+	unsigned int AddInstance();
+
+	//update instance data i.e transforms, mesh, materials
+	void updateInstance(Transform* transform);
+
+	void updateInstance(Mesh* mesh);
+
+	void updateInstance(Material* material);
+
+	//update camera data i.e position, target, up direction. To modify only select parameters pass a nullPTR in their place
+	void updateCamera(glm::vec3* eyePosition, glm::vec3* target, glm::vec3* up);
 };
 

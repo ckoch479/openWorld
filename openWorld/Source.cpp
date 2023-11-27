@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include "lookup_table.h"
+
+
 int main()
 {
 
