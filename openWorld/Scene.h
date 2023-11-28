@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Includes/glad/gl.h"
+#include <glad/glad.h>
 #include "GLFW/glfw3.h"
 
 #include <iostream>
@@ -11,16 +11,17 @@
 #include "Includes/glm/gtc/type_ptr.hpp"
 
 #include "lookup_table.h"
+#include "ResourceManager.h"
 
-struct Material
-{
-	std::string name;
-
-	float Ambient[3];
-	float Diffuse[3];
-	float Specular[3];
-	float Shininess;
-};
+//struct Material
+//{
+//	std::string name;
+//
+//	float Ambient[3];
+//	float Diffuse[3];
+//	float Specular[3];
+//	float Shininess;
+//};
 
 struct Mesh 
 {
@@ -67,7 +68,9 @@ struct Camera
 };
 
 
-//scene is a database of all objects that need to be drawn. Each object is placed in a table. All parts of each object are contained within tables as well.
+//scene is a database of all objects that need to be drawn. Each object is placed in a table. 
+// All parts of each object are contained within tables as well.
+//VAOS are stored in the Scene class, basic data such as Vertices, indices, and textures/materials are stored in ResourceManager
 class Scene
 {
 public:
@@ -85,19 +88,16 @@ public:
 
 	ID MainCameraID;
 
-	void LoadMeshes();
+	//load mesh to be stored as a scene object using the resource manager, returns MeshID
+	ID LoadMesh(const char* filepath);
+
+	//load an instance as a scene object with a mesh ID and a Transform ID, returns an Instance ID
+	ID LoadInstance(ID MeshID, ID TransformID);
 
 	//returns an instance ID
 	unsigned int AddInstance();
 
-	//update instance data i.e transforms, mesh, materials
-	void updateInstance(Transform* transform);
-
-	void updateInstance(Mesh* mesh);
-
-	void updateInstance(Material* material);
-
-	//update camera data i.e position, target, up direction. To modify only select parameters pass a nullPTR in their place
-	void updateCamera(glm::vec3* eyePosition, glm::vec3* target, glm::vec3* up);
+	
+	
 };
 

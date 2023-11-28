@@ -41,6 +41,7 @@ public:
 		return objects[check_id.index].id.inner_id == check_id.inner_id;
 	}
 
+	//return the object with this ID
 	T& lookup(ID id)
 	{
 		return objects[id.index].t;

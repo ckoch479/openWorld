@@ -130,6 +130,7 @@
     <ClCompile Include="lookup_table.cpp" />
     <ClCompile Include="packed_freelist.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimulationManager.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="lookup_table.h" />
     <ClInclude Include="packed_freelist.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimulationManager.h" />

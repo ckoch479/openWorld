@@ -1,12 +1,20 @@
 #include <iostream>
 
-#include "lookup_table.h"
+#include "ResourceManager.h"
 
 
 int main()
 {
 
 	std::cout << "Hello World!\n";
+
+	ResourceManager manager;
+
+
+	std::string filepath;
+	filepath = "resources/Arissa@Jump.glb";
+
+	manager.loadMesh(filepath);
 
 
 	return 0;

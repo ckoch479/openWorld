@@ -8,6 +8,9 @@
 #include <sstream>
 #include <iostream>
 
+#include "includes/glm/glm.hpp"
+#include "Includes/glm/gtc/type_ptr.hpp"
+
 class Shader
 {
 	//Shader Program ID
@@ -29,9 +32,15 @@ class Shader
 
 	const void setVec2(const std::string& name, float x, float y);
 
+	const void setVec2(const std::string& name, glm::vec2 value);
+
 	const void setVec3(const std::string& name, float x, float y, float z);
 
+	const void setVec3(const std::string& name, glm::vec3);
+
 	const void setVec4(const std::string& name, float x, float y, float z, float w);
+
+	const void setVec4(const std::string& name, glm::vec4);
 
 
 };
