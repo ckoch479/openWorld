@@ -1,5 +1,16 @@
 #include "Shader.h"
 
+#include <glad/glad.h>
+#include "GLFW/glfw3.h"
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+#include "includes/glm/glm.hpp"
+#include "Includes/glm/gtc/type_ptr.hpp"
+
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
 	std::string vertexCode;
@@ -60,7 +71,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 	}
 
 	//Create shader program
-	shaderID = glCreateProgram();
+	this->shaderID = glCreateProgram();
 	glAttachShader(shaderID, vertex);
 	glAttachShader(shaderID, fragment);
 	glLinkProgram(shaderID);

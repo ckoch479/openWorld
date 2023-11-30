@@ -2,6 +2,7 @@
 #define SHADER_H
 
 #include <glad/glad.h>
+#include "GLFW/glfw3.h"
 
 #include <string>
 #include <fstream>
@@ -13,6 +14,7 @@
 
 class Shader
 {
+public:
 	//Shader Program ID
 	unsigned int shaderID;
 
