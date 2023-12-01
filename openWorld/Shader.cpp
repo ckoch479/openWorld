@@ -60,7 +60,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 	};
 
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(vertex, 1, &fShaderCode, NULL);
+	glShaderSource(fragment, 1, &fShaderCode, NULL);
 	glCompileShader(fragment);
 
 	glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
@@ -80,7 +80,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 	if (!success)
 	{
 		glGetProgramInfoLog(shaderID, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKINH_FAILED\n" << infoLog << std::endl;
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 
 	glDeleteShader(vertex);
@@ -109,7 +109,7 @@ Shader::Shader(std::string VertexString, std::string FragmentString)
 	};
 
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(vertex, 1, &fShaderCode, NULL);
+	glShaderSource(fragment, 1, &fShaderCode, NULL);
 	glCompileShader(fragment);
 
 	glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
@@ -129,7 +129,7 @@ Shader::Shader(std::string VertexString, std::string FragmentString)
 	if (!success)
 	{
 		glGetProgramInfoLog(shaderID, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKINH_FAILED\n" << infoLog << std::endl;
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
 
 	glDeleteShader(vertex);
