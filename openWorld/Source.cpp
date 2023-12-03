@@ -2,9 +2,11 @@
 
 #include "Renderer.h"
 #include "Scene.h"
+#include "Camera.h"
+#include "SimulationManager.h"
 
-Renderer* render = new Renderer;
-Scene scene;
+//Renderer* render = new Renderer;
+
 
 
 std::string vertex = { "#version 330 core\n"
@@ -30,28 +32,42 @@ std::string fragment{ "#version 330 core\n"
 int main()
 {
 	
-	ID MeshID,TransformID;
+	//ID MeshID,TransformID;
 
-	std::vector <glm::vec3> positions {glm::vec3(-0.5,-0.5,0.0),glm::vec3(0.5,-0.5,0.0),glm::vec3(0.0,0.5,0.0)};
-	std::vector <glm::vec3> colors { glm::vec3(1,0,0),glm::vec3(0,1,0),glm::vec3(0,0,1) };
+	//std::vector <glm::vec3> positions {glm::vec3(-0.5,-0.5,-1.0),glm::vec3(0.5,-0.5,-1.0),glm::vec3(0.0,0.5,-1.0)};
+	//std::vector <glm::vec3> colors { glm::vec3(1,0,0),glm::vec3(0,1,0),glm::vec3(0,0,1) };
 
-	render->init();
 
-	Shader newShader("Shaders/3.3.shader.vs","Shaders/3.3.shader.fs");
-	//Shader newShader(vertex, fragment);
+	//render->init();
 
-	scene.DebugFunction();
-	
+	//Scene scene;
+	//Camera newCamera(glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0),-90,0);
+	//scene.Init(newCamera);
 
-	MeshID = scene.createMesh(positions,colors, newShader);
-	TransformID = scene.createTransform(glm::vec3(1.0,1.0,1.0),glm::vec3(0.0, 1.0, 0.0),glm::quat(),glm::vec3(1.0, 1.0, 1.0));
-	scene.AddInstance(MeshID,TransformID);
+	//Shader newShader("Shaders/3.3.shader.vs","Shaders/3.3.shader.fs");
+	////Shader newShader(vertex, fragment);
 
-	
-	scene.DebugFunction();
-	
-	render->drawWindow(&scene);
-	scene.DebugFunction();
+	//
+
+	//scene.DebugFunction();
+	//
+
+	//MeshID = scene.createMesh(positions,colors, newShader);
+	//TransformID = scene.createTransform(glm::vec3(0.50,0.50,0.0),glm::vec3(0.0, 1.0, 0.0),glm::quat(),glm::vec3(0.50, 0.50, 1.0));
+	//scene.AddInstance(MeshID,TransformID);
+
+	//
+	//scene.DebugFunction();
+	//
+	//render->drawWindow(&scene);
+	//scene.DebugFunction();
+
+	SimulationManager newSimulation;
+	newSimulation.Init();
+
+	newSimulation.run();
+
+	newSimulation.shutDown();
 
 	return 0;
 }

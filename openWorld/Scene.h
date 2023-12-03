@@ -13,6 +13,7 @@
 #include "lookup_table.h"
 #include "ResourceManager.h"
 #include "Shader.h"
+#include "Camera.h"
 
 //struct Material
 //{
@@ -58,20 +59,6 @@ struct Instance
 	ID TransformID;
 };
 
-struct Camera 
-{
-//view
-	glm::vec3 Eye;
-	glm::vec3 Target;
-	glm::vec3 Up;
-
-	//projection
-	float ZFar;
-	float Aspect;
-	float ZNear;
-};
-
-
 //scene is a database of all objects that need to be drawn. Each object is placed in a table. 
 // All parts of each object are contained within tables as well.
 //VAOS are stored in the Scene class, basic data such as Vertices, indices, and textures/materials are stored in ResourceManager
@@ -79,12 +66,9 @@ class Scene
 {
 public:
 
-	//tables:
-	//materials
-	//meshes
-	//cameras
-	//skeletons
+	Scene();
 
+	void Init(Camera newCamera);
 	
 
 	//load mesh to be stored as a scene object using the resource manager, returns MeshID
@@ -119,7 +103,7 @@ private:
 
 	std::vector <ID> InstanceIDs;
 
-	ID MainCameraID;
+	Camera* MainCamera;
 
 	unsigned int InstanceCount = 0;
 

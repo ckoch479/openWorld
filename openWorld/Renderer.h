@@ -14,9 +14,19 @@
 #include "lookup_table.h"
 
 #include "Scene.h"
+#include "Camera.h"
+
 
 #ifndef RENDERER_H
 #define RENDERER_H
+
+//temporary************
+static bool Keys[1024];
+static float currentMouse;
+static float lastMouse;
+static bool firstMouse;
+//temporary************
+
 class Renderer
 {
 public:
@@ -32,8 +42,18 @@ public:
 	//draw all objects currently in scene
 	void drawWindow(Scene* scene);
 
+	void shutDown();
+
+	bool checkWindowCloseState();
+
+
 private:
 	GLFWwindow* window;
+
+	float SCR_WIDTH = 800;
+	float SCR_HEIGHT = 600;
+
+	
 
 };
 

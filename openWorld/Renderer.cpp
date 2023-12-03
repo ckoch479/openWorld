@@ -4,7 +4,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 void errorCallback(int error, const char *msg);
 
-void processInput(GLFWwindow* window);
+void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 void Renderer::init() 
 {
@@ -34,7 +34,10 @@ void Renderer::init()
 	glViewport(0, 0, 800, 600);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, Key_Callback);
 	glfwSetErrorCallback(errorCallback);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 Renderer::Renderer() 
@@ -45,12 +48,12 @@ Renderer::Renderer()
 void Renderer::drawWindow(Scene* scene) 
 {
 
-	while(!glfwWindowShouldClose(this->window))
-	{
-		processInput(window);
+
+		
+		//processInput(window,*scene);
 
 		glClearColor(0.0f, 0.4f, 0.7f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 		//create a loop that renders each instance stored in the scene
 		for(unsigned int i = 0; i < scene->InstanceCount; i++)
@@ -68,12 +71,29 @@ void Renderer::drawWindow(Scene* scene)
 			//bind the shader
 			mesh->Meshshader->use();
 			//bind the mesh VAO
+			
 			glBindVertexArray(mesh->MeshVAO);
+
+			//set uniform variables
+			glm::mat4 model(1.0f);
+			glm::mat4 view(1.0f);
+			glm::mat4 projection(1.0f);
+
+			model = glm::translate(model, meshTransforms->Translation); //translate mesh
+			
+			//model = glm::rotate(meshTransforms->rotation, meshTransforms->RotationOrigin);//rotate mesh
+			
+			model = glm::scale(model, meshTransforms->Scale);//scale mesh
+			view = scene->MainCamera->GetViewMatrix();
+			projection = glm::perspective(glm::radians(scene->MainCamera->Zoom), ((float)800.0 / (float)600.0), 0.1f, 100.0f);
+			mesh->Meshshader->setMat4("modelMatrix", model);
+			mesh->Meshshader->setMat4("view", view);
+			mesh->Meshshader->setMat4("projection", projection);
+
+
+
 			glDrawArrays(GL_TRIANGLES, 0, 9);
-
 			glBindVertexArray(0);
-
-			//std::cout << "renderer loop" << std::endl;
 
 		}
 
@@ -81,10 +101,26 @@ void Renderer::drawWindow(Scene* scene)
 		glfwSwapBuffers(this->window);
 		glfwPollEvents();
 		
-	}
+}
 
+void Renderer::shutDown() 
+{
 	glfwTerminate();
 }
+
+bool Renderer::checkWindowCloseState() 
+{
+	if(glfwWindowShouldClose(this->window)) //if the window should close return true
+	{
+		return true;
+	}
+
+	if (!glfwWindowShouldClose(this->window)) //if the window should remain open return false
+	{
+		return false;
+	}
+}
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -98,8 +134,15 @@ void errorCallback(int error, const char* msg)
 	std::cerr << s << std::endl;
 }
 
-void processInput(GLFWwindow* window)
+void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+	if (key >= 0 && key < 1024)
+	{
+		if (action == GLFW_PRESS)
+			Keys[key] = true;
+		else if (action == GLFW_RELEASE)
+			Keys[key] = false;
+	}
 }
