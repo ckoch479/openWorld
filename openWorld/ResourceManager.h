@@ -6,13 +6,16 @@
 #include <iostream>
 #include <vector>
 #include <map>
-
+#include <unordered_map>
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 #include "lookup_table.h"
+#include "Texture.h"
 
 //basic mesh data ie vertices,texcoords,normals,indices,ect
+
+
 struct Vertex
 {
 	glm::vec3 vertexPosition;
@@ -20,26 +23,13 @@ struct Vertex
 	glm::vec3 Normal;
 };
 
-struct Texture
-{
-	int TextID;
-};
-
 struct MeshData
 {
 	std::vector <Vertex> vertices;
-	std::vector <Texture> textures;
+	//std::vector <Texture> textures;
 };
 
-struct Material
-{
-	std::string name;
 
-	float Ambient[3];
-	float Diffuse[3];
-	float Specular[3];
-	float Shininess;
-};
 
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
@@ -53,11 +43,14 @@ public:
 
 	//returns the mesh data of the object via this ID
 	MeshData* getMesh(ID& id);
+
+	static Texture* loadTexture(const std::string filepath, std::string name);
 	
+	static Texture* getTexture(std::string name);
 
 private:
 	lookup_table<MeshData> meshes;
-	lookup_table<Texture> textures;
+	static std::unordered_map <std::string,Texture> textures;
 
 	//loads mesh data from a file, gltf is currently only supported
 	MeshData loadMeshDataFromFile(const std::string filepath);

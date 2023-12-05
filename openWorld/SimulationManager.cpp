@@ -10,17 +10,30 @@ void SimulationManager::Init()
 	this->renderer = new Renderer;
 	renderer->init();
 	
-
-	Camera newCamera(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), -90, 0);
-
 	this->scene = new Scene;
-	scene->Init(newCamera);
+	scene->Init();
 
 	this->state = running;
 };
 
 void SimulationManager::run() 
 {
+	ID MeshID, TransformID;
+
+	std::vector <glm::vec3> positions{ glm::vec3(-0.5,-0.5,-1.0),glm::vec3(0.5,-0.5,-1.0),glm::vec3(0.0,0.5,-1.0) };
+	std::vector <glm::vec3> colors{ glm::vec3(1,0,0),glm::vec3(0,1,0),glm::vec3(0,0,1) };
+
+	Shader newShader("Shaders/3.3.shader.vs", "Shaders/3.3.shader.fs");
+	//Shader newShader(vertex, fragment);
+
+
+	MeshID = scene->createMesh(positions, colors, newShader);
+	TransformID = scene->createTransform(glm::vec3(0.50, 0.50, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(0.50, 0.50, 1.0));
+	scene->AddInstance(MeshID, TransformID);
+
+	this->scene->DebugFunction();
+
+
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
 	while (this->state == running)
 	{
@@ -32,9 +45,14 @@ void SimulationManager::run()
 
 		setDeltaTime(); //update deltaTime for this loop
 		checkKeys(); //check for active keys during this loop
+		checkMouse();
 
-
+	
+	
+	
+		//draw contents to actual game window
 		this->renderer->drawWindow(this->scene);
+		
 	}
 
 	if (this->state != running && this->state != pause) //if the game is not running or paused shutdown
@@ -42,17 +60,77 @@ void SimulationManager::run()
 		this->renderer->shutDown();
 	}
 
-
 }
 
 void SimulationManager::checkKeys() 
 {
+	int state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_W);
+	if(state == GLFW_PRESS)
+	{
+		this->scene->MoveCamera(FORWARD, this->deltaTime);
+		state = GLFW_RELEASE;
+	}
 
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_A);
+	if (state == GLFW_PRESS)
+	{
+		this->scene->MoveCamera(LEFT, this->deltaTime);
+		state = GLFW_RELEASE;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_S);
+	if (state == GLFW_PRESS)
+	{
+		this->scene->MoveCamera(BACKWARD, this->deltaTime);
+		state = GLFW_RELEASE;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_D);
+	if (state == GLFW_PRESS)
+	{
+		this->scene->MoveCamera(RIGHT, this->deltaTime);
+		state = GLFW_RELEASE;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_ESCAPE);
+	if(state == GLFW_PRESS)
+	{
+		this->state = shutdown;
+	}
+
+}
+
+void SimulationManager::checkMouse() 
+{
+	
+	double mouseX, mouseY;
+	glfwGetCursorPos(this->renderer->getWindow(), &mouseX, &mouseY); //poll the window for the current mouse position
+
+	if (firstMouse == true)
+	{
+		lastMouseX = mouseX;
+		lastMouseY = mouseY;
+		firstMouse = false;
+	}
+
+	float xoffset = mouseX - this->lastMouseX; //create an offset value from where the mouse last was for relative camera movement
+	float yoffset = this->lastMouseY - mouseY;
+
+	this->lastMouseX = mouseX;
+	this->lastMouseY = mouseY;
+
+	xoffset *= this->mouseSensitivity;
+	yoffset *= this->mouseSensitivity;
+
+	this->scene->MouseAimCamera(xoffset, yoffset); //using the x and y offsets aim the camera
+	
 }
 
 void SimulationManager::setDeltaTime() 
 {
-
+	float currentFrame = glfwGetTime();
+	this->deltaTime = currentFrame - lastFrame;
+	this->lastFrame = currentFrame;
 }
 
 void SimulationManager::shutDown() 

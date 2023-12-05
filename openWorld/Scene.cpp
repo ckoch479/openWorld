@@ -11,7 +11,7 @@ ID Scene::AddInstance(ID& MeshID, ID& TransformID)
 	instanceID = this->Instances.add(newInstance);
 	this->InstanceIDs.push_back(instanceID);
 
-	Mesh newMesh;
+	RenderMesh newMesh;
 	newMesh = this->Meshes.lookup(MeshID);
 
 	std::cout << newMesh.MeshVAO;
@@ -20,7 +20,7 @@ ID Scene::AddInstance(ID& MeshID, ID& TransformID)
 	return instanceID;
 }
 
-ID Scene::AddInstance(Mesh& mesh, Transform& transform) 
+ID Scene::AddInstance(RenderMesh& mesh, Transform& transform)
 {
 	ID newMeshID = this->Meshes.add(mesh);
 	ID newTransformID = this->Transforms.add(transform);
@@ -42,7 +42,7 @@ ID Scene::AddInstance(Mesh& mesh, Transform& transform)
 //test function for meshes
 ID Scene::createMesh(std::vector <glm::vec3>& vertices, std::vector <glm::vec3>& colors, Shader& shader) 
 {
-	Mesh newMesh;
+	RenderMesh newMesh;
 	//create VAO for the mesh
 	unsigned int VAO,VBO,VBO1;
 
@@ -98,9 +98,17 @@ void Scene::DebugFunction()
 	std::cout << "instance ids size:" << this->InstanceIDs.size() << std::endl;
 }
 
-void Scene::Init(Camera newCamera) 
+void Scene::Init() 
 {
-	
+	this->MainCamera = new Camera;
+}
 
-	this->MainCamera = new Camera;// newCamera;
+void Scene::MoveCamera(Camera_Movement direction, float deltaTime) 
+{
+	this->MainCamera->ProcessKeyboard(direction, deltaTime);
+}
+
+void Scene::MouseAimCamera(float xoffset, float yoffset) 
+{
+	this->MainCamera->ProcessMouseMovement(xoffset, yoffset);
 }

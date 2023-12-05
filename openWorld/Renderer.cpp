@@ -4,8 +4,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 void errorCallback(int error, const char *msg);
 
-void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-
 void Renderer::init() 
 {
 	//init opengl and set opengl version
@@ -34,10 +32,12 @@ void Renderer::init()
 	glViewport(0, 0, 800, 600);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetKeyCallback(window, Key_Callback);
 	glfwSetErrorCallback(errorCallback);
 
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	glEnable(GL_DEPTH_TEST);
+
 }
 
 Renderer::Renderer() 
@@ -47,11 +47,7 @@ Renderer::Renderer()
 
 void Renderer::drawWindow(Scene* scene) 
 {
-
-
 		
-		//processInput(window,*scene);
-
 		glClearColor(0.0f, 0.4f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -90,17 +86,19 @@ void Renderer::drawWindow(Scene* scene)
 			mesh->Meshshader->setMat4("view", view);
 			mesh->Meshshader->setMat4("projection", projection);
 
-
-
 			glDrawArrays(GL_TRIANGLES, 0, 9);
 			glBindVertexArray(0);
 
 		}
 
-
 		glfwSwapBuffers(this->window);
 		glfwPollEvents();
 		
+}
+
+GLFWwindow* Renderer::getWindow() 
+{
+	return this->window;
 }
 
 void Renderer::shutDown() 
@@ -132,17 +130,4 @@ void errorCallback(int error, const char* msg)
 	std::string s;
 	s = " [" + std::to_string(error) + "] " + msg + '\n';
 	std::cerr << s << std::endl;
-}
-
-void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-	if (key >= 0 && key < 1024)
-	{
-		if (action == GLFW_PRESS)
-			Keys[key] = true;
-		else if (action == GLFW_RELEASE)
-			Keys[key] = false;
-	}
 }

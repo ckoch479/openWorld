@@ -15,34 +15,15 @@
 #include "Shader.h"
 #include "Camera.h"
 
-//struct Material
-//{
-//	std::string name;
-//
-//	float Ambient[3];
-//	float Diffuse[3];
-//	float Specular[3];
-//	float Shininess;
-//};
-
-struct Mesh 
+struct RenderMesh 
 {
-	std::string name;
 
 	GLuint MeshVAO;
-	GLuint PositionBO;
-	GLuint TexCoordBO;
-	GLuint NormalBO;
-	GLuint IndexBO;
-
 	GLuint IndexCount;
 	GLuint VertexCount;
 
 	//ptr to the shader used by this mesh?
 	Shader* Meshshader;
-
-	//std::vector <GLDrawElementsIndirectCommand>
-	std::vector<uint32_t> MaterialIDs;
 };
 
 struct Transform 
@@ -68,19 +49,12 @@ public:
 
 	Scene();
 
-	void Init(Camera newCamera);
+	void Init();
 	
-
-	//load mesh to be stored as a scene object using the resource manager, returns MeshID
-	//ID LoadMesh(const char* filepath);
-
-	//load an instance as a scene object with a mesh ID and a Transform ID, returns an Instance ID
-	//ID LoadInstance(ID MeshID, ID TransformID);
-
 	//returns an instance ID
 	ID AddInstance(ID& MeshID,ID& TransformID);
 
-	ID AddInstance(Mesh& mesh, Transform& transform);
+	ID AddInstance(RenderMesh& mesh, Transform& transform);
 
 	//ID createMesh(std::vector <Vertex> vertices, std::vector <unsigned int> indices, std::vector <Texture> textures);
 
@@ -91,6 +65,10 @@ public:
 	ID createTransform(glm::vec3 position, glm::vec3 rotationOrigin, glm::quat rotation, glm::vec3 scale);
 	
 	void DebugFunction();
+
+	void MoveCamera(Camera_Movement direction, float deltaTime);
+
+	void MouseAimCamera(float xoffset, float yoffset);
 	
 
 private:
@@ -110,4 +88,11 @@ private:
 	friend class Renderer;
 
 };
+
+//things to add:
+// light objects
+// textures
+// bone and bone transformations
+// shadows?
+// 2d Graphics?
 

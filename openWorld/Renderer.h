@@ -17,15 +17,9 @@
 #include "Camera.h"
 
 
+
 #ifndef RENDERER_H
 #define RENDERER_H
-
-//temporary************
-static bool Keys[1024];
-static float currentMouse;
-static float lastMouse;
-static bool firstMouse;
-//temporary************
 
 class Renderer
 {
@@ -46,12 +40,15 @@ public:
 
 	bool checkWindowCloseState();
 
+	GLFWwindow* getWindow();
 
+	
 private:
 	GLFWwindow* window;
 
 	float SCR_WIDTH = 800;
 	float SCR_HEIGHT = 600;
+
 
 	
 

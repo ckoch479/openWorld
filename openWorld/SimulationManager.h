@@ -40,6 +40,8 @@ public:
 
 	void checkKeys();
 
+	void checkMouse();
+
 	void setDeltaTime();
 private:
 
@@ -55,7 +57,14 @@ private:
 	gameState state;
 
 	float deltaTime = 0.0f;
-	float lastFrame = 0.0f;
+	float lastFrame = 1.0f;
+
+	float lastMouseX = 400.0f;
+	float lastMouseY = 300.0f;
+
+	float mouseSensitivity = 0.5f;
+
+	bool firstMouse = true;
 };
 
 #endif // !SIMULATIONMANAGER_H
