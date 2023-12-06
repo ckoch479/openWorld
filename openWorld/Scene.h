@@ -74,9 +74,9 @@ public:
 private:
 
 	lookup_table<Instance> Instances;
-	lookup_table<Mesh> Meshes;
+	lookup_table<RenderMesh> Meshes;
 	lookup_table<Transform> Transforms;
-	lookup_table<Material> Materials;
+	//lookup_table<Material> Materials;
 
 
 	std::vector <ID> InstanceIDs;

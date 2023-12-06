@@ -1,48 +1,54 @@
 #include "ResourceManager.h"
 
-ID ResourceManager::loadMesh(std::string filepath)
+std::unordered_map <std::string, Texture> ResourceManager::textures; //container for textures
+std::unordered_map <std::string, MeshData> ResourceManager::meshes;  //container for mesh data
+
+MeshData* ResourceManager::loadMesh(std::string filepath, std::string name)
 {
-	MeshData newMesh = loadMeshDataFromFile(filepath);
-	ID meshID = meshes.add(newMesh);
-	return meshID;
+	meshes[name] = loadMeshDataFromFile(filepath);
+	return &meshes[name];
 }
 
-MeshData* ResourceManager::getMesh(ID& id)
+MeshData* ResourceManager::getMesh(std::string name)
 {
-	return &meshes.lookup(id);
+	return &meshes[name];
 }
 
 MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 {
-	std::fstream newfile;
-	newfile.open(filepath.c_str(),std::ios::in);
+	Assimp::Importer import;
 
-	char fileData;
-	
+	const aiScene* scene = import.ReadFile(filepath,aiProcess_Triangulate | aiProcess_FlipUVs);
 
-	if (!newfile.is_open())
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
 	{
-		std::cout << "ERROR::UNABLE::TO::READ::FILE::AT:" << filepath << std::endl;
+		std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
 	}
-		
-	if(newfile.is_open())
-	{
-		while (newfile.good())
-		{
-			std::string myline;
-			std::getline(newfile, myline);
-			//fileData = newfile.get();
-			std::cout << myline << std::endl;
-			
-		}
-		
-	}
-	
-	//std::cout << fileData << std::endl;
 
-	newfile.close();
+	scene->mRootNode;
+}
 
-	MeshData newMeshdata;
+Texture* ResourceManager::loadTexture(const std::string filepath, std::string name)
+{
+	textures[name] = loadTextureFromFile(filepath);
+	return &textures[name];
+}
 
-	return newMeshdata;
+Texture* ResourceManager::getTexture(std::string name)
+{
+	return &textures[name];
+}
+
+Texture ResourceManager::loadTextureFromFile(std::string filepath)
+{
+	int width;
+	int height;
+	int nrChannels;
+
+	unsigned char* data = stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0);
+
+	Texture newTexture;
+	newTexture.generate(width, height, data);
+
+	return newTexture;
 }

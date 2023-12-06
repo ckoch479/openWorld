@@ -59,7 +59,7 @@ void Renderer::drawWindow(Scene* scene)
 			ID* meshID = &scene->Instances.lookup(*instanceID).MeshID;
 			ID* transformsID = &scene->Instances.lookup(*instanceID).TransformID;
 
-			Mesh* mesh = &scene->Meshes.lookup(*meshID);
+			RenderMesh* mesh = &scene->Meshes.lookup(*meshID);
 			Transform* meshTransforms = &scene->Transforms.lookup(*transformsID);
 
 			//Render this instance--------------------------------------
