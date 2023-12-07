@@ -30,7 +30,8 @@ struct Vertex
 struct MeshData
 {
 	std::vector <Vertex> vertices;
-	std::vector <Texture*> textures;
+	std::vector <Texture*> diffuseTextures;
+	std::vector <Texture*> specularTextures;
 	std::vector <int> indices;
 };
 
@@ -61,7 +62,6 @@ private:
 	static MeshData loadMeshDataFromFile(const std::string filepath);
 	//loads texture from a file
 	static Texture loadTextureFromFile(std::string filepath);
-
 
 };
 
