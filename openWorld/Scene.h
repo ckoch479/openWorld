@@ -19,11 +19,18 @@ struct RenderMesh
 {
 
 	GLuint MeshVAO;
+	GLuint MeshVBO;
+	GLuint MeshEBO;
+
 	GLuint IndexCount;
 	GLuint VertexCount;
 
+	bool hasTextures;
+	int numTextures;
+
 	//ptr to the shader used by this mesh?
 	Shader* Meshshader;
+	std::vector <Texture*> meshTextures;
 };
 
 struct Transform 
@@ -60,6 +67,8 @@ public:
 
 	//test function for meshes
 	ID createMesh(std::vector <glm::vec3>& vertices, std::vector <glm::vec3>& colors, Shader& shader);
+
+	ID createMesh(MeshData mesh, Shader& shader);
 
 	//test function for transforms
 	ID createTransform(glm::vec3 position, glm::vec3 rotationOrigin, glm::quat rotation, glm::vec3 scale);

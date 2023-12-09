@@ -19,6 +19,9 @@
 #include "lookup_table.h"
 #include "Texture.h"
 
+#include "AssimpModel.h"
+#include "AssimpMesh.h"
+
 //basic mesh data i.e. vertices,texcoords,normals,indices,ect
 struct Vertex
 {
@@ -32,7 +35,7 @@ struct MeshData
 	std::vector <Vertex> vertices;
 	std::vector <Texture*> diffuseTextures;
 	std::vector <Texture*> specularTextures;
-	std::vector <int> indices;
+	std::vector <unsigned> indices;
 };
 
 

@@ -139,6 +139,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssimpMesh.cpp" />
+    <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="lookup_table.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -151,6 +153,9 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssimpMesh.h" />
+    <ClInclude Include="AssimpModel.h" />
+    <ClInclude Include="assimp_glm_helpers.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="lookup_table.h" />
     <ClInclude Include="Renderer.h" />
@@ -163,6 +168,8 @@
   <ItemGroup>
     <None Include="Shaders\3.3.shader.fs" />
     <None Include="Shaders\3.3.shader.vs" />
+    <None Include="Shaders\ModelShader.fs" />
+    <None Include="Shaders\Modelshader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

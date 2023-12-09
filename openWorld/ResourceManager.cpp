@@ -16,59 +16,50 @@ MeshData* ResourceManager::getMesh(std::string name)
 
 MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 {
-	Assimp::Importer import;
+	MeshData newMesh;
 
-	const aiScene* scene = import.ReadFile(filepath,aiProcess_Triangulate | aiProcess_FlipUVs);
+	//get data from assimpMesh class
+	AssimpModel newModel(filepath);
+	std::vector <AssimpMesh> meshes = newModel.getMeshes();
 
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
+	std::vector <Vertex> Vertices;
+	std::vector <unsigned int> indices;
+	std::vector <Texture*> Textures;
+
+	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
-	}
+		std::vector <glm::vec3> positions = meshes[i].getVertexPositions();
+		std::vector <glm::vec3> normals = meshes[i].getVertexNormals();
+		std::vector <glm::vec2> texcoords = meshes[i].getVertexTexCoords();
 
-    std::string directory = filepath.substr(0, filepath.find_last_of('/'));
+		for(unsigned int j = 0; j < positions.size(); j++)
+		{
+			Vertex tempVertex;
 
-	std::vector <Vertex> vertices;
-	std::vector <int> indices;
-	std::vector <Texture*> diffuseTextures;
-	std::vector <Texture*> specularTextures;
-	
+			tempVertex.vertexPosition = positions[j];
+			tempVertex.Normal = normals[j];
+			tempVertex.texCoords = texcoords[j];
 
-	if (scene->HasMeshes() == true)
-	{
-		aiMesh* tempMesh = scene->mMeshes[0];
+			Vertices.push_back(tempVertex);
+		}
+
+		indices = meshes[i].getIndices();
 		
-		//vertices
-		for (unsigned int i = 0; i < tempMesh->mNumVertices; i++)
-		{
-			Vertex newVertex;
-
-			newVertex.vertexPosition = glm::vec3(tempMesh->mVertices[i].x, tempMesh->mVertices[i].y, tempMesh->mVertices[i].z);
-
-			newVertex.Normal = glm::vec3(tempMesh->mNormals[i].x, tempMesh->mNormals[i].y, tempMesh->mNormals[i].z);
-
-			if (tempMesh->mTextureCoords[0]) 
-			{
-				newVertex.texCoords = glm::vec2(tempMesh->mTextureCoords[0][i].x, tempMesh->mTextureCoords[0][i].x);
-			}
-			else
-			{
-				newVertex.texCoords = glm::vec2(0.0f, 0.0f);
-			}
-
-			vertices.push_back(newVertex);
-		}
-		//indices
-		for(unsigned int i = 0; i < tempMesh->mNumFaces; i++)
-		{
-			aiFace face = tempMesh->mFaces[i];
-			// retrieve all indices of the face and store them in the indices vector
-			for (unsigned int j = 0; j < face.mNumIndices; j++)
-				indices.push_back(face.mIndices[j]);
-		}
-
-		//textures
-
 	}
+
+	//load diffuse textures
+	std::vector <std::string> diffuseTexturePaths = newModel.getDiffuseTexturePaths();
+	for(unsigned int i = 0; i < diffuseTexturePaths.size(); i++)
+	{
+		Texture* newTexture = loadTexture(diffuseTexturePaths[i], filepath + "diffuse_Texture");
+		Textures.push_back(newTexture);
+	}
+
+	newMesh.vertices = Vertices;
+	newMesh.indices = indices;
+	newMesh.diffuseTextures = Textures;
+
+	return newMesh;
 }
 
 Texture* ResourceManager::loadTexture(const std::string filepath, std::string name)

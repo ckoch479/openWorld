@@ -80,13 +80,24 @@ void Renderer::drawWindow(Scene* scene)
 			//model = glm::rotate(meshTransforms->rotation, meshTransforms->RotationOrigin);//rotate mesh
 			
 			model = glm::scale(model, meshTransforms->Scale);//scale mesh
+
 			view = scene->MainCamera->GetViewMatrix();
 			projection = glm::perspective(glm::radians(scene->MainCamera->Zoom), ((float)800.0 / (float)600.0), 0.1f, 100.0f);
 			mesh->Meshshader->setMat4("modelMatrix", model);
 			mesh->Meshshader->setMat4("view", view);
 			mesh->Meshshader->setMat4("projection", projection);
 
-			glDrawArrays(GL_TRIANGLES, 0, 9);
+			if(mesh->hasTextures == true)
+			{
+				//mesh->Meshshader->setInt("diffuse_texture0", mesh->meshTextures[0]->id);
+				mesh->meshTextures[0]->bind();
+				
+				
+			}
+
+			glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mesh->IndexCount), GL_UNSIGNED_INT, 0);
+
+			glDrawArrays(GL_TRIANGLES, 0, 100000);
 			glBindVertexArray(0);
 
 		}

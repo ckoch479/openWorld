@@ -24,7 +24,15 @@ void SimulationManager::run()
 	std::vector <glm::vec3> colors{ glm::vec3(1,0,0),glm::vec3(0,1,0),glm::vec3(0,0,1) };
 
 	Shader newShader("Shaders/3.3.shader.vs", "Shaders/3.3.shader.fs");
-	
+	Shader Arissashader("Shaders/ModelShader.vs","Shaders/ModelShader.fs");
+
+	//load meshes
+	MeshData* newMesh = ResourceManager::loadMesh("resources/character.dae", "Arissa");
+	ID ArissaTransform = scene->createTransform(glm::vec3(0.0,0.0,-1.0), glm::vec3(0.0,1.0,0.0), glm::quat(), glm::vec3(0.1,0.1,0.1));
+	ID ArissaRenderID = scene->createMesh(*newMesh, Arissashader);
+	scene->AddInstance(ArissaRenderID, ArissaTransform);
+
+	this->scene->DebugFunction();
 
 	MeshID = scene->createMesh(positions, colors, newShader);
 	TransformID = scene->createTransform(glm::vec3(0.50, 0.50, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(0.50, 0.50, 1.0));
