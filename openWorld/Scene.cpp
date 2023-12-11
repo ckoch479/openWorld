@@ -46,8 +46,12 @@ ID Scene::createMesh(std::vector <glm::vec3>& vertices, std::vector <glm::vec3>&
 	//create VAO for the mesh
 	unsigned int VAO,VBO,VBO1;
 
-	newMesh.hasTextures = false;
-	newMesh.numTextures = 0;
+	newMesh.hasDiffuseTextures = false;
+	newMesh.numDiffuseTextures = 0;
+	
+	newMesh.hasSpecularTextures = false;
+	newMesh.numSpecularTextures = 0;
+
 
 	glGenVertexArrays(1, &newMesh.MeshVAO);
 	glBindVertexArray(newMesh.MeshVAO);
@@ -64,9 +68,6 @@ ID Scene::createMesh(std::vector <glm::vec3>& vertices, std::vector <glm::vec3>&
 	glBufferData(GL_ARRAY_BUFFER, colors.size() * (3*sizeof(float)), &colors[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
-
-	//create the mesh object
-	std::cout << newMesh.MeshVAO << std::endl;
 	
 	//newMesh.MeshVAO = VAO;
 	newMesh.Meshshader = &shader;
@@ -108,22 +109,22 @@ ID Scene::createMesh(MeshData mesh,Shader& shader)
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
 	glEnableVertexAttribArray(2);
 
-	newMesh.hasTextures = (mesh.diffuseTextures.size() >= 1);
-	newMesh.numTextures = mesh.diffuseTextures.size();
+	//Add textures to the render mesh object
+	newMesh.hasDiffuseTextures = (mesh.diffuseTextures.size() >= 1);
+	newMesh.numDiffuseTextures = mesh.diffuseTextures.size();
 
-	if (newMesh.hasTextures == true)
+	if (newMesh.hasDiffuseTextures == true)
 	{
-		newMesh.meshTextures = mesh.diffuseTextures;
-	
-
-		/*for(unsigned int i = 0;mesh.diffuseTextures.size(); i++)
-		{
-			newMesh.meshTextures.push_back(mesh.diffuseTextures[i]);
-		}*/
+		newMesh.meshDiffuseTextures = mesh.diffuseTextures;
 	}
 
-	//create the mesh object
-	std::cout << newMesh.MeshVAO << std::endl;
+	newMesh.hasSpecularTextures = (mesh.specularTextures.size() >= 1);
+	newMesh.numSpecularTextures = mesh.specularTextures.size();
+
+	if (newMesh.hasSpecularTextures == true)
+	{
+		newMesh.meshSpecularTextures = mesh.specularTextures;
+	}
 
 	//newMesh.MeshVAO = VAO;
 	newMesh.Meshshader = &shader;

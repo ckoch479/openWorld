@@ -27,8 +27,8 @@ void SimulationManager::run()
 	Shader Arissashader("Shaders/ModelShader.vs","Shaders/ModelShader.fs");
 
 	//load meshes
-	MeshData* newMesh = ResourceManager::loadMesh("resources/character.dae", "Arissa");
-	ID ArissaTransform = scene->createTransform(glm::vec3(0.0,0.0,-1.0), glm::vec3(0.0,1.0,0.0), glm::quat(), glm::vec3(0.1,0.1,0.1));
+	MeshData* newMesh = ResourceManager::loadMesh("resources/vampire/dancing_vampire.dae", "Arissa");
+	ID ArissaTransform = scene->createTransform(glm::vec3(0.0,0.0,-1.0), glm::vec3(0.0,1.0,0.0), glm::quat(), glm::vec3(0.01,0.01,0.01));
 	ID ArissaRenderID = scene->createMesh(*newMesh, Arissashader);
 	scene->AddInstance(ArissaRenderID, ArissaTransform);
 

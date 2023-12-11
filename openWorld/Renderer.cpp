@@ -14,7 +14,7 @@ void Renderer::init()
 
 	//create window object
 
-	this->window = glfwCreateWindow(800, 600, "openWorld", NULL, NULL);
+	this->window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "openWorld", NULL, NULL);
 	if(window == NULL)
 	{
 		std::cout << "Failed to create GLFW window!" << std::endl;
@@ -29,7 +29,7 @@ void Renderer::init()
 		std::cout << "Failed to initialize GLAD!" << std::endl;
 	}
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetErrorCallback(errorCallback);
@@ -87,12 +87,16 @@ void Renderer::drawWindow(Scene* scene)
 			mesh->Meshshader->setMat4("view", view);
 			mesh->Meshshader->setMat4("projection", projection);
 
-			if(mesh->hasTextures == true)
+			if(mesh->hasDiffuseTextures == true)
 			{
-				//mesh->Meshshader->setInt("diffuse_texture0", mesh->meshTextures[0]->id);
-				mesh->meshTextures[0]->bind();
-				
-				
+				glActiveTexture(GL_TEXTURE0);
+				mesh->meshDiffuseTextures[0]->bind();
+			}
+
+			if(mesh->hasSpecularTextures == true)
+			{
+				glActiveTexture(GL_TEXTURE1);
+				mesh->meshSpecularTextures[0]->bind();
 			}
 
 			glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mesh->IndexCount), GL_UNSIGNED_INT, 0);

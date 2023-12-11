@@ -25,12 +25,16 @@ struct RenderMesh
 	GLuint IndexCount;
 	GLuint VertexCount;
 
-	bool hasTextures;
-	int numTextures;
+	bool hasDiffuseTextures;
+	bool hasSpecularTextures;
+
+	int numDiffuseTextures;
+	int numSpecularTextures;
 
 	//ptr to the shader used by this mesh?
 	Shader* Meshshader;
-	std::vector <Texture*> meshTextures;
+	std::vector <Texture*> meshDiffuseTextures;
+	std::vector <Texture*> meshSpecularTextures;
 };
 
 struct Transform 
@@ -46,6 +50,23 @@ struct Instance
 	ID MeshID;
 	ID TransformID;
 };
+
+struct DirectionalLight
+{
+
+};
+
+struct Pointlight
+{
+
+};
+
+struct SpotLight
+{
+
+};
+
+
 
 //scene is a database of all objects that need to be drawn. Each object is placed in a table. 
 // All parts of each object are contained within tables as well.

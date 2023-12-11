@@ -53,3 +53,8 @@ std::vector <unsigned int> AssimpMesh::getIndices()
 {
 	return this->indices;
 }
+
+std::vector <AssimpVertex> AssimpMesh::getVertexData()
+{
+	return this->vertices;
+}

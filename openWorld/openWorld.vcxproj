@@ -141,6 +141,8 @@
   <ItemGroup>
     <ClCompile Include="AssimpMesh.cpp" />
     <ClCompile Include="AssimpModel.cpp" />
+    <ClCompile Include="AssimpSkeletalAnimation.cpp" />
+    <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="lookup_table.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -155,7 +157,9 @@
   <ItemGroup>
     <ClInclude Include="AssimpMesh.h" />
     <ClInclude Include="AssimpModel.h" />
+    <ClInclude Include="AssimpSkeletalAnimation.h" />
     <ClInclude Include="assimp_glm_helpers.h" />
+    <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="lookup_table.h" />
     <ClInclude Include="Renderer.h" />

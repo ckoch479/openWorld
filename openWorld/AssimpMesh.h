@@ -44,6 +44,8 @@ public:
 
 	std::vector <glm::vec2> getVertexTexCoords();
 
+	std::vector <AssimpVertex> getVertexData();
+
 	std::vector <unsigned int> getIndices();
 
 private:

@@ -24,7 +24,8 @@ MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 
 	std::vector <Vertex> Vertices;
 	std::vector <unsigned int> indices;
-	std::vector <Texture*> Textures;
+	std::vector <Texture*> DiffuseTextures;
+	std::vector <Texture*> SpecularTextures;
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
@@ -52,12 +53,22 @@ MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 	for(unsigned int i = 0; i < diffuseTexturePaths.size(); i++)
 	{
 		Texture* newTexture = loadTexture(diffuseTexturePaths[i], filepath + "diffuse_Texture");
-		Textures.push_back(newTexture);
+		DiffuseTextures.push_back(newTexture);
+	}
+
+	//load specular textures
+	std::vector <std::string> specularTexturePaths = newModel.getSpecularTexturePaths();
+	for (unsigned int i = 0; i < specularTexturePaths.size(); i++)
+	{
+		Texture* newTexture = loadTexture(specularTexturePaths[i], filepath + "specular_Texture");
+		SpecularTextures.push_back(newTexture);
 	}
 
 	newMesh.vertices = Vertices;
 	newMesh.indices = indices;
-	newMesh.diffuseTextures = Textures;
+	newMesh.diffuseTextures = DiffuseTextures;
+	newMesh.specularTextures = SpecularTextures;
+
 
 	return newMesh;
 }

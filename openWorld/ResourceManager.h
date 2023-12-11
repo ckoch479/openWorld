@@ -40,6 +40,8 @@ struct MeshData
 
 
 
+
+
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 //resource manager stores data of meshes, textures, ect
