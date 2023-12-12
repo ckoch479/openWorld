@@ -21,6 +21,8 @@
 
 #include "AssimpModel.h"
 #include "AssimpMesh.h"
+#include "Bone.h"
+#include "AssimpSkeletalAnimation.h"
 
 //basic mesh data i.e. vertices,texcoords,normals,indices,ect
 struct Vertex
@@ -28,6 +30,34 @@ struct Vertex
 	glm::vec3 vertexPosition;
 	glm::vec2 texCoords;
 	glm::vec3 Normal;
+
+	int BoneIds[MAX_BONE_INFLUENCE];
+
+	float boneWeights[MAX_BONE_INFLUENCE];
+};
+
+struct BoneData
+{
+	int BoneId;
+	std::string boneName;
+	glm::mat4 boneMatrix;
+};
+
+//this animation bone data is to determine the heirarchy of bones for the animation Bone data itself is for which bones are attached to the mesh itself
+struct AnimationBoneData
+{
+	glm::mat4 localTransformation;
+	std::string name;
+	int childrenCount;
+	std::vector<AnimationBoneData> children;
+
+	std::vector <KeyPosition> Positions;
+	std::vector <KeyRotation> Rotations;
+	std::vector <KeyScale> Scalings;
+
+	int numPositions;
+	int numRotations;
+	int numScalings;
 };
 
 struct MeshData
@@ -36,6 +66,15 @@ struct MeshData
 	std::vector <Texture*> diffuseTextures;
 	std::vector <Texture*> specularTextures;
 	std::vector <unsigned> indices;
+
+	std::vector <BoneData> skeleton;
+};
+
+struct AnimationData
+{
+	float duration;
+	int ticksPerSecond;
+	AnimationBoneData rootBone;
 };
 
 
@@ -59,14 +98,23 @@ public:
 	
 	static Texture* getTexture(std::string name);
 
+	static AnimationData* loadAnimation(const std::string filepath, std::string name);
+
+	static AnimationData* getAnimation(std::string name);
+
 private:
 	static std::unordered_map <std::string, MeshData> meshes;
-	static std::unordered_map <std::string,Texture> textures;
+	static std::unordered_map <std::string, Texture> textures;
+	static std::unordered_map <std::string, AnimationData> animations;
 
 	//loads mesh data from a file
 	static MeshData loadMeshDataFromFile(const std::string filepath);
 	//loads texture from a file
 	static Texture loadTextureFromFile(std::string filepath);
+
+	static AnimationData loadAnimationFromFile(std::string filepath);
+
+	static void getBoneData(AnimationBoneData& newBone, AssimpNodeData& boneNode, AssimpSkeletalAnimation& animation);
 
 };
 

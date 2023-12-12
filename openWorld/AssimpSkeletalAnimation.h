@@ -17,6 +17,7 @@
 #include "Includes/glm/gtc/type_ptr.hpp"
 
 #include "AssimpModel.h"
+#include "Bone.h"
 
 #ifndef ASSIMPSKELETALANIMATION_H
 #define ASSIMPSKELETALANIMATION_H
@@ -37,6 +38,15 @@ public:
 	AssimpSkeletalAnimation(const std::string animationPath);
 	~AssimpSkeletalAnimation();
 
+	Bone* FindBone(const std::string& name);
+
+	float GetTicksPerSecond();
+
+	float GetDuration();
+
+	AssimpNodeData& GetRootNode();
+
+	
 
 
 private:
@@ -44,7 +54,12 @@ private:
 	int ticksPerSecond;
 	AssimpNodeData rootNode;
 
+	std::vector <Bone> Bones;
 	std::map<std::string, BoneInfo> BoneInfoMap;
+
+	void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
+
+	void populateBoneData(const aiAnimation* animation);
 
 
 };

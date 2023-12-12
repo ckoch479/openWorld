@@ -16,13 +16,22 @@
 #define BONE_H
 
 struct KeyPosition
-{};
+{
+	glm::vec3 position;
+	float timestamp;
+};
 
 struct KeyRotation
-{};
+{
+	glm::quat rotation;
+	float timestamp;
+};
 
 struct KeyScale
-{};
+{
+	glm::vec3 scale;
+	float timestamp;
+};
 
 //Animation data for each bone is stored in this class 
 class Bone
@@ -33,7 +42,23 @@ public:
 
 	~Bone();
 
+	glm::mat4 getLocalTransform();
 
+	std::string getBoneName() const;
+
+	int getBoneID();
+
+	int getNumPositions();
+
+	int getNumRotations();
+
+	int getNumScalings();
+
+	std::vector <KeyPosition> getPositions();
+
+	std::vector <KeyRotation> getRotations();
+
+	std::vector <KeyScale> getScalings();
 
 private:
 	std::vector <KeyPosition> Positions;

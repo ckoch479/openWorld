@@ -66,6 +66,10 @@ struct SpotLight
 
 };
 
+struct RenderAnimation
+{
+
+};
 
 
 //scene is a database of all objects that need to be drawn. Each object is placed in a table. 

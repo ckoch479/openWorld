@@ -26,6 +26,9 @@ void SimulationManager::run()
 	Shader newShader("Shaders/3.3.shader.vs", "Shaders/3.3.shader.fs");
 	Shader Arissashader("Shaders/ModelShader.vs","Shaders/ModelShader.fs");
 
+	//Animation data testing
+	AnimationData* newAnimation = ResourceManager::loadAnimation("resources/vampire/dancing_vampire.dae","dance");
+
 	//load meshes
 	MeshData* newMesh = ResourceManager::loadMesh("resources/vampire/dancing_vampire.dae", "Arissa");
 	ID ArissaTransform = scene->createTransform(glm::vec3(0.0,0.0,-1.0), glm::vec3(0.0,1.0,0.0), glm::quat(), glm::vec3(0.01,0.01,0.01));

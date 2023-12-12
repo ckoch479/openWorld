@@ -1,7 +1,8 @@
 #include "ResourceManager.h"
 
-std::unordered_map <std::string, Texture> ResourceManager::textures; //container for textures
-std::unordered_map <std::string, MeshData> ResourceManager::meshes;  //container for mesh data
+std::unordered_map <std::string, Texture>       ResourceManager::textures;  //container for textures
+std::unordered_map <std::string, MeshData>      ResourceManager::meshes;    //container for mesh data
+std::unordered_map <std::string, AnimationData> ResourceManager::animations;//container for animation data
 
 MeshData* ResourceManager::loadMesh(std::string filepath, std::string name)
 {
@@ -98,6 +99,59 @@ Texture ResourceManager::loadTextureFromFile(std::string filepath)
 	return newTexture;
 }
 
+AnimationData* ResourceManager::loadAnimation(const std::string filepath, std::string name)
+{
+	animations[name] = loadAnimationFromFile(filepath);
+	return &animations[name];
+}
 
+AnimationData* ResourceManager::getAnimation(std::string name)
+{
+	return &animations[name];
+}
+
+void ResourceManager::getBoneData(AnimationBoneData &newBone, AssimpNodeData &boneNode, AssimpSkeletalAnimation& animation)
+{
+
+	assert(&newBone);
+
+	newBone.name = boneNode.name;
+	newBone.localTransformation = boneNode.transformation;
+	newBone.childrenCount = boneNode.childrenCount;
+
+	Bone* tempBone = animation.FindBone(newBone.name);
+
+	if(tempBone != nullptr)
+	{
+		newBone.numPositions = animation.FindBone(newBone.name)->getNumPositions();
+		newBone.numRotations = animation.FindBone(newBone.name)->getNumRotations();
+		newBone.numScalings = animation.FindBone(newBone.name)->getNumScalings();
+
+		newBone.Positions = animation.FindBone(newBone.name)->getPositions();
+		newBone.Rotations = animation.FindBone(newBone.name)->getRotations();
+		newBone.Scalings = animation.FindBone(newBone.name)->getScalings();
+	}
+
+	for(unsigned int i = 0; i < newBone.childrenCount; i++)
+	{
+		AnimationBoneData childBone;
+		getBoneData(childBone, boneNode.children[i], animation);
+		newBone.children.push_back(childBone);
+	}
+}
+
+AnimationData ResourceManager::loadAnimationFromFile(std::string filepath)
+{
+	AnimationData newAnimation;
+	
+	AssimpSkeletalAnimation animation(filepath);
+
+	newAnimation.duration = animation.GetDuration();
+	newAnimation.ticksPerSecond = animation.GetTicksPerSecond();
+
+	getBoneData(newAnimation.rootBone, animation.GetRootNode() , animation);
+
+	return newAnimation;
+}
 
 
