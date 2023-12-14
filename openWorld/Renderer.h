@@ -15,6 +15,7 @@
 
 #include "Scene.h"
 #include "Camera.h"
+#include "Animator.h"
 
 
 
@@ -26,9 +27,6 @@ class Renderer
 public:
 	Renderer();
 	~Renderer();
-
-	
-
 
 	//create gl context and window
 	void init();
@@ -42,9 +40,19 @@ public:
 
 	GLFWwindow* getWindow();
 
+	void setPointLightUniform(Pointlight light, Shader& shader, int iter);
+
+	void setDirectionalLightUniform(DirectionalLight light, Shader& shader);
+
+	void setSpotLightUniforms(SpotLight light, Shader& shader);
+
 	
 private:
 	GLFWwindow* window;
+	Animator* animator;
+
+	float DeltaTime = 0.0f;
+	float LastFrame = 1.0f;
 
 	float SCR_WIDTH = 800;
 	float SCR_HEIGHT = 600;

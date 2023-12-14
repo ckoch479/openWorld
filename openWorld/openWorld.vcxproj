@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="AssimpMesh.cpp" />
     <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="AssimpSkeletalAnimation.cpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationDebug.h" />
+    <ClInclude Include="Animator.h" />
     <ClInclude Include="AssimpMesh.h" />
     <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="AssimpSkeletalAnimation.h" />
@@ -173,8 +175,14 @@
   <ItemGroup>
     <None Include="Shaders\3.3.shader.fs" />
     <None Include="Shaders\3.3.shader.vs" />
+    <None Include="Shaders\AnimationShader.fs" />
+    <None Include="Shaders\AnimationShader.vs" />
+    <None Include="Shaders\LightAndAnimationShader.fs" />
+    <None Include="Shaders\LightAndAnimationShader.vs" />
     <None Include="Shaders\ModelShader.fs" />
     <None Include="Shaders\Modelshader.vs" />
+    <None Include="Shaders\PhongLightShader.fs" />
+    <None Include="Shaders\PhongLightShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

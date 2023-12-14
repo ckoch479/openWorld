@@ -30,23 +30,30 @@ MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		std::vector <glm::vec3> positions = meshes[i].getVertexPositions();
-		std::vector <glm::vec3> normals = meshes[i].getVertexNormals();
-		std::vector <glm::vec2> texcoords = meshes[i].getVertexTexCoords();
+		std::vector <AssimpVertex> assimpVertices = meshes[i].getVertexData();
 
-		for(unsigned int j = 0; j < positions.size(); j++)
+		for(unsigned int vertexCounter = 0; vertexCounter < assimpVertices.size(); vertexCounter++)
 		{
 			Vertex tempVertex;
 
-			tempVertex.vertexPosition = positions[j];
-			tempVertex.Normal = normals[j];
-			tempVertex.texCoords = texcoords[j];
+			tempVertex.vertexPosition = assimpVertices[vertexCounter].Position;
+			tempVertex.Normal =         assimpVertices[vertexCounter].Normal;
+			tempVertex.texCoords =      assimpVertices[vertexCounter].TexCoords;
+			//only a bone influence of 4 is allowed as of now
+			tempVertex.BoneIds[0] = assimpVertices[vertexCounter].BoneIDs[0]; //std::cout << tempVertex.BoneIds[0] << "bone" << assimpVertices[vertexCounter].BoneIDs[0] << std::endl;
+			tempVertex.BoneIds[1] = assimpVertices[vertexCounter].BoneIDs[1];
+			tempVertex.BoneIds[2] = assimpVertices[vertexCounter].BoneIDs[2];
+			tempVertex.BoneIds[3] = assimpVertices[vertexCounter].BoneIDs[3];
+			//bone weights
+			tempVertex.boneWeights[0] = assimpVertices[vertexCounter].weights[0];
+			tempVertex.boneWeights[1] = assimpVertices[vertexCounter].weights[1];
+			tempVertex.boneWeights[2] = assimpVertices[vertexCounter].weights[2];
+			tempVertex.boneWeights[3] = assimpVertices[vertexCounter].weights[3];
 
 			Vertices.push_back(tempVertex);
 		}
-
 		indices = meshes[i].getIndices();
-		
+
 	}
 
 	//load diffuse textures
@@ -69,7 +76,19 @@ MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 	newMesh.indices = indices;
 	newMesh.diffuseTextures = DiffuseTextures;
 	newMesh.specularTextures = SpecularTextures;
+	newMesh.skeleton;
 
+	//get bones from the model
+
+	for (unsigned int j = 0; j < newModel.getBoneCount(); j++)
+	{
+		BoneData newbone;
+		newbone.boneName = newModel.getBoneNames()[j];
+		newbone.BoneId = newModel.getBoneInfoMap()[newbone.boneName].id;
+		newbone.boneMatrix = newModel.getBoneInfoMap()[newbone.boneName].offset;
+
+		newMesh.skeleton.push_back(newbone);
+	}
 
 	return newMesh;
 }
@@ -119,8 +138,6 @@ void ResourceManager::getBoneData(AnimationBoneData &newBone, AssimpNodeData &bo
 	newBone.localTransformation = boneNode.transformation;
 	newBone.childrenCount = boneNode.childrenCount;
 
-	std::cout << newBone.name << std::endl;
-
 	Bone* tempBone = animation.FindBone(newBone.name);
 
 	if(tempBone != nullptr)
@@ -132,6 +149,12 @@ void ResourceManager::getBoneData(AnimationBoneData &newBone, AssimpNodeData &bo
 		newBone.Positions = animation.FindBone(newBone.name)->getPositions();
 		newBone.Rotations = animation.FindBone(newBone.name)->getRotations();
 		newBone.Scalings = animation.FindBone(newBone.name)->getScalings();
+		newBone.boneNode = true;
+	}
+
+	if(tempBone == nullptr)
+	{
+		newBone.boneNode = false;
 	}
 
 	for(unsigned int i = 0; i < newBone.childrenCount; ++i)
@@ -139,7 +162,6 @@ void ResourceManager::getBoneData(AnimationBoneData &newBone, AssimpNodeData &bo
 		AnimationBoneData childBone;
 		getBoneData(childBone, boneNode.children[i], animation);
 
-		if (newBone.name == " ") { std::cout << "no name!\n"; }
 		newBone.children.push_back(childBone);
 	}
 }

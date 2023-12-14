@@ -25,7 +25,8 @@
 #include "AssimpSkeletalAnimation.h"
 
 
-
+#ifndef RESOURCEMANAGER_H
+#define RESOURCEMANAGER_H
 //basic mesh data i.e. vertices,texcoords,normals,indices,ect
 struct Vertex
 {
@@ -60,6 +61,9 @@ struct AnimationBoneData
 	int numPositions;
 	int numRotations;
 	int numScalings;
+
+	//placed here incase this is just a transform node and not an actual bone
+	bool boneNode;
 };
 
 struct MeshData
@@ -80,11 +84,6 @@ struct AnimationData
 };
 
 
-
-
-
-#ifndef RESOURCEMANAGER_H
-#define RESOURCEMANAGER_H
 //resource manager stores data of meshes, textures, ect
 //loads data from files and stores in memory
 class ResourceManager

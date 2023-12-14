@@ -57,6 +57,9 @@
     <ClCompile Include="Bone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -101,6 +104,9 @@
     <ClInclude Include="AnimationDebug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\3.3.shader.fs">
@@ -113,6 +119,24 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Shaders\Modelshader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\AnimationShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\AnimationShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\PhongLightShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\PhongLightShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\LightAndAnimationShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\LightAndAnimationShader.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

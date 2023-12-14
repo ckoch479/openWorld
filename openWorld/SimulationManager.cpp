@@ -23,26 +23,41 @@ void SimulationManager::run()
 	std::vector <glm::vec3> positions{ glm::vec3(-0.5,-0.5,-1.0),glm::vec3(0.5,-0.5,-1.0),glm::vec3(0.0,0.5,-1.0) };
 	std::vector <glm::vec3> colors{ glm::vec3(1,0,0),glm::vec3(0,1,0),glm::vec3(0,0,1) };
 
-	Shader newShader("Shaders/3.3.shader.vs", "Shaders/3.3.shader.fs");
-	Shader Arissashader("Shaders/ModelShader.vs","Shaders/ModelShader.fs");
+	Shader newShader("Shaders/3.3.shader.vs", "Shaders/3.3.shader.fs"); //simple no texture/mesh shader
+	Shader Arissashader("Shaders/ModelShader.vs","Shaders/ModelShader.fs"); //simple mesh and texture shader
+	Shader AnimationShader("Shaders/AnimationShader.vs", "Shaders/AnimationShader.fs"); //mesh, texture, and skeletal animation shader
+	Shader LightShader("Shaders/PhongLightShader.vs", "Shaders/PhongLightShader.fs"); //simple mesh and light shader
+	Shader LightAnimShader("Shaders/LightAndAnimationShader.vs", "Shaders/LightAndAnimationShader.fs"); //simple light, mesh, texture and animation shader
 
 	//Animation data testing
 	AnimationData* newAnimation = ResourceManager::loadAnimation("resources/vampire/dancing_vampire.dae","dance");
 
 	//load meshes
 	MeshData* newMesh = ResourceManager::loadMesh("resources/vampire/dancing_vampire.dae", "Arissa");
-	ID ArissaTransform = scene->createTransform(glm::vec3(0.0,0.0,-1.0), glm::vec3(0.0,1.0,0.0), glm::quat(), glm::vec3(0.01,0.01,0.01));
-	ID ArissaRenderID = scene->createMesh(*newMesh, Arissashader);
+	ID ArissaTransform = scene->createTransform(glm::vec3(0.0,0.0,-1.0), glm::vec3(0.0,1.0,0.0), glm::quat(), glm::vec3(1.0,1.0,1.0));
+	ID ArissaRenderID = scene->createMesh(*newMesh, LightAnimShader, newAnimation);
 	scene->AddInstance(ArissaRenderID, ArissaTransform);
 
 	this->scene->DebugFunction();
 
 	MeshID = scene->createMesh(positions, colors, newShader);
-	TransformID = scene->createTransform(glm::vec3(0.50, 0.50, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(0.50, 0.50, 1.0));
-	scene->AddInstance(MeshID, TransformID);
+	TransformID = scene->createTransform(glm::vec3(0.50, 0.50, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(1.0, 1.0, 1.0));
+	//scene->AddInstance(MeshID, TransformID);
+
+	scene->createDirectionalLight(glm::vec3(-0.2f, -1.0f, -0.3f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.4f, 0.4f), glm::vec3(0.5f, 0.5f, 0.5f));
+
+	scene->createPointLight(glm::vec3(8.0,3,0.2), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
+
+	scene->createPointLight(glm::vec3(13, 2, 5), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
+	scene->createPointLight(glm::vec3(14, 5, 1), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
+	scene->createPointLight(glm::vec3(10, 1, 13), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
+
+
+	scene->createSpotLight(glm::vec3(-1.0), glm::vec3(-1.0,-1.0,-1.0), glm::vec3(0.020), glm::vec3(0.020), glm::vec3(0.050),1.0f,0.09f,0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
 
 	this->scene->DebugFunction();
 
+	
 
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
 	while (this->state == running)

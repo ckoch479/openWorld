@@ -72,7 +72,7 @@ Bone* AssimpSkeletalAnimation::FindBone(const std::string& name)
             return Bone.getBoneName() == name;
         }
     );
-    if (iter == Bones.end()) { std::cout << "bone not Found!\n";  return nullptr; }
+    if (iter == Bones.end()) {return nullptr;}
     else return &(*iter);
 }
 
