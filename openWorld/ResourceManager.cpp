@@ -119,6 +119,8 @@ void ResourceManager::getBoneData(AnimationBoneData &newBone, AssimpNodeData &bo
 	newBone.localTransformation = boneNode.transformation;
 	newBone.childrenCount = boneNode.childrenCount;
 
+	std::cout << newBone.name << std::endl;
+
 	Bone* tempBone = animation.FindBone(newBone.name);
 
 	if(tempBone != nullptr)
@@ -132,10 +134,12 @@ void ResourceManager::getBoneData(AnimationBoneData &newBone, AssimpNodeData &bo
 		newBone.Scalings = animation.FindBone(newBone.name)->getScalings();
 	}
 
-	for(unsigned int i = 0; i < newBone.childrenCount; i++)
+	for(unsigned int i = 0; i < newBone.childrenCount; ++i)
 	{
 		AnimationBoneData childBone;
 		getBoneData(childBone, boneNode.children[i], animation);
+
+		if (newBone.name == " ") { std::cout << "no name!\n"; }
 		newBone.children.push_back(childBone);
 	}
 }
@@ -150,6 +154,8 @@ AnimationData ResourceManager::loadAnimationFromFile(std::string filepath)
 	newAnimation.ticksPerSecond = animation.GetTicksPerSecond();
 
 	getBoneData(newAnimation.rootBone, animation.GetRootNode() , animation);
+
+	
 
 	return newAnimation;
 }

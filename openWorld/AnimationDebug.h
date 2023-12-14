@@ -25,7 +25,9 @@
 void DebugBoneTrees(AnimationBoneData& bone,std::string& boneAndNodeData)
 {
 	glm::mat4 boneTransform;
-	std::string name;
+	std::string name = bone.name;
+
+	boneAndNodeData += name + "\n";
 	int childrencount;
 
 	std::vector <AnimationBoneData> children;
@@ -37,6 +39,12 @@ void DebugBoneTrees(AnimationBoneData& bone,std::string& boneAndNodeData)
 	int numPositions;
 	int numRotations;
 	int numScalings;
+
+	for (int i = 0; i < bone.childrenCount; i++) 
+	{
+		AnimationBoneData childBone = bone.children[i];
+		DebugBoneTrees(childBone, boneAndNodeData);
+	}
 }
 
 void debugAnimationData(AnimationData& animation)
@@ -45,6 +53,8 @@ void debugAnimationData(AnimationData& animation)
 	int TPS = animation.ticksPerSecond;
 
 	std::string boneAndNodeData;
+
+	DebugBoneTrees(animation.rootBone, boneAndNodeData);
 
 
 }

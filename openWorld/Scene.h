@@ -68,7 +68,8 @@ struct SpotLight
 
 struct RenderAnimation
 {
-
+	AnimationData animationData;
+	std::string name;
 };
 
 
@@ -110,6 +111,7 @@ private:
 	lookup_table<Instance> Instances;
 	lookup_table<RenderMesh> Meshes;
 	lookup_table<Transform> Transforms;
+	lookup_table<RenderAnimation> animations;
 	//lookup_table<Material> Materials;
 
 

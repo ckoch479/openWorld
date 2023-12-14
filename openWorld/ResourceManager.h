@@ -24,6 +24,8 @@
 #include "Bone.h"
 #include "AssimpSkeletalAnimation.h"
 
+
+
 //basic mesh data i.e. vertices,texcoords,normals,indices,ect
 struct Vertex
 {
