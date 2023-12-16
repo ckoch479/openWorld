@@ -26,7 +26,7 @@ public:
 	Animator();
 	~Animator();
 
-	void setCurrentAnimation(RenderAnimation* currentAnimation, RenderMesh* currentMesh);
+	void setCurrentAnimation(RenderAnimation* currentAnimation, RenderModel* currentModel);
 
 	void updateCurrentAnimation(float& deltaTime, float& currentAnimationTime);
 
@@ -35,9 +35,8 @@ public:
 
 private:
 	std::vector <glm::mat4> finalMatrices;
-	//float* currentAnimationTime;
 	RenderAnimation* currentAnimation;
-	RenderMesh* currentMesh;
+	RenderModel* currentModel;
 	float deltatime;
 
 	void CalculateBonetransforms(AnimationBoneData node, glm::mat4 parentTransform, float& currentAnimationTime);

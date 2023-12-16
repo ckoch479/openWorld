@@ -5,6 +5,14 @@
 
 Texture::Texture() : width(0),height(0),internalFormat(GL_RGBA),imageFormat(GL_RGBA),wrapS(GL_REPEAT),wrapT(GL_REPEAT),filterMin(GL_LINEAR),filterMax(GL_LINEAR)
 {
+	this->width = width;
+	this->height = height;
+	this->internalFormat = internalFormat;
+	this->imageFormat = imageFormat;
+	this->wrapS = wrapS;
+	this->wrapT = wrapT;
+	this->filterMin = filterMin;
+	this->filterMax = filterMax;
 	glGenTextures(1, &this->id);
 }
 

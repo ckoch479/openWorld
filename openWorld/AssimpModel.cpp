@@ -44,8 +44,15 @@ void AssimpModel::processNode(aiNode* node, const aiScene* scene)
 
 AssimpMesh AssimpModel::processMesh(aiMesh* mesh, const aiScene* scene)
 {
+   
+
     std::vector<AssimpVertex> vertices;
     std::vector<unsigned int> indices;
+
+    std::vector <std::string> diffuseTexturePaths;
+    std::vector <std::string> specularTexturePaths;
+    std::vector <std::string> heightTexturePaths;
+    std::vector <std::string> normalTexturePaths;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -79,23 +86,23 @@ AssimpMesh AssimpModel::processMesh(aiMesh* mesh, const aiScene* scene)
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
  
     // 1. diffuse maps
-    loadMaterialTextures(material, aiTextureType_DIFFUSE, Diffuse);
+    loadMaterialTextures(material, aiTextureType_DIFFUSE, Diffuse, diffuseTexturePaths);
 
     // 2. specular maps
-    loadMaterialTextures(material, aiTextureType_SPECULAR, Specular);
+    loadMaterialTextures(material, aiTextureType_SPECULAR, Specular, specularTexturePaths);
 
     // 3. normal maps
-     loadMaterialTextures(material, aiTextureType_HEIGHT, Normal);
+     loadMaterialTextures(material, aiTextureType_HEIGHT, Normal, normalTexturePaths);
   
     // 4. height maps
-    loadMaterialTextures(material, aiTextureType_AMBIENT, Height);
+    loadMaterialTextures(material, aiTextureType_AMBIENT, Height,heightTexturePaths);
     
 
     ExtractBoneWeightForVertices(vertices, mesh, scene);
 
     // return a mesh object created from the extracted mesh data
     this->numMeshes++;
-    return AssimpMesh(vertices, indices);
+    return AssimpMesh(vertices, indices, diffuseTexturePaths,specularTexturePaths);
 }
 
 void AssimpModel::SetVertexBoneDataToDefault(AssimpVertex& vertex)
@@ -181,7 +188,7 @@ void AssimpModel::ExtractBoneWeightForVertices(std::vector<AssimpVertex>& vertic
     }
 }
 
-void AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, textureType typeName) 
+void AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, textureType typeName, std::vector <std::string> &texturePaths) 
 {
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
@@ -192,24 +199,8 @@ void AssimpModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, text
         std::string filename = path;
         filename = directory + '/' + filename;
 
-        switch(typeName)
-        {
-        case (Diffuse):
-            this->diffuseTextures.push_back(filename);
-            break;
 
-        case (Specular):
-            this->specularTextures.push_back(filename);
-            break;
-
-        case (Normal):
-            this->normalTextures.push_back(filename);
-            break;
-
-        case (Height):
-            this->heightTextures.push_back(filename);
-            break;
-        }
+        texturePaths.push_back(filename);
     }
 }
 

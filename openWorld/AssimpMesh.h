@@ -33,10 +33,9 @@ class AssimpMesh
 {
 public:
 	
-
-	AssimpMesh(std::vector <AssimpVertex> vertices, std::vector <unsigned int> indices, std::vector <std::string> textures);
-
 	AssimpMesh(std::vector <AssimpVertex> vertices, std::vector <unsigned int> indices);
+
+	AssimpMesh(std::vector <AssimpVertex> vertices, std::vector <unsigned int> indices, std::vector <std::string> DiffusetexturePaths, std::vector <std::string> SpeculartexturePaths);
 
 	std::vector <glm::vec3> getVertexPositions();
 
@@ -48,13 +47,24 @@ public:
 
 	std::vector <unsigned int> getIndices();
 
+	std::vector <std::string> getDiffuseTexturePaths();
+
+	std::vector <std::string> getSpecularTexturePaths();
+
+	std::vector <std::string> getNormalTexturePaths();
+
+	std::vector <std::string> getHeightTexturePaths();
+
 private:
 
 	std::vector <AssimpVertex> vertices;
 	std::vector <unsigned int> indices;
 
-	//texture paths will be stored in the vector
-	std::vector <std::string> textures;
+	std::vector <std::string> diffuseTextures;
+	std::vector <std::string> specularTextures;
+	std::vector <std::string> normalTextures;
+	std::vector <std::string> heightTextures;
+
 };
 
 #endif

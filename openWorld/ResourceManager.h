@@ -83,6 +83,14 @@ struct AnimationData
 	AnimationBoneData rootBone;
 };
 
+struct ModelData
+{
+	std::vector <MeshData> meshes;//meshes
+	std::vector <BoneData> skeleton;//skeleton
+	//AABB
+
+};
+
 
 //resource manager stores data of meshes, textures, ect
 //loads data from files and stores in memory
@@ -94,6 +102,10 @@ public:
 	static MeshData* loadMesh(const std::string filepath, std::string name);
 
 	static MeshData* getMesh(std::string name);
+
+	static ModelData* loadModel(const std::string filepath, std::string name);
+
+	static ModelData* getModel(std::string name);
 
 	static Texture* loadTexture(const std::string filepath, std::string name);
 	
@@ -107,9 +119,12 @@ private:
 	static std::unordered_map <std::string, MeshData> meshes;
 	static std::unordered_map <std::string, Texture> textures;
 	static std::unordered_map <std::string, AnimationData> animations;
+	static std::unordered_map <std::string, ModelData> models;
 
 	//loads mesh data from a file
 	static MeshData loadMeshDataFromFile(const std::string filepath);
+
+	static ModelData loadModelDataFromFile(const std::string filepath);
 	//loads texture from a file
 	static Texture loadTextureFromFile(std::string filepath);
 

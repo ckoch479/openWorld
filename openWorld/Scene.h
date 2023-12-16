@@ -17,7 +17,6 @@
 
 struct RenderMesh 
 {
-
 	GLuint MeshVAO;
 	GLuint MeshVBO;
 	GLuint MeshEBO;
@@ -31,10 +30,15 @@ struct RenderMesh
 	int numDiffuseTextures;
 	int numSpecularTextures;
 
-	//ptr to the shader used by this mesh?
-	Shader* Meshshader;
 	std::vector <Texture*> meshDiffuseTextures;
 	std::vector <Texture*> meshSpecularTextures;
+};
+
+struct RenderModel
+{
+	std::vector <ID> renderMeshIDs;
+
+	Shader* Modelshader;
 
 	bool hasActiveAnimation;
 	ID animationID;
@@ -52,7 +56,7 @@ struct Transform
 
 struct Instance 
 {
-	ID MeshID;
+	ID ModelID;
 	ID TransformID;
 };
 
@@ -118,18 +122,13 @@ public:
 	void Init();
 	
 	//returns an instance ID
-	ID AddInstance(ID& MeshID,ID& TransformID);
+	ID AddInstance(ID& ModelID,ID& TransformID);
 
-	ID AddInstance(RenderMesh& mesh, Transform& transform);
+	ID AddInstance(RenderModel& Model, Transform& transform);
 
-	//ID createMesh(std::vector <Vertex> vertices, std::vector <unsigned int> indices, std::vector <Texture> textures);
+	ID createModel(ModelData model, Shader& shader);
 
-	//test function for meshes
-	ID createMesh(std::vector <glm::vec3>& vertices, std::vector <glm::vec3>& colors, Shader& shader);
-
-	ID createMesh(MeshData mesh, Shader& shader);
-
-	ID createMesh(MeshData mesh, Shader& shader, AnimationData* animation);
+	ID createModel(ModelData model, Shader& shader, AnimationData* animation);
 
 	//test function for transforms
 	ID createTransform(glm::vec3 position, glm::vec3 rotationOrigin, glm::quat rotation, glm::vec3 scale);
@@ -165,6 +164,7 @@ private:
 	lookup_table<Instance> Instances;
 	lookup_table<RenderMesh> Meshes;
 	lookup_table<Transform> Transforms;
+	lookup_table<RenderModel> Models;
 
 	lookup_table<RenderAnimation> animations;
 
@@ -184,6 +184,8 @@ private:
 
 	unsigned int InstanceCount = 0;
 	unsigned int numPointLights = 0;
+
+	ID createMesh(MeshData mesh);
 
 	friend class Renderer;
 

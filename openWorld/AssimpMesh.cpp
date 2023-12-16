@@ -1,16 +1,17 @@
 #include "AssimpMesh.h"
 
-AssimpMesh::AssimpMesh(std::vector <AssimpVertex> vertices, std::vector <unsigned int> indices, std::vector <std::string> textures)
-{
-	this->vertices = vertices;
-	this->indices = indices;
-	this->textures = textures;
-}
-
 AssimpMesh::AssimpMesh(std::vector <AssimpVertex> vertices, std::vector <unsigned int> indices)
 {
 	this->vertices = vertices;
 	this->indices = indices;
+}
+
+AssimpMesh::AssimpMesh(std::vector <AssimpVertex> vertices, std::vector <unsigned int> indices, std::vector <std::string> DiffusetexturePaths, std::vector <std::string> SpeculartexturePaths)
+{
+	this->vertices = vertices;
+	this->indices = indices;
+	this->diffuseTextures = DiffusetexturePaths;
+	this->specularTextures = SpeculartexturePaths;
 }
 
 std::vector <glm::vec3> AssimpMesh::getVertexPositions()
@@ -57,4 +58,24 @@ std::vector <unsigned int> AssimpMesh::getIndices()
 std::vector <AssimpVertex> AssimpMesh::getVertexData()
 {
 	return this->vertices;
+}
+
+std::vector <std::string> AssimpMesh::getDiffuseTexturePaths()
+{
+	return this->diffuseTextures;
+}
+
+std::vector <std::string> AssimpMesh::getSpecularTexturePaths()
+{
+	return this->specularTextures;
+}
+
+std::vector <std::string> AssimpMesh::getNormalTexturePaths()
+{
+	return this->normalTextures;
+}
+
+std::vector <std::string> AssimpMesh::getHeightTexturePaths()
+{
+	return this->heightTextures;
 }

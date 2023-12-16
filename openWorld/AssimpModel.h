@@ -88,7 +88,7 @@ private:
 
     void ExtractBoneWeightForVertices(std::vector<AssimpVertex>& vertices, aiMesh* mesh, const aiScene* scene);
 
-    void loadMaterialTextures(aiMaterial* mat, aiTextureType type, textureType typeName);
+    void loadMaterialTextures(aiMaterial* mat, aiTextureType type, textureType typeName, std::vector <std::string>& texturePaths);
 };
 
 #endif

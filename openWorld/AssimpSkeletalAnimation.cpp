@@ -11,18 +11,27 @@ AssimpSkeletalAnimation::AssimpSkeletalAnimation(const std::string animationPath
         return;
     }
 
-    aiAnimation* animation = scene->mAnimations[0];
+    if(scene->HasAnimations() == true)
+    {
+        aiAnimation* animation = scene->mAnimations[0];
 
-    this->Duration = animation->mDuration;
+        this->Duration = animation->mDuration;
 
-    this->ticksPerSecond = animation->mTicksPerSecond;
+        this->ticksPerSecond = animation->mTicksPerSecond;
 
-    aiMatrix4x4 globaltransform = scene->mRootNode->mTransformation;
+        aiMatrix4x4 globaltransform = scene->mRootNode->mTransformation;
 
-    globaltransform = globaltransform.Inverse();
+        globaltransform = globaltransform.Inverse();
 
-    ReadHierarchyData(this->rootNode, scene->mRootNode);
-    populateBoneData(animation);
+        ReadHierarchyData(this->rootNode, scene->mRootNode);
+        populateBoneData(animation);
+    }
+   
+    if(scene->HasAnimations() == false)
+    {
+        std::cout << "No Animations Found!\n";
+    }
+   
 }
 
 AssimpSkeletalAnimation::~AssimpSkeletalAnimation() 

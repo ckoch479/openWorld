@@ -40,11 +40,7 @@ public:
 
 	GLFWwindow* getWindow();
 
-	void setPointLightUniform(Pointlight light, Shader& shader, int iter);
-
-	void setDirectionalLightUniform(DirectionalLight light, Shader& shader);
-
-	void setSpotLightUniforms(SpotLight light, Shader& shader);
+	
 
 	
 private:
@@ -57,7 +53,13 @@ private:
 	float SCR_WIDTH = 800;
 	float SCR_HEIGHT = 600;
 
+	void setPointLightUniform(Pointlight light, Shader& shader, int iter);
 
+	void setDirectionalLightUniform(DirectionalLight light, Shader& shader);
+
+	void setSpotLightUniforms(SpotLight light, Shader& shader);
+
+	void setTransforms(ID transformID, Scene& currentScene, Shader& shader);
 	
 
 };

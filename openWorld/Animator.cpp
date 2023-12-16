@@ -13,12 +13,12 @@ Animator::~Animator()
 
 }
 
-void Animator::setCurrentAnimation(RenderAnimation* currentAnimation, RenderMesh* currentMesh)
+void Animator::setCurrentAnimation(RenderAnimation* currentAnimation, RenderModel* currentModel)
 {
 	this->currentAnimation = currentAnimation;
 	
 
-	this->currentMesh = currentMesh;
+	this->currentModel = currentModel;
 
 	for(unsigned int i = 0; i < 100; i++)
 	{
@@ -58,7 +58,7 @@ void Animator::CalculateBonetransforms(AnimationBoneData node, glm::mat4 parentT
 
 	glm::mat4 globalTransform = parentTransform * transform;
 
-	auto boneInfoMap = this->currentMesh->boneMap;
+	auto boneInfoMap = this->currentModel->boneMap;
 	if (boneInfoMap.find(nodeName) != boneInfoMap.end())
 	{
 		int index = boneInfoMap[nodeName].BoneId;

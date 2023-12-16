@@ -5,7 +5,7 @@ Scene::Scene() {};
 ID Scene::AddInstance(ID& MeshID, ID& TransformID)
 {
 	Instance newInstance;
-	newInstance.MeshID = MeshID;
+	newInstance.ModelID = MeshID;
 	newInstance.TransformID = TransformID;
 	ID instanceID;
 	instanceID = this->Instances.add(newInstance);
@@ -14,23 +14,20 @@ ID Scene::AddInstance(ID& MeshID, ID& TransformID)
 	RenderMesh newMesh;
 	newMesh = this->Meshes.lookup(MeshID);
 
-	std::cout << newMesh.MeshVAO;
 	this->InstanceCount++;
 
 	return instanceID;
 }
 
-ID Scene::AddInstance(RenderMesh& mesh, Transform& transform)
+ID Scene::AddInstance(RenderModel& Model, Transform& transform)
 {
-	ID newMeshID = this->Meshes.add(mesh);
+	ID newModelID = this->Models.add(Model);
 	ID newTransformID = this->Transforms.add(transform);
 
 	Instance newInstance;
-	newInstance.MeshID = newMeshID;
+	newInstance.ModelID = newModelID;
 	newInstance.TransformID = newTransformID;
 	
-	
-
 	ID newInstanceID = this->Instances.add(newInstance);
 	this->InstanceCount++;
 
@@ -39,51 +36,88 @@ ID Scene::AddInstance(RenderMesh& mesh, Transform& transform)
 	return newInstanceID;
 }
 
-//test function for meshes
-ID Scene::createMesh(std::vector <glm::vec3>& vertices, std::vector <glm::vec3>& colors, Shader& shader) 
+ID Scene::createModel(ModelData model, Shader& shader)
 {
-	RenderMesh newMesh;
-	//create VAO for the mesh
-	unsigned int VAO,VBO,VBO1;
+	RenderModel newModel;
 
-	newMesh.hasDiffuseTextures = false;
-	newMesh.numDiffuseTextures = 0;
+	//create mesh IDs for rendering and push them back
+	for(int i = 0; i < model.meshes.size(); i++)
+	{
+		ID newID;
+
+		newID = createMesh(model.meshes[i]);
+		newModel.renderMeshIDs.push_back(newID);
+	}
+
+	//create a bone map for animation for this model
+	for (unsigned int i = 0; i < model.skeleton.size(); i++)
+	{
+		BoneData newbone;
+		newbone.BoneId = model.skeleton[i].BoneId;
+		newbone.boneMatrix = model.skeleton[i].boneMatrix;
+		newbone.boneName = model.skeleton[i].boneName;
+
+		newModel.boneMap[model.skeleton[i].boneName] = newbone;
+	}
+
+	//set the shader used for this model and meshes
+	newModel.Modelshader = &shader;
+
+	//no animation was added with this mode so animation ID remains null 
+	newModel.animationID;
 	
-	newMesh.hasSpecularTextures = false;
-	newMesh.numSpecularTextures = 0;
+	//no animations were loaded with this model so this is set to false
+	newModel.hasActiveAnimation = false;
 
+	ID newModelID;
+	newModelID = Models.add(newModel);
 
-	glGenVertexArrays(1, &newMesh.MeshVAO);
-	glBindVertexArray(newMesh.MeshVAO);
-
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * (3 * sizeof(float)), &vertices[0], GL_STATIC_DRAW); //this is how the vector should be done
-	//store position vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glGenBuffers(1, &VBO1);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO1);
-	glBufferData(GL_ARRAY_BUFFER, colors.size() * (3*sizeof(float)), &colors[0], GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	
-	//newMesh.MeshVAO = VAO;
-	newMesh.Meshshader = &shader;
-	
-	ID newMeshID;
-	newMeshID = this->Meshes.add(newMesh);
-	glBindVertexArray(0);
-
-	return newMeshID;
+	return newModelID;
 }
 
-ID Scene::createMesh(MeshData mesh,Shader& shader) 
+ID Scene::createModel(ModelData model, Shader& shader, AnimationData* animation)
+{
+	RenderModel newModel;
+
+	//create mesh IDs for rendering and push them back
+	for (int i = 0; i < model.meshes.size(); i++)
+	{
+		ID newID;
+
+		newID = createMesh(model.meshes[i]);
+		newModel.renderMeshIDs.push_back(newID);
+	}
+
+	//create a bone map for animation for this model
+	for (unsigned int i = 0; i < model.skeleton.size(); i++)
+	{
+		BoneData newbone;
+		newbone.BoneId = model.skeleton[i].BoneId;
+		newbone.boneMatrix = model.skeleton[i].boneMatrix;
+		newbone.boneName = model.skeleton[i].boneName;
+
+		newModel.boneMap[model.skeleton[i].boneName] = newbone;
+	}
+
+	//set the shader used for this model and meshes
+	newModel.Modelshader = &shader;
+
+	//add active animation ID to the model
+	newModel.animationID = createAnimation(animation);
+
+	//animations were loaded with this model so this is set to true
+	newModel.hasActiveAnimation = true;
+
+	ID newModelID;
+	newModelID = Models.add(newModel);
+
+	return newModelID;
+}
+
+
+ID Scene::createMesh(MeshData mesh) 
 {
 	RenderMesh newMesh;
-
-
 
 	glGenVertexArrays(1, &newMesh.MeshVAO);
 	glGenBuffers(1, &newMesh.MeshVBO);
@@ -132,22 +166,7 @@ ID Scene::createMesh(MeshData mesh,Shader& shader)
 		newMesh.meshSpecularTextures = mesh.specularTextures;
 	}
 
-	//newMesh.MeshVAO = VAO;
-	newMesh.Meshshader = &shader;
-
 	newMesh.IndexCount = mesh.indices.size();
-
-	newMesh.hasActiveAnimation = false;
-
-	for(unsigned int i = 0; i < mesh.skeleton.size(); i++)
-	{
-		BoneData newbone;
-		newbone.BoneId = mesh.skeleton[i].BoneId;
-		newbone.boneMatrix = mesh.skeleton[i].boneMatrix;
-		newbone.boneName = mesh.skeleton[i].boneName;
-
-		newMesh.boneMap[mesh.skeleton[i].boneName] = newbone;
-	}
 
 	ID newMeshID;
 	newMeshID = this->Meshes.add(newMesh);
@@ -221,82 +240,82 @@ ID Scene::createAnimation(AnimationData* animation, std::string name)
 	return animationID;
 }
 
-ID Scene::createMesh(MeshData mesh, Shader& shader, AnimationData* animation)
-{
-	RenderMesh newMesh;
-
-	glGenVertexArrays(1, &newMesh.MeshVAO);
-	glGenBuffers(1, &newMesh.MeshVBO);
-	glGenBuffers(1, &newMesh.MeshEBO);
-
-	glBindVertexArray(newMesh.MeshVAO);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, newMesh.MeshVBO);
-
-	glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex), &mesh.vertices[0], GL_STATIC_DRAW); //this is how the vector should be done
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newMesh.MeshEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(unsigned int), &mesh.indices[0], GL_STATIC_DRAW);
-
-	//store position vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-	glEnableVertexAttribArray(0);
-	//store normals
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Normal));
-	glEnableVertexAttribArray(1);
-	//store texcoords
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
-	glEnableVertexAttribArray(2);
-	//store BoneIds;
-	glEnableVertexAttribArray(3);
-	glVertexAttribIPointer(3, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, BoneIds));
-	//store Bone weights;
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeights));
-
-	//Add textures to the render mesh object
-	newMesh.hasDiffuseTextures = (mesh.diffuseTextures.size() >= 1);
-	newMesh.numDiffuseTextures = mesh.diffuseTextures.size();
-
-	if (newMesh.hasDiffuseTextures == true)
-	{
-		newMesh.meshDiffuseTextures = mesh.diffuseTextures;
-	}
-
-	newMesh.hasSpecularTextures = (mesh.specularTextures.size() >= 1);
-	newMesh.numSpecularTextures = mesh.specularTextures.size();
-
-	if (newMesh.hasSpecularTextures == true)
-	{
-		newMesh.meshSpecularTextures = mesh.specularTextures;
-	}
-
-	//newMesh.MeshVAO = VAO;
-	newMesh.Meshshader = &shader;
-
-	newMesh.IndexCount = mesh.indices.size();
-
-	newMesh.hasActiveAnimation = true;
-
-	newMesh.animationID = createAnimation(animation);
-
-	for (unsigned int i = 0; i < mesh.skeleton.size(); i++)
-	{
-		BoneData newbone;
-		newbone.BoneId = mesh.skeleton[i].BoneId;
-		newbone.boneMatrix = mesh.skeleton[i].boneMatrix;
-		newbone.boneName = mesh.skeleton[i].boneName;
-
-		newMesh.boneMap[mesh.skeleton[i].boneName] = newbone;
-	}
-
-	ID newMeshID;
-	newMeshID = this->Meshes.add(newMesh);
-	glBindVertexArray(0);
-
-	return newMeshID;
-}
+//ID Scene::createMesh(MeshData mesh, Shader& shader, AnimationData* animation)
+//{
+//	RenderMesh newMesh;
+//
+//	glGenVertexArrays(1, &newMesh.MeshVAO);
+//	glGenBuffers(1, &newMesh.MeshVBO);
+//	glGenBuffers(1, &newMesh.MeshEBO);
+//
+//	glBindVertexArray(newMesh.MeshVAO);
+//
+//
+//	glBindBuffer(GL_ARRAY_BUFFER, newMesh.MeshVBO);
+//
+//	glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex), &mesh.vertices[0], GL_STATIC_DRAW); //this is how the vector should be done
+//
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newMesh.MeshEBO);
+//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(unsigned int), &mesh.indices[0], GL_STATIC_DRAW);
+//
+//	//store position vertices
+//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+//	glEnableVertexAttribArray(0);
+//	//store normals
+//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Normal));
+//	glEnableVertexAttribArray(1);
+//	//store texcoords
+//	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+//	glEnableVertexAttribArray(2);
+//	//store BoneIds;
+//	glEnableVertexAttribArray(3);
+//	glVertexAttribIPointer(3, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, BoneIds));
+//	//store Bone weights;
+//	glEnableVertexAttribArray(4);
+//	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeights));
+//
+//	//Add textures to the render mesh object
+//	newMesh.hasDiffuseTextures = (mesh.diffuseTextures.size() >= 1);
+//	newMesh.numDiffuseTextures = mesh.diffuseTextures.size();
+//
+//	if (newMesh.hasDiffuseTextures == true)
+//	{
+//		newMesh.meshDiffuseTextures = mesh.diffuseTextures;
+//	}
+//
+//	newMesh.hasSpecularTextures = (mesh.specularTextures.size() >= 1);
+//	newMesh.numSpecularTextures = mesh.specularTextures.size();
+//
+//	if (newMesh.hasSpecularTextures == true)
+//	{
+//		newMesh.meshSpecularTextures = mesh.specularTextures;
+//	}
+//
+//	//newMesh.MeshVAO = VAO;
+//	newMesh.Meshshader = &shader;
+//
+//	newMesh.IndexCount = mesh.indices.size();
+//
+//	newMesh.hasActiveAnimation = true;
+//
+//	newMesh.animationID = createAnimation(animation);
+//
+//	for (unsigned int i = 0; i < mesh.skeleton.size(); i++)
+//	{
+//		BoneData newbone;
+//		newbone.BoneId = mesh.skeleton[i].BoneId;
+//		newbone.boneMatrix = mesh.skeleton[i].boneMatrix;
+//		newbone.boneName = mesh.skeleton[i].boneName;
+//
+//		newMesh.boneMap[mesh.skeleton[i].boneName] = newbone;
+//	}
+//
+//	ID newMeshID;
+//	newMeshID = this->Meshes.add(newMesh);
+//	glBindVertexArray(0);
+//
+//	return newMeshID;
+//}
 
 ID Scene::createLight(DirectionalLight directionalLight)
 {

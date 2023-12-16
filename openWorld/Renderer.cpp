@@ -50,7 +50,7 @@ Renderer::Renderer()
 void Renderer::drawWindow(Scene* scene) 
 {
 		
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.00f, 0.00f, 0.00f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 		float currentFrame = glfwGetTime();
@@ -60,105 +60,91 @@ void Renderer::drawWindow(Scene* scene)
 		//create a loop that renders each instance stored in the scene
 		for(unsigned int i = 0; i < scene->InstanceCount; i++)
 		{
+			//iterate through each instance and render its parts
 			ID* instanceID = &scene->InstanceIDs[i];
+			Instance* currentInstance = &scene->Instances.lookup(*instanceID);
+			RenderModel* model = &scene->Models.lookup(currentInstance->ModelID);
 
-			ID* meshID = &scene->Instances.lookup(*instanceID).MeshID;
-			ID* transformsID = &scene->Instances.lookup(*instanceID).TransformID;
+			model->Modelshader->use();
 
-			RenderMesh* mesh = &scene->Meshes.lookup(*meshID);
-			Transform* meshTransforms = &scene->Transforms.lookup(*transformsID);
+			//set up current transforms for this instance 
+			setTransforms(currentInstance->TransformID, *scene, *model->Modelshader);
 
-			//Render this instance--------------------------------------
-			// 
-			//bind the shader
-			mesh->Meshshader->use();
-			//bind the mesh VAO
-			
-			glBindVertexArray(mesh->MeshVAO);
-
-			//tranformation matrix handling
-			//set uniform variables
-			glm::mat4 model(1.0f);
-			glm::mat4 view(1.0f);
-			glm::mat4 projection(1.0f);
-
-			model = glm::translate(model, meshTransforms->Translation); //translate mesh
-			
-			//model = glm::rotate(meshTransforms->rotation, meshTransforms->RotationOrigin);//rotate mesh
-			
-			model = glm::scale(model, meshTransforms->Scale);//scale mesh
-
-			view = scene->MainCamera->GetViewMatrix();
-			projection = glm::perspective(glm::radians(scene->MainCamera->Zoom), ((float)800.0 / (float)600.0), 0.1f, 100.0f);
-			mesh->Meshshader->setMat4("modelMatrix", model);
-			mesh->Meshshader->setMat4("view", view);
-			mesh->Meshshader->setMat4("projection", projection);
-
-			//textures
-			if(mesh->hasDiffuseTextures == true)
+			//set up animation matrix uniforms
+			//animation handling--------------------------------------------------------------------
+			if (model->hasActiveAnimation != true)
 			{
-				glActiveTexture(GL_TEXTURE0);
-				mesh->meshDiffuseTextures[0]->bind();
-			}
-
-			if(mesh->hasSpecularTextures == true)
-			{
-				glActiveTexture(GL_TEXTURE1);
-				mesh->meshSpecularTextures[0]->bind();
-			}
-
-			//animation handling
-			if(mesh->hasActiveAnimation != true)
-			{
-				for(int j = 0; j < 100; j++)
+				for (int j = 0; j < 100; j++)
 				{
-					mesh->Meshshader->setMat4("finalBonesMatrices[" + std::to_string(j) + "]", glm::mat4(1.0f));
+					model->Modelshader->setMat4("finalBonesMatrices[" + std::to_string(j) + "]", glm::mat4(1.0f));
 				}
 			}
-			else if(mesh->hasActiveAnimation == true)
+			else if (model->hasActiveAnimation == true)
 			{
-				animator->setCurrentAnimation(&scene->animations.lookup(mesh->animationID),mesh);
+				animator->setCurrentAnimation(&scene->animations.lookup(model->animationID), model);
 
-				animator->updateCurrentAnimation(this->DeltaTime,scene->animations.lookup(mesh->animationID).currentPoint);
+				animator->updateCurrentAnimation(this->DeltaTime, scene->animations.lookup(model->animationID).currentPoint);
 				//do math for the animation
 				std::vector <glm::mat4> finalAnimationMatrix = animator->returnFinalMatrices();
 
 				for (int matrixCounter = 0; matrixCounter < 100; matrixCounter++)
 				{
-					mesh->Meshshader->setMat4("finalBonesMatrices[" + std::to_string(matrixCounter) + "]", finalAnimationMatrix[matrixCounter]);
+					model->Modelshader->setMat4("finalBonesMatrices[" + std::to_string(matrixCounter) + "]", finalAnimationMatrix[matrixCounter]);
 				}
 			}
 
-			//lighting test
-			mesh->Meshshader->use();
-			// be sure to activate shader when setting uniforms/drawing objects
-			mesh->Meshshader->setVec3("viewPos", scene->MainCamera->CameraPosition);
-			mesh->Meshshader->setFloat("material.shininess", 16.0f);
+			//set up scene lighting
 
+			model->Modelshader->setVec3("viewPos", scene->MainCamera->CameraPosition);
+			model->Modelshader->setFloat("material.shininess", 132.0f);
 			//point Lights
-			for(unsigned int i = 0; i < scene->numPointLights; i++)
+			for (unsigned int i = 0; i < scene->numPointLights; i++)
 			{
-				setPointLightUniform(scene->pointLights.lookup(scene->pointLightIDs[i]), * mesh->Meshshader,i);
+				setPointLightUniform(scene->pointLights.lookup(scene->pointLightIDs[i]), *model->Modelshader, i);
 			}
-		
-			if(scene->numPointLights < 4 && scene->numPointLights >= 1) //shader needs all lighting uniforms to be filled so fill the empty uniforms with the same light
+
+			if (scene->numPointLights < 4 && scene->numPointLights >= 1) //shader needs all lighting uniforms to be filled so fill the empty uniforms with the same light
 			{
-				for(unsigned int pointLightCounter = scene->numPointLights; pointLightCounter < 4; pointLightCounter++)
+				for (unsigned int pointLightCounter = scene->numPointLights; pointLightCounter < 4; pointLightCounter++)
 				{
-					setPointLightUniform(scene->pointLights.lookup(scene->pointLightIDs[0]), *mesh->Meshshader,pointLightCounter);
+					setPointLightUniform(scene->pointLights.lookup(scene->pointLightIDs[0]), *model->Modelshader, pointLightCounter);
 				}
 			}
 			//Spot lights
-			setSpotLightUniforms(scene->spotLights.lookup(scene->spotLightID), *mesh->Meshshader);
+			setSpotLightUniforms(scene->spotLights.lookup(scene->spotLightID), *model->Modelshader);
 
 			//directional Lights
-			setDirectionalLightUniform(scene->directionalLights.lookup(scene->directionLightID), *mesh->Meshshader);
+			setDirectionalLightUniform(scene->directionalLights.lookup(scene->directionLightID), *model->Modelshader);
 
-			glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mesh->IndexCount), GL_UNSIGNED_INT, 0);
 
-			glDrawArrays(GL_TRIANGLES, 0, 100000);
-			glBindVertexArray(0);
+			//set up current Model and mesh data for this instance
+			
+			for(int meshes = 0; meshes < model->renderMeshIDs.size(); meshes++)
+			{
+				RenderMesh* mesh = &scene->Meshes.lookup(model->renderMeshIDs[meshes]);
 
+				glBindVertexArray(mesh->MeshVAO);
+
+				//textures
+				if (mesh->hasDiffuseTextures == true)
+				{
+					glActiveTexture(GL_TEXTURE0);
+					mesh->meshDiffuseTextures[0]->bind();
+				}
+
+				if (mesh->hasSpecularTextures == true)
+				{
+					glActiveTexture(GL_TEXTURE1);
+					mesh->meshSpecularTextures[0]->bind();
+				}
+
+				glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mesh->IndexCount), GL_UNSIGNED_INT, 0);
+
+				glDrawArrays(GL_TRIANGLES, 0, 100000);
+				glBindVertexArray(0);
+			}
+
+			
 		}
 
 		glfwSwapBuffers(this->window);
@@ -187,6 +173,25 @@ bool Renderer::checkWindowCloseState()
 	{
 		return false;
 	}
+}
+
+void Renderer::setTransforms(ID transformID, Scene& currentScene,Shader& shader)
+{
+	glm::mat4 model(1.0f);
+	glm::mat4 view(1.0f);
+	glm::mat4 projection(1.0f);
+
+	model = glm::translate(model, currentScene.Transforms.lookup(transformID).Translation); //translate mesh
+
+	//model = glm::rotate(meshTransforms->rotation, meshTransforms->RotationOrigin);//rotate mesh
+
+	model = glm::scale(model, currentScene.Transforms.lookup(transformID).Scale);//scale mesh
+
+	view = currentScene.MainCamera->GetViewMatrix();
+	projection = glm::perspective(glm::radians(currentScene.MainCamera->Zoom), ((float)SCR_WIDTH / (float)SCR_HEIGHT), 0.1f, 100.0f);
+	shader.setMat4("modelMatrix", model);
+	shader.setMat4("view", view);
+	shader.setMat4("projection", projection);
 }
 
 void Renderer::setPointLightUniform(Pointlight light, Shader& shader, int iter)
