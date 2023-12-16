@@ -39,15 +39,15 @@ void SimulationManager::run()
 	ID RenderID1 = scene->createModel(*newModel1, LightShader);
 	scene->AddInstance(RenderID1, newModelTransform1);*/
 
-	/*ModelData* newModel2 = ResourceManager::loadModel("resources/vampire/dancing_vampire.dae", "vampire");
-	ID newModelTransform2 = scene->createTransform(glm::vec3(0.0, 3.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(1.0, 1.0, 1.0));
-	ID RenderID2 = scene->createModel(*newModel2, LightAnimShader, newAnimation);
-	scene->AddInstance(RenderID2, newModelTransform2);*/
+	//ModelData* newModel2 = ResourceManager::loadModel("resources/vampire/dancing_vampire.dae", "vampire");
+	//ID newModelTransform2 = scene->createTransform(glm::vec3(0.0, 3.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(1.0, 1.0, 1.0));
+	//ID RenderID2 = scene->createModel(*newModel2, LightAnimShader, newAnimation);
+	//scene->AddInstance(RenderID2, newModelTransform2);
 
-	/*ModelData* newModel3 = ResourceManager::loadModel("resources/vampire/dancing_vampire.dae", "vampire");
-	ID newModelTransform3 = scene->createTransform(glm::vec3(3.0, 3.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(1.0, 1.0, 1.0));
-	ID RenderID3 = scene->createModel(*newModel3, LightAnimShader, newAnimation);
-	scene->AddInstance(RenderID3, newModelTransform3);*/
+	//ModelData* newModel3 = ResourceManager::loadModel("resources/vampire/dancing_vampire.dae", "vampire");
+	//ID newModelTransform3 = scene->createTransform(glm::vec3(3.0, 3.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(1.0, 1.0, 1.0));
+	//ID RenderID3 = scene->createModel(*newModel3, LightAnimShader, newAnimation);
+	//scene->AddInstance(RenderID3, newModelTransform3);
 
 
 	//create lights for the scene
