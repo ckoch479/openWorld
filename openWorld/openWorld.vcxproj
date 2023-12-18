@@ -145,9 +145,12 @@
     <ClCompile Include="AssimpSkeletalAnimation.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="lookup_table.cpp" />
+    <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimulationManager.cpp" />
@@ -164,12 +167,16 @@
     <ClInclude Include="assimp_glm_helpers.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="lookup_table.h" />
+    <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimulationManager.h" />
+    <ClInclude Include="testingBoxMeshFunctions.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +190,8 @@
     <None Include="Shaders\Modelshader.vs" />
     <None Include="Shaders\PhongLightShader.fs" />
     <None Include="Shaders\PhongLightShader.vs" />
+    <None Include="Shaders\PhysicsTestShader.fs" />
+    <None Include="Shaders\PhysicsTestShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

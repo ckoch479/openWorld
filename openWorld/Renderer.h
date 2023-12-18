@@ -32,7 +32,7 @@ public:
 	void init();
 
 	//draw all objects currently in scene
-	void drawWindow(Scene* scene);
+	void drawWindow(Scene* scene,float dt);
 
 	void shutDown();
 
@@ -47,8 +47,8 @@ private:
 	GLFWwindow* window;
 	Animator* animator;
 
-	float DeltaTime = 0.0f;
-	float LastFrame = 1.0f;
+	/*float DeltaTime = 0.0f;
+	float LastFrame = 1.0f;*/
 
 	float SCR_WIDTH = 800;
 	float SCR_HEIGHT = 600;

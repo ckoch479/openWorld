@@ -31,7 +31,7 @@ enum textureType
 {
     Diffuse,
     Specular,
-    Normal,
+    NormalT,
     Height
 };
 

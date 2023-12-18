@@ -92,7 +92,7 @@ AssimpMesh AssimpModel::processMesh(aiMesh* mesh, const aiScene* scene)
     loadMaterialTextures(material, aiTextureType_SPECULAR, Specular, specularTexturePaths);
 
     // 3. normal maps
-     loadMaterialTextures(material, aiTextureType_HEIGHT, Normal, normalTexturePaths);
+     loadMaterialTextures(material, aiTextureType_HEIGHT, NormalT, normalTexturePaths);
   
     // 4. height maps
     loadMaterialTextures(material, aiTextureType_AMBIENT, Height,heightTexturePaths);

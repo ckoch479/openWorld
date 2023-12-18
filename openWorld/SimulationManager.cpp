@@ -1,12 +1,13 @@
 #include "SimulationManager.h"
+#include "testingBoxMeshFunctions.h"
 
 void SimulationManager::Init()
 {
 	this->state = startup;
 	//run platform detection
-	//init glfw/glut
-	//create window
 	
+	//init glfw/glut
+	//create window	
 	this->renderer = new Renderer;
 	renderer->init();
 	
@@ -25,29 +26,34 @@ void SimulationManager::run()
 	Shader AnimationShader("Shaders/AnimationShader.vs", "Shaders/AnimationShader.fs"); //mesh, texture, and skeletal animation shader
 	Shader LightShader("Shaders/PhongLightShader.vs", "Shaders/PhongLightShader.fs"); //simple mesh and light shader
 	Shader LightAnimShader("Shaders/LightAndAnimationShader.vs", "Shaders/LightAndAnimationShader.fs"); //simple light, mesh, texture and animation shader
+	Shader testShader("Shaders/PhysicsTestShader.vs","Shaders/PhysicsTestShader.fs");
+	//Game objects go here for testing independent parts of the engine--------------------------------------
 
-	//Animation data testing
+	//object physics data
+
+	//temporary meshes for world and physics bodies
+	//normals are used for color
+	ModelData testModel = createTestModel(glm::vec3(0,0.5,0),glm::vec3(1,1,1), glm::vec3(0.5, 0.1, 0.1));
+	ID testModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
+	ID testerID = scene->createModel(testModel,testShader);
+	scene->AddInstance(testerID,testModelTransform);
+
+
+	ModelData worldModel = createTestModel(glm::vec3(0, -0.2, 0), glm::vec3(25, 0.2, 25), glm::vec3(0.1, 0.1, 0.6));
+	ID worldModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
+	ID worldID = scene->createModel(worldModel, testShader);
+	scene->AddInstance(worldID, worldModelTransform);
+
+
+
+	
+	//object rendering data
 	AnimationData* newAnimation = ResourceManager::loadAnimation("resources/vampire/dancing_vampire.dae","dance");
 
 	ModelData* newModel = ResourceManager::loadModel("resources/vampire/dancing_vampire.dae", "vampire");
-	ID newModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(1.0, 1.0, 1.0));
+	ID newModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0,0,0.0,0), glm::vec3(1.0, 1.0, 1.0));
 	ID RenderID = scene->createModel(*newModel, LightAnimShader, newAnimation);
 	scene->AddInstance(RenderID, newModelTransform);
-
-	/*ModelData* newModel1 = ResourceManager::loadModel("resources/crystal.dae", "crystal");
-	ID newModelTransform1 = scene->createTransform(glm::vec3(3.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(0.01, 0.01, 0.01));
-	ID RenderID1 = scene->createModel(*newModel1, LightShader);
-	scene->AddInstance(RenderID1, newModelTransform1);*/
-
-	//ModelData* newModel2 = ResourceManager::loadModel("resources/vampire/dancing_vampire.dae", "vampire");
-	//ID newModelTransform2 = scene->createTransform(glm::vec3(0.0, 3.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(1.0, 1.0, 1.0));
-	//ID RenderID2 = scene->createModel(*newModel2, LightAnimShader, newAnimation);
-	//scene->AddInstance(RenderID2, newModelTransform2);
-
-	//ModelData* newModel3 = ResourceManager::loadModel("resources/vampire/dancing_vampire.dae", "vampire");
-	//ID newModelTransform3 = scene->createTransform(glm::vec3(3.0, 3.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(), glm::vec3(1.0, 1.0, 1.0));
-	//ID RenderID3 = scene->createModel(*newModel3, LightAnimShader, newAnimation);
-	//scene->AddInstance(RenderID3, newModelTransform3);
 
 
 	//create lights for the scene
@@ -78,7 +84,7 @@ void SimulationManager::run()
 	
 	
 		//draw contents to actual game window
-		this->renderer->drawWindow(this->scene);
+		this->renderer->drawWindow(this->scene,this->deltaTime);
 		
 	}
 

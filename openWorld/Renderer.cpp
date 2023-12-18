@@ -13,7 +13,6 @@ void Renderer::init()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	//create window object
-
 	this->window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "openWorld", NULL, NULL);
 	if(window == NULL)
 	{
@@ -22,7 +21,6 @@ void Renderer::init()
 	}
 	glfwMakeContextCurrent(window);
 	
-
 	//init glad
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -47,15 +45,11 @@ Renderer::Renderer()
 
 }
 
-void Renderer::drawWindow(Scene* scene) 
+void Renderer::drawWindow(Scene* scene, float dt)
 {
 		
-		glClearColor(0.00f, 0.00f, 0.00f, 1.0f);
+		glClearColor(0.30f, 0.30f, 0.60f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-		float currentFrame = glfwGetTime();
-		this->DeltaTime = currentFrame - LastFrame;
-		this->LastFrame = currentFrame;
 
 		//create a loop that renders each instance stored in the scene
 		for(unsigned int i = 0; i < scene->InstanceCount; i++)
@@ -83,7 +77,7 @@ void Renderer::drawWindow(Scene* scene)
 			{
 				animator->setCurrentAnimation(&scene->animations.lookup(model->animationID), model);
 
-				animator->updateCurrentAnimation(this->DeltaTime, scene->animations.lookup(model->animationID).currentPoint);
+				animator->updateCurrentAnimation(dt, scene->animations.lookup(model->animationID).currentPoint);
 				//do math for the animation
 				std::vector <glm::mat4> finalAnimationMatrix = animator->returnFinalMatrices();
 
@@ -94,7 +88,6 @@ void Renderer::drawWindow(Scene* scene)
 			}
 
 			//set up scene lighting
-
 			model->Modelshader->setVec3("viewPos", scene->MainCamera->CameraPosition);
 			model->Modelshader->setFloat("material.shininess", 132.0f);
 			//point Lights
@@ -118,7 +111,6 @@ void Renderer::drawWindow(Scene* scene)
 
 
 			//set up current Model and mesh data for this instance
-			
 			for(int meshes = 0; meshes < model->renderMeshIDs.size(); meshes++)
 			{
 				RenderMesh* mesh = &scene->Meshes.lookup(model->renderMeshIDs[meshes]);
@@ -140,7 +132,7 @@ void Renderer::drawWindow(Scene* scene)
 
 				glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mesh->IndexCount), GL_UNSIGNED_INT, 0);
 
-				glDrawArrays(GL_TRIANGLES, 0, 100000);
+				//glDrawArrays(GL_TRIANGLES, 0, 100000);
 				glBindVertexArray(0);
 			}
 
@@ -183,7 +175,9 @@ void Renderer::setTransforms(ID transformID, Scene& currentScene,Shader& shader)
 
 	model = glm::translate(model, currentScene.Transforms.lookup(transformID).Translation); //translate mesh
 
-	//model = glm::rotate(meshTransforms->rotation, meshTransforms->RotationOrigin);//rotate mesh
+	//model = glm::rotate(model, currentScene.Transforms.lookup(transformID).RotationOrigin, currentScene.Transforms.lookup(transformID).rotation);//rotate mesh
+
+	model *= glm::toMat4(currentScene.Transforms.lookup(transformID).rotation);
 
 	model = glm::scale(model, currentScene.Transforms.lookup(transformID).Scale);//scale mesh
 

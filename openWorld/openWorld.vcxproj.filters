@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\PhysicsAndDynamicsHeaders">
+      <UniqueIdentifier>{afb3d183-0a7d-46a2-8ff6-801482fbde69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RenderingandSceneHeaders">
+      <UniqueIdentifier>{71ecaafb-656b-414f-b5b2-6da3b2da170c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PhysicsandDynamicsBody">
+      <UniqueIdentifier>{38377a8b-4912-405d-97b4-19a1dba0c556}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderingandSceneBody">
+      <UniqueIdentifier>{d16790f8-56a8-4f67-a80a-9305d38ae248}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -21,43 +33,52 @@
     <ClCompile Include="SimulationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="lookup_table.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stb_image.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
     <ClCompile Include="AssimpMesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
     <ClCompile Include="AssimpModel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
     <ClCompile Include="AssimpSkeletalAnimation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
     <ClCompile Include="Bone.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
-    <ClCompile Include="Animator.cpp">
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsWorld.cpp">
+      <Filter>Source Files\PhysicsandDynamicsBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Source Files\PhysicsandDynamicsBody</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,46 +86,58 @@
     <ClInclude Include="SimulationManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lookup_table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsWorld.h">
+      <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AssimpMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AssimpModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="assimp_glm_helpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AssimpSkeletalAnimation.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Bone.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
     <ClInclude Include="AnimationDebug.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Animator.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="assimp_glm_helpers.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpMesh.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpModel.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpSkeletalAnimation.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="testingBoxMeshFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,6 +170,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Shaders\LightAndAnimationShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\PhysicsTestShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\PhysicsTestShader.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
