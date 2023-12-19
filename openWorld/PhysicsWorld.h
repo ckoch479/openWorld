@@ -17,7 +17,12 @@ struct physicsObject
 {
 	RigidBody* body;
 	Collider* collider;
+};
 
+struct Force
+{
+	glm::vec3 direction;
+	float magnitude;
 };
 
 class PhysicsWorld
@@ -27,20 +32,24 @@ public:
 	std::vector <RigidBody> rigidBodies;
 	std::vector <Collider> colliders;
 
-	physicsObject addPhysicsObject(RigidBody body, Collider collider);
+	std::vector <physicsObject> objects;
 
-	RigidBody* createRigidBody();
+	physicsObject* addPhysicsObject(RigidBody body, Collider collider);
+
+	RigidBody* createRigidBody(glm::vec3 Positon, glm::vec3 velocity, float mass);
 
 	Collider* createCollider(AABB collider);
 
-	Collider* createCollider(CircleCollider collider);
+	//Collider* createCollider(CircleCollider collider);
 
-	Collider* createCollider(Collider collider);
+	//Collider* createCollider(Collider collider);
 
 	void stepPhysicsSimulation(float dt);
 
 private:
-	//force calculation
+	//dynamics
+
+	void eulerIntergration(physicsObject& object, Force& force, float dt);
 
 	//collision detection
 
