@@ -48,9 +48,34 @@ private:
 
 };
 
-class CircleCollider : public Collider
+class SphereCollider : public Collider
 {
+public:
 
+	glm::vec3 position;
+	float radius;
+
+	bool checkCollision(const SphereCollider& other);
+};
+
+class OBB : public Collider //oriented bounding box
+{
+	float halfWidth;
+	float halfHeight;
+	float halfDepth;
+
+	glm::mat4 transform;
+
+	bool checkCollision(const OBB& other);
+};
+
+class CapsuleCollider : public Collider
+{
+	glm::vec3 PointA;
+	glm::vec3 PointB;
+	float radius;
+
+	bool checkCollision(const CapsuleCollider& other);
 };
 
 #endif

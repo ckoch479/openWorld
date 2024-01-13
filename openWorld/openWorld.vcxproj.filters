@@ -25,6 +25,12 @@
     <Filter Include="Source Files\RenderingandSceneBody">
       <UniqueIdentifier>{d16790f8-56a8-4f67-a80a-9305d38ae248}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObjectHeaders">
+      <UniqueIdentifier>{e3974d12-e582-4f32-a935-48096ce6d5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjectBody">
+      <UniqueIdentifier>{546b42a3-ffae-4239-a7bd-d3af9260703d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -79,6 +85,9 @@
       <Filter>Source Files\PhysicsandDynamicsBody</Filter>
     </ClCompile>
     <ClCompile Include="RigidBody.cpp">
+      <Filter>Source Files\PhysicsandDynamicsBody</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -138,6 +147,9 @@
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
     </ClInclude>
     <ClInclude Include="RigidBody.h">
+      <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -17,21 +17,21 @@ void PhysicsWorld::eulerIntergration(physicsObject& object, Force& force, float 
 	object.body->position.z += object.body->velocity.z * dt;
 
 }
-
-physicsObject* PhysicsWorld::addPhysicsObject(RigidBody body, Collider collider)
-{
-
-}
-
-RigidBody* PhysicsWorld::createRigidBody(glm::vec3 Positon, glm::vec3 velocity, float mass)
-{
-
-}
-
-Collider* PhysicsWorld::createCollider(AABB collider)
-{
-
-}
+//
+//physicsObject* PhysicsWorld::addPhysicsObject(RigidBody body, Collider collider)
+//{
+//
+//}
+//
+//RigidBody* PhysicsWorld::createRigidBody(glm::vec3 Positon, glm::vec3 velocity, float mass)
+//{
+//
+//}
+//
+//Collider* PhysicsWorld::createCollider(AABB collider)
+//{
+//
+//}
 
 //Collider* PhysicsWorld::createCollider(CircleCollider collider)
 //{

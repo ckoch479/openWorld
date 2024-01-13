@@ -114,6 +114,33 @@ ID Scene::createModel(ModelData model, Shader& shader, AnimationData* animation)
 	return newModelID;
 }
 
+void Scene::removeModelFromScene(ID modelID)
+{
+	RenderModel* tempModel;
+	tempModel = &this->Models.lookup(modelID);
+
+	for(int i = 0; i < tempModel->renderMeshIDs.size(); i++) //free the memory of the meshes linked to this model first
+	{
+		this->Meshes.remove(tempModel->renderMeshIDs[i]);
+	}
+	
+	this->Models.remove(modelID); //free the memory of the model
+}
+
+void Scene::UpdateAnimation(ID modelID, ID animationID)
+{
+	RenderModel* tempModel;
+	tempModel = &this->Models.lookup(modelID);
+	tempModel->animationID = animationID;
+}
+
+void Scene::UpdateShader(ID modelID, Shader& shader)
+{
+	RenderModel* tempModel;
+	tempModel = &this->Models.lookup(modelID);
+	tempModel->Modelshader = &shader;
+}
+
 
 ID Scene::createMesh(MeshData mesh) 
 {
@@ -188,6 +215,17 @@ ID Scene::createTransform(glm::vec3 position, glm::vec3 rotationOrigin, glm::qua
 
 	newTransformID = this->Transforms.add(newTransform);
 	return newTransformID;
+}
+
+void Scene::updateTransform(ID transformID, glm::vec3 position, glm::vec3 rotationOrigin, glm::quat rotation, glm::vec3 scale)
+{
+	Transform* tempTransform;
+	tempTransform = &this->Transforms.lookup(transformID);
+	tempTransform->Translation = position;
+	tempTransform->RotationOrigin = rotationOrigin;
+	tempTransform->rotation = rotation;
+	tempTransform->Scale = scale;
+
 }
 
 void Scene::DebugFunction() 

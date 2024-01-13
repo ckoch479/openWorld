@@ -16,8 +16,6 @@
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
-
-
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
 
