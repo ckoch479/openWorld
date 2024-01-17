@@ -64,7 +64,7 @@ ID Scene::createModel(ModelData model, Shader& shader)
 	newModel.Modelshader = &shader;
 
 	//no animation was added with this mode so animation ID remains null 
-	newModel.animationID;
+	//newModel.animationID;
 	
 	//no animations were loaded with this model so this is set to false
 	newModel.hasActiveAnimation = false;
@@ -130,8 +130,12 @@ void Scene::removeModelFromScene(ID modelID)
 void Scene::UpdateAnimation(ID modelID, ID animationID)
 {
 	RenderModel* tempModel;
-	tempModel = &this->Models.lookup(modelID);
+	
+	tempModel = &Models.lookup(modelID);
+
 	tempModel->animationID = animationID;
+
+	tempModel->hasActiveAnimation = true;
 }
 
 void Scene::UpdateShader(ID modelID, Shader& shader)

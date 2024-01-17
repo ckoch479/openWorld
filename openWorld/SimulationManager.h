@@ -12,6 +12,8 @@
 #include "Camera.h"
 #include "Shader.h"
 
+#include "GameObject.h"
+
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"

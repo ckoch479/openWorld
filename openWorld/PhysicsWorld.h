@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 
+#include "lookup_table.h"
+
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
@@ -15,8 +17,9 @@
 
 struct physicsObject
 {
-	RigidBody* body;
-	Collider* collider;
+	ID rigidBodyID;
+	std::vector <ID> colliderIDs;
+	sphereCollider broadCollisionCollider; //collider will be a sphere collider for ease of use and calculation
 };
 
 struct Force
@@ -29,32 +32,42 @@ class PhysicsWorld
 {
 public:
 
-	std::vector <RigidBody> rigidBodies;
-	std::vector <Collider> colliders;
+	lookup_table<RigidBody> rigidBodies;
+	lookup_table<Collider> colliders;
+	std::vector <Collider> broadPhaseColliders; //large AABB that fully contains all colliders in each physics object
 
 	std::vector <physicsObject> objects;
 
-	physicsObject* addPhysicsObject(RigidBody body, Collider collider);
+	void stepSimulation(float dt);
 
-	RigidBody* createRigidBody(glm::vec3 Positon, glm::vec3 velocity, float mass);
+	physicsObject* createPhysicsObject(RigidBody body, std::vector <Collider> colliders);
 
-	Collider* createCollider(AABB collider);
-
-	//Collider* createCollider(CircleCollider collider);
-
-	//Collider* createCollider(Collider collider);
-
-	void stepPhysicsSimulation(float dt);
+	void deletePhysicsObject(physicsObject* object);
 
 private:
+
+	//broad phase collider is generated based on the colliders in an object
+	sphereCollider generateBroadPhaseCollider(physicsObject object);
 	//dynamics
 
 	void eulerIntergration(physicsObject& object, Force& force, float dt);
 
 	//collision detection
 
+	std::vector<physicsObject*> createPossibleCollisions(physicsObject* currentObject);
+
+	bool checkCollision(physicsObject* objectA, physicsObject* objectB);
+
 	//collision resolution
 
+	float physicsWorldObjects = 0;
+	float numRigidBodies = 0;
+	float numColliders = 0;
+	float numBroadPhaseColliders = 0;
+
+	//utility functions
+
+	float findDistance(glm::vec3 pointA, glm::vec3 pointB);
 
 };
 

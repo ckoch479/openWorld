@@ -88,7 +88,7 @@
       <Filter>Source Files\PhysicsandDynamicsBody</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +150,7 @@
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

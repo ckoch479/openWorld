@@ -13,16 +13,39 @@ class RigidBody
 {
 public:
 
+	RigidBody();
+	~RigidBody();
+
 	glm::vec3 position;
 	glm::vec3 velocity;
+	glm::vec3 acceleration;
+
+	glm::quat orientation;
+	glm::vec3 rotationOrigin;
+
+	glm::vec3 angularVelocity;
+	glm::vec3 angularAcceleration;
 
 	float mass;
 
-	void applyForce(const glm::vec3& force, float dt);
+	//intertia tensor?
+	//force accumulator?
+	// torque accumulator?
+	//material properties (friction, restitution)
+	//sleeping
+	//user interface hooks I.E. player controlling movement
 
-	void update(float dt);
+	void createRigidBody(glm::vec3 newposition, glm::quat neworientation, float newmass);
+
+	void updatePosition(float dt);
+
+	void applyForce(glm::vec3 newForce);
+
+	void sleepObject();
 
 private:
+
+	glm::vec3 calculateNewPosition(float dt);
 
 };
 

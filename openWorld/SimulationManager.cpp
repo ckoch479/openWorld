@@ -33,24 +33,27 @@ void SimulationManager::run()
 
 	//temporary meshes for world and physics bodies
 	//normals are used for color
-	ModelData testModel = createTestModel(glm::vec3(0,0.5,0),glm::vec3(1,1,1), glm::vec3(0.5, 0.1, 0.1));
-	ID testModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
-	ID testerID = scene->createModel(testModel,testShader);
-	scene->AddInstance(testerID,testModelTransform);
+	//ModelData testModel = createTestModel(glm::vec3(0,0.5,0),glm::vec3(1,1,1), glm::vec3(0.5, 0.1, 0.1));
+	//ID testModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
+	//ID testerID = scene->createModel(testModel,testShader);
+	//scene->AddInstance(testerID,testModelTransform);
 
 
-	ModelData worldModel = createTestModel(glm::vec3(0, -0.2, 0), glm::vec3(25, 0.2, 25), glm::vec3(0.1, 0.1, 0.6));
-	ID worldModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
-	ID worldID = scene->createModel(worldModel, testShader);
-	scene->AddInstance(worldID, worldModelTransform);
+	//ModelData worldModel = createTestModel(glm::vec3(0, -0.2, 0), glm::vec3(25, 0.2, 25), glm::vec3(0.1, 0.1, 0.6));
+	//ID worldModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
+	//ID worldID = scene->createModel(worldModel, testShader);
+	//scene->AddInstance(worldID, worldModelTransform);
 
 	//object rendering data
 	AnimationData* newAnimation = ResourceManager::loadAnimation("resources/vampire/dancing_vampire.dae","dance");
 
-	ModelData* newModel = ResourceManager::loadModel("resources/vampire/dancing_vampire.dae", "vampire");
-	ID newModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0,0,0.0,0), glm::vec3(1.0, 1.0, 1.0));
-	ID RenderID = scene->createModel(*newModel, LightAnimShader, newAnimation);
-	scene->AddInstance(RenderID, newModelTransform);
+	//game object class tester
+	GameObject newObject;
+
+	newObject.LoadObjectFromFile("resources/vampire/dancing_vampire.dae", "vampire");
+	ID newAnimationID = scene->createAnimation(newAnimation);
+	newObject.addObjectToScene(LightAnimShader,scene);
+	newObject.setAnimation(newAnimation, scene);
 
 
 	//create lights for the scene

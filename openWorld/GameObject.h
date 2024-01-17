@@ -6,6 +6,7 @@
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
+#include "Includes/glm/gtc/quaternion.hpp"
 
 #include "ResourceManager.h"
 #include "Collider.h"
@@ -25,9 +26,13 @@ public:
 
 	void LoadObjectFromFile(std::string filepath,std::string objectName); //load gameObject using resource manager
 
-	void addObjectToScene(Shader& shader);
+	void addObjectToScene(Shader& shader, Scene* scene);
 
-	void removeObjectFromScene();
+	void removeObjectFromScene(Scene* scene);
+
+	void AddtoPhysicsWorld();
+
+	void removeFromPhysicsWorld();
 
 	void applyForce(glm::vec3 direction, float force);
 
@@ -37,9 +42,9 @@ public:
 
 	void setScaling(glm::vec3 scaling);  //used to overRide transform data created from physics engine
 
-	void setAnimation(RenderAnimation* animation);
+	void setAnimation(AnimationData* animation, Scene* scene);
 
-	void setAnimation(ID animationID);
+	void setAnimation(ID animationID, Scene* scene);
 
 private:
 
@@ -47,16 +52,21 @@ private:
 
 	void calculateTransform();
 
-	Transform currentTransform;
-
 	//rendering info
 	ModelData* modelingData; //data from resource manager about rendering, skeleton info, ect
-	ID sceneID;
 
-	RenderAnimation* animation;//current animation for this object, allows for the OBBs to be updated accordingly
+	ID sceneObjectID;
+	ID sceneModelID;
+	ID renderAnimationID;
+
 	//physics and collision info
-	std::vector <OBB*> orientedBoundingBoxes; //oriented bounding boxes based off the vertices and bones of the model, 1 OBB per bone
+	std::vector <orientedBoundingBox*> orientedBoundingBoxes; //oriented bounding boxes based off the vertices and bones of the model, 1 OBB per bone
 	RigidBody* body; // rigid body of the game object, this contains data needed to determine physics of the object
+
+	ID sceneTransformID;
+	glm::vec3 objectScale;
+
+	std::string objectName;
 
 };
 #endif
