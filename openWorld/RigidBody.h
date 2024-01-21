@@ -28,6 +28,8 @@ public:
 
 	float mass;
 
+	float coefficientFriction;
+
 	//intertia tensor?
 	//force accumulator?
 	// torque accumulator?
@@ -44,8 +46,6 @@ public:
 	void sleepObject();
 
 private:
-
-	glm::vec3 calculateNewPosition(float dt);
 
 };
 

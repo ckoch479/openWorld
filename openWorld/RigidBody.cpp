@@ -1,7 +1,8 @@
 #include "RigidBody.h"
 RigidBody::RigidBody()
 {
-
+	this->position = glm::vec3(0, 0, -5);
+	this->mass = 1.0;
 }
 
 RigidBody::~RigidBody()
@@ -25,20 +26,25 @@ void RigidBody::createRigidBody(glm::vec3 newposition, glm::quat neworientation,
 
 void RigidBody::updatePosition(float dt)
 {
+	//simple euler integration with nothing fancy
+	this->velocity.x = this->acceleration.x * dt;
+	this->velocity.y = this->acceleration.y * dt;
+	this->velocity.z = this->acceleration.z * dt;
 
+	this->position.x += this->velocity.x * dt;
+	this->position.y += this->velocity.y * dt;
+	this->position.z += this->velocity.z * dt;
 }
 
 void RigidBody::applyForce(glm::vec3 newForce)
 {
-
+	//A = A/M
+	this->acceleration.x += newForce.x / this->mass;
+	this->acceleration.y += newForce.y / this->mass;
+	this->acceleration.z += newForce.z / this->mass;
 }
 
 void RigidBody::sleepObject()
 {
 
-}
-
-glm::vec3 RigidBody::calculateNewPosition(float dt)
-{
-	return this->position;
 }

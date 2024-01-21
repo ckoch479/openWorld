@@ -11,6 +11,7 @@
 #include "ResourceManager.h"
 #include "Collider.h"
 #include "RigidBody.h"
+#include "physicsWorld.h"
 
 #include "Scene.h"
 
@@ -26,19 +27,21 @@ public:
 
 	void LoadObjectFromFile(std::string filepath,std::string objectName); //load gameObject using resource manager
 
-	void addObjectToScene(Shader& shader, Scene* scene);
+	void addObjectToScene(Shader& shader, Scene* scene, PhysicsWorld* world);
 
 	void removeObjectFromScene(Scene* scene);
 
-	void AddtoPhysicsWorld();
+	void CreateRigidBody(glm::vec3 position, glm::quat orientation, glm::vec3 rotationOrigin, float mass, PhysicsWorld* world);
 
-	void removeFromPhysicsWorld();
+	void AddtoPhysicsWorld(PhysicsWorld* world);
 
-	void applyForce(glm::vec3 direction, float force);
+	void removeFromPhysicsWorld(PhysicsWorld* world);
 
-	void setPosition(glm::vec3 position); //used to overRide transform data created from physics engine
+	void applyForce(glm::vec3 direction, PhysicsWorld* world);
 
-	void setRotation(glm::vec3 rotationOrigin, glm::quat rotation); //used to overRide transform data created from physics engine
+	void setPosition(glm::vec3 position, PhysicsWorld* world); //used to overRide transform data created from physics engine
+
+	void setRotation(glm::vec3 rotationOrigin, glm::quat rotation, PhysicsWorld* world); //used to overRide transform data created from physics engine
 
 	void setScaling(glm::vec3 scaling);  //used to overRide transform data created from physics engine
 
@@ -46,11 +49,9 @@ public:
 
 	void setAnimation(ID animationID, Scene* scene);
 
+	void updateTransforms(Scene* scene, PhysicsWorld* world);
+
 private:
-
-	void calculateOBBDataFromBones();
-
-	void calculateTransform();
 
 	//rendering info
 	ModelData* modelingData; //data from resource manager about rendering, skeleton info, ect
@@ -58,12 +59,14 @@ private:
 	ID sceneObjectID;
 	ID sceneModelID;
 	ID renderAnimationID;
+	ID sceneTransformID;
+
+	ID physicsWorldObjectID;
+	ID rigidBodyID;
 
 	//physics and collision info
-	std::vector <orientedBoundingBox*> orientedBoundingBoxes; //oriented bounding boxes based off the vertices and bones of the model, 1 OBB per bone
-	RigidBody* body; // rigid body of the game object, this contains data needed to determine physics of the object
-
-	ID sceneTransformID;
+	std::vector <orientedBoundingBox> orientedBoundingBoxes; //oriented bounding boxes based off the vertices and bones of the model, 1 OBB per bone
+	
 	glm::vec3 objectScale;
 
 	std::string objectName;

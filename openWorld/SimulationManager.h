@@ -49,6 +49,7 @@ private:
 
 	Scene* scene;
 	Renderer* renderer;
+	PhysicsWorld* world;
 	//InputManager* inputs;
 	//resource manager
 	//platform detection
@@ -67,6 +68,13 @@ private:
 	float mouseSensitivity = 0.5f;
 
 	bool firstMouse = true;
+
+	//for testing to be removed later
+	bool up = false;
+	bool down = false;
+	bool left = false;
+	bool right = false;
+	bool space = false;
 };
 
 #endif // !SIMULATIONMANAGER_H

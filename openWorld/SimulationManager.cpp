@@ -14,6 +14,8 @@ void SimulationManager::Init()
 	this->scene = new Scene;
 	scene->Init();
 
+	this->world = new PhysicsWorld;
+
 	this->state = running;
 };
 
@@ -33,16 +35,16 @@ void SimulationManager::run()
 
 	//temporary meshes for world and physics bodies
 	//normals are used for color
-	//ModelData testModel = createTestModel(glm::vec3(0,0.5,0),glm::vec3(1,1,1), glm::vec3(0.5, 0.1, 0.1));
-	//ID testModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
-	//ID testerID = scene->createModel(testModel,testShader);
-	//scene->AddInstance(testerID,testModelTransform);
+	ModelData testModel = createTestModel(glm::vec3(2,0.5,0),glm::vec3(1,1,1), glm::vec3(0.5, 0.1, 0.1));
+	ID testModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
+	ID testerID = scene->createModel(testModel,testShader);
+	scene->AddInstance(testerID,testModelTransform);
 
 
-	//ModelData worldModel = createTestModel(glm::vec3(0, -0.2, 0), glm::vec3(25, 0.2, 25), glm::vec3(0.1, 0.1, 0.6));
-	//ID worldModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
-	//ID worldID = scene->createModel(worldModel, testShader);
-	//scene->AddInstance(worldID, worldModelTransform);
+	ModelData worldModel = createTestModel(glm::vec3(0, -0.2, 0), glm::vec3(25, 0.2, 25), glm::vec3(0.1, 0.1, 0.6));
+	ID worldModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
+	ID worldID = scene->createModel(worldModel, testShader);
+	scene->AddInstance(worldID, worldModelTransform);
 
 	//object rendering data
 	AnimationData* newAnimation = ResourceManager::loadAnimation("resources/vampire/dancing_vampire.dae","dance");
@@ -52,7 +54,12 @@ void SimulationManager::run()
 
 	newObject.LoadObjectFromFile("resources/vampire/dancing_vampire.dae", "vampire");
 	ID newAnimationID = scene->createAnimation(newAnimation);
-	newObject.addObjectToScene(LightAnimShader,scene);
+	
+	newObject.CreateRigidBody(glm::vec3(0,0,-2),glm::quat(), glm::vec3(0,1,0), 10.0f,this->world);
+	newObject.AddtoPhysicsWorld(this->world);
+
+
+	newObject.addObjectToScene(LightAnimShader,scene, this->world);
 	newObject.setAnimation(newAnimation, scene);
 
 
@@ -78,8 +85,18 @@ void SimulationManager::run()
 		setDeltaTime(); //update deltaTime for this loop
 		checkKeys(); //check for active keys during this loop
 		checkMouse();
-	
-	
+
+		//update physics
+		this->world->stepSimulation(this->deltaTime);
+		//newObject.applyForce(glm::vec3(0.0,0.0,0.2),this->world);
+		newObject.updateTransforms(this->scene, this->world);
+
+		//testing only remove later
+		if (up == true) { newObject.applyForce(glm::vec3(10.0, 0.0, 0.0), this->world); };
+		if (down == true) { newObject.applyForce(glm::vec3(-10.0, 0.0, 0.0), this->world); };
+		if (left == true) { newObject.applyForce(glm::vec3(0.0, 0.0, 10.0), this->world); };
+		if (right == true) { newObject.applyForce(glm::vec3(0.0, 0.0, -10.0), this->world); };
+		if (space == true) { newObject.applyForce(glm::vec3(0.0, 10.0, 0.0), this->world); };
 	
 		//draw contents to actual game window
 		this->renderer->drawWindow(this->scene,this->deltaTime);
@@ -129,6 +146,57 @@ void SimulationManager::checkKeys()
 		this->state = shutdown;
 	}
 
+	//testing only remove later
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_DOWN);
+	if(state == GLFW_PRESS)
+	{
+		this->down = true;
+	}
+	if (state == GLFW_RELEASE)
+	{
+		this->down = false;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_LEFT);
+	if (state == GLFW_PRESS)
+	{
+		this->left = true;
+	}
+	if (state == GLFW_RELEASE)
+	{
+		this->left = false;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_RIGHT);
+	if (state == GLFW_PRESS)
+	{
+		this->right = true;
+	}
+	if (state == GLFW_RELEASE)
+	{
+		this->right = false;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_SPACE);
+	if (state == GLFW_PRESS)
+	{
+		this->space = true;
+	}
+	if (state == GLFW_RELEASE)
+	{
+		this->space = false;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_UP);
+	if (state == GLFW_PRESS)
+	{
+		this->up = true;
+	}
+	if (state == GLFW_RELEASE)
+	{
+		this->up = false;
+	}
+
 }
 
 void SimulationManager::checkMouse() 
@@ -168,3 +236,52 @@ void SimulationManager::shutDown()
 {
 
 }
+
+//script testing function idea
+//
+// setup section (what to load and preform for this level)-------------------------------------------------------------------------
+// 
+// load model shader
+// load light shader
+// load map mesh
+// load player model
+// load player animations
+// load dynamic environment objects (boxes,NPCs)
+// load lights
+// 
+// load and create EntityArray
+// 
+// Add box to scene entity Array (x,y) x10
+// Add Agressive NPC (x,y) x 4
+// set Enemy AI?
+// 
+// set Environmental triggers array (x,y,z) 
+// 
+// end setup section ()---------------------------------------------------------------------------------------
+// 
+// Active check section
+// 
+//	check environment triggers array (trigger name, true/false)
+// 
+//	if(trigger name == true) do trigger action
+// 
+//  if(player == moving(slow)) set animation walk
+//  if(player == moving(medium)) set animation jog
+//  if(player == moving(fast)) set animation run
+// 
+//  keypress checks---------------------------------------------
+//  
+// if(keypress = space) Apply force +y
+// if(keypress = crtl) set Animation Crouch
+// if(mouseClick = LMB) set Animation Attack
+// if(mouseClick = RMB) set Animation Block
+// 
+// 
+// //collision checks
+// 
+// if(player == attacking && Collision(nearest enemy) = true) Enemy = die
+// if(Enemy == attacking && Collision(player) = true) Player = die
+// 
+// TerrainHeight = mapCheckHeight(player.x, player.y)
+// if(player.y < TerrainHeight) player.y = TerrainHeight
+//

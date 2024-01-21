@@ -230,6 +230,11 @@ void Scene::updateTransform(ID transformID, glm::vec3 position, glm::vec3 rotati
 	tempTransform->rotation = rotation;
 	tempTransform->Scale = scale;
 
+	if(!tempTransform)
+	{
+		std::cout << "transform ID not valid!\n";
+	}
+
 }
 
 void Scene::DebugFunction() 

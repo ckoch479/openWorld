@@ -2,22 +2,13 @@
 
 GameObject::GameObject()
 {
-	this->objectScale = glm::vec3(1.0f);
-	this->body = new RigidBody;
-
-	this->body->mass = 1.0f;
-	this->body->acceleration = glm::vec3 (0.0f);
-	this->body->position = glm::vec3(0.0,0.0,-2.0);
-	this->body->orientation = glm::quat(0.0,0.0,0.0,0.0);
-	this->body->rotationOrigin = glm::vec3(0, 1, 0);
-	this->body->velocity = glm::vec3(0.0f);
-
+	this->objectScale = glm::vec3(1.0);
 	this->objectName = "default";
 }
 
 GameObject::~GameObject()
 {
-	delete this->body;
+	
 }
 
 void GameObject::LoadObjectFromFile(std::string filepath, std::string objectName)
@@ -26,10 +17,10 @@ void GameObject::LoadObjectFromFile(std::string filepath, std::string objectName
 	this->objectName = objectName;
 }
 
-void GameObject::addObjectToScene(Shader& shader, Scene* scene)
+void GameObject::addObjectToScene(Shader& shader, Scene* scene, PhysicsWorld* world)
 {
 	this->sceneModelID = scene->createModel(*modelingData, shader);
-	this->sceneTransformID = scene->createTransform(body->position,body->rotationOrigin, body->orientation, objectScale);
+	this->sceneTransformID = scene->createTransform(world->getBodyPosition(this->rigidBodyID), world->getBodyRotationOrigin(this->rigidBodyID),world->getBodyOrientation(this->rigidBodyID), objectScale);
 
 	this->sceneObjectID = scene->AddInstance(this->sceneModelID, this->sceneTransformID);
 }
@@ -39,34 +30,40 @@ void GameObject::removeObjectFromScene(Scene* scene)
 	scene->removeModelFromScene(this->sceneModelID);
 }
 
-void GameObject::AddtoPhysicsWorld()
+void GameObject::CreateRigidBody(glm::vec3 position, glm::quat orientation, glm::vec3 rotationOrigin, float mass, PhysicsWorld* world)
 {
-
+	this->rigidBodyID = world->createRigidBody(position,orientation,rotationOrigin, mass);
 }
 
-void GameObject::removeFromPhysicsWorld()
+void GameObject::AddtoPhysicsWorld(PhysicsWorld* world)
 {
-
+	this->physicsWorldObjectID = world->createPhysicsObject(this->rigidBodyID); //create physics object in the world
 }
 
-void GameObject::applyForce(glm::vec3 direction, float force)
+void GameObject::removeFromPhysicsWorld(PhysicsWorld* world)
 {
-
+	world->deletePhysicsObject(this->physicsWorldObjectID);
 }
 
-void GameObject::setPosition(glm::vec3 position)
+void GameObject::applyForce(glm::vec3 direction,PhysicsWorld* world)
 {
-
+	world->applyForce(this->rigidBodyID, direction);
 }
 
-void GameObject::setRotation(glm::vec3 rotationOrigin, glm::quat rotation)
+void GameObject::setPosition(glm::vec3 position, PhysicsWorld* world)
 {
+	world->setPosition(this->rigidBodyID, position);
+}
 
+void GameObject::setRotation(glm::vec3 rotationOrigin, glm::quat rotation, PhysicsWorld* world)
+{
+	world->setRotation(this->rigidBodyID,rotation);
+	world->setRotationOrigin(this->rigidBodyID,rotationOrigin);
 }
 
 void GameObject::setScaling(glm::vec3 scaling)
 {
-
+	this->objectScale = scaling;
 }
 
 //for animations be sure to create a scene object first or the an error will be thrown
@@ -82,20 +79,7 @@ void GameObject::setAnimation(ID animationID, Scene* scene)
 	scene->UpdateAnimation(this->sceneModelID, renderAnimationID);
 }
 
-void GameObject::calculateOBBDataFromBones()
+void GameObject::updateTransforms(Scene* scene, PhysicsWorld* world)
 {
-	//count the number of boxes needed (1 per bone)
-	
-	this->modelingData->skeleton;
-
-
-	// take each bone and find all vertices it affects then find the furthest points of these vertices
-	//create a box using the vertices generated above then apply the bones transform to them
-
-
-}
-
-void GameObject::calculateTransform()
-{
-
+	scene->updateTransform(this->sceneTransformID, world->getBodyPosition(this->rigidBodyID), world->getBodyRotationOrigin(this->rigidBodyID), world->getBodyOrientation(this->rigidBodyID), objectScale);
 }

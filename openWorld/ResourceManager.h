@@ -132,6 +132,8 @@ private:
 
 	static void getBoneData(AnimationBoneData& newBone, AssimpNodeData& boneNode, AssimpSkeletalAnimation& animation);
 
+
+
 };
 
 #endif

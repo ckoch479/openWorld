@@ -18,56 +18,63 @@
 struct physicsObject
 {
 	ID rigidBodyID;
-	std::vector <ID> colliderIDs;
-	sphereCollider broadCollisionCollider; //collider will be a sphere collider for ease of use and calculation
-};
-
-struct Force
-{
-	glm::vec3 direction;
-	float magnitude;
+	//std::vector <ID> colliderIDs;
+	//sphereCollider broadCollisionCollider; //collider will be a sphere collider for ease of use and calculation
 };
 
 class PhysicsWorld
 {
 public:
 
-	lookup_table<RigidBody> rigidBodies;
-	lookup_table<Collider> colliders;
-	std::vector <Collider> broadPhaseColliders; //large AABB that fully contains all colliders in each physics object
+	PhysicsWorld();
+	~PhysicsWorld();
 
-	std::vector <physicsObject> objects;
+	lookup_table<RigidBody> rigidBodies;
+
+	//physics world objects
+	lookup_table <physicsObject> objects;
+
+	ID createRigidBody(RigidBody body);
+
+	ID createRigidBody(glm::vec3 position, glm::quat rotation, glm::vec3 rotationOrigin, float mass);
+
+	ID createPhysicsObject(ID rigidBodyID); //Add collision ID as a parameter later
+
+	ID createPhysicsObject(RigidBody* body, std::vector <orientedBoundingBox> colliders);
+
+	void deletePhysicsObject(ID objectID);
+
+	//manipulate object------------------------------------------
+
+	void applyForce(ID bodyID,glm::vec3 force);
+
+	void setPosition(ID bodyID, glm::vec3 position);
+
+	void setRotation(ID bodyID, glm::quat rotation);
+
+	void setRotationOrigin(ID bodyID, glm::vec3 origin);
+
+
+
+	//get data from object------------------------------------
+
+	glm::vec3 getBodyPosition(ID bodyID);
+
+	glm::quat getBodyOrientation(ID bodyID);
+	
+	glm::vec3 getBodyRotationOrigin(ID bodyID);
 
 	void stepSimulation(float dt);
 
-	physicsObject* createPhysicsObject(RigidBody body, std::vector <Collider> colliders);
-
-	void deletePhysicsObject(physicsObject* object);
-
 private:
 
-	//broad phase collider is generated based on the colliders in an object
-	sphereCollider generateBroadPhaseCollider(physicsObject object);
 	//dynamics
-
-	void eulerIntergration(physicsObject& object, Force& force, float dt);
-
-	//collision detection
-
-	std::vector<physicsObject*> createPossibleCollisions(physicsObject* currentObject);
-
-	bool checkCollision(physicsObject* objectA, physicsObject* objectB);
 
 	//collision resolution
 
 	float physicsWorldObjects = 0;
 	float numRigidBodies = 0;
-	float numColliders = 0;
-	float numBroadPhaseColliders = 0;
-
-	//utility functions
-
-	float findDistance(glm::vec3 pointA, glm::vec3 pointB);
+	std::vector <ID> worldObjectIDs;
 
 };
 
