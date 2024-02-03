@@ -55,7 +55,7 @@ void SimulationManager::run()
 	newObject.LoadObjectFromFile("resources/vampire/dancing_vampire.dae", "vampire");
 	ID newAnimationID = scene->createAnimation(newAnimation);
 	
-	newObject.CreateRigidBody(glm::vec3(0,0,-2),glm::quat(), glm::vec3(0,1,0), 10.0f,this->world);
+	newObject.CreateRigidBody(this->playerPosition,glm::quat(), glm::vec3(0,1,0), 10.0f,this->world);
 	newObject.AddtoPhysicsWorld(this->world);
 
 
@@ -73,6 +73,13 @@ void SimulationManager::run()
 
 	scene->createSpotLight(glm::vec3(-1.0), glm::vec3(-1.0,-1.0,-1.0), glm::vec3(0.020), glm::vec3(0.020), glm::vec3(0.050),1.0f,0.09f,0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
 
+	//camera testing
+
+	this->CameraPosition = glm::vec3(1, 2, 4);
+	//this->scene->setCameraPosition(this->playerPosition, this->cameraPitch, this->cameraYaw, this->radius);
+	
+
+
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
 	while (this->state == running)
 	{
@@ -86,18 +93,16 @@ void SimulationManager::run()
 		checkKeys(); //check for active keys during this loop
 		checkMouse();
 
+		
+
 		//update physics
 		this->world->stepSimulation(this->deltaTime);
-		//newObject.applyForce(glm::vec3(0.0,0.0,0.2),this->world);
 		newObject.updateTransforms(this->scene, this->world);
 
-		//testing only remove later
-		if (up == true) { newObject.applyForce(glm::vec3(10.0, 0.0, 0.0), this->world); };
-		if (down == true) { newObject.applyForce(glm::vec3(-10.0, 0.0, 0.0), this->world); };
-		if (left == true) { newObject.applyForce(glm::vec3(0.0, 0.0, 10.0), this->world); };
-		if (right == true) { newObject.applyForce(glm::vec3(0.0, 0.0, -10.0), this->world); };
-		if (space == true) { newObject.applyForce(glm::vec3(0.0, 10.0, 0.0), this->world); };
-	
+		newObject.setPosition(this->playerPosition,this->world);
+		this->scene->setCameraPosition(this->playerPosition, this->cameraPitch, this->cameraYaw, this->radius);
+
+
 		//draw contents to actual game window
 		this->renderer->drawWindow(this->scene,this->deltaTime);
 		
@@ -115,28 +120,33 @@ void SimulationManager::checkKeys()
 	int state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_W);
 	if(state == GLFW_PRESS)
 	{
-		this->scene->MoveCamera(FORWARD, this->deltaTime);
+		//this->scene->MoveCamera(FORWARD, this->deltaTime);
+
+		this->playerPosition.z += 0.1;
 		state = GLFW_RELEASE;
 	}
 
 	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_A);
 	if (state == GLFW_PRESS)
 	{
-		this->scene->MoveCamera(LEFT, this->deltaTime);
+		//this->scene->MoveCamera(LEFT, this->deltaTime);
+		this->playerPosition.x += 0.1;
 		state = GLFW_RELEASE;
 	}
 
 	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_S);
 	if (state == GLFW_PRESS)
 	{
-		this->scene->MoveCamera(BACKWARD, this->deltaTime);
+		//this->scene->MoveCamera(BACKWARD, this->deltaTime);
+		this->playerPosition.z -= 0.1;
 		state = GLFW_RELEASE;
 	}
 
 	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_D);
 	if (state == GLFW_PRESS)
 	{
-		this->scene->MoveCamera(RIGHT, this->deltaTime);
+		//this->scene->MoveCamera(RIGHT, this->deltaTime);
+		this->playerPosition.x -= 0.1;
 		state = GLFW_RELEASE;
 	}
 
@@ -144,57 +154,6 @@ void SimulationManager::checkKeys()
 	if(state == GLFW_PRESS)
 	{
 		this->state = shutdown;
-	}
-
-	//testing only remove later
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_DOWN);
-	if(state == GLFW_PRESS)
-	{
-		this->down = true;
-	}
-	if (state == GLFW_RELEASE)
-	{
-		this->down = false;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_LEFT);
-	if (state == GLFW_PRESS)
-	{
-		this->left = true;
-	}
-	if (state == GLFW_RELEASE)
-	{
-		this->left = false;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_RIGHT);
-	if (state == GLFW_PRESS)
-	{
-		this->right = true;
-	}
-	if (state == GLFW_RELEASE)
-	{
-		this->right = false;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_SPACE);
-	if (state == GLFW_PRESS)
-	{
-		this->space = true;
-	}
-	if (state == GLFW_RELEASE)
-	{
-		this->space = false;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_UP);
-	if (state == GLFW_PRESS)
-	{
-		this->up = true;
-	}
-	if (state == GLFW_RELEASE)
-	{
-		this->up = false;
 	}
 
 }
@@ -221,8 +180,33 @@ void SimulationManager::checkMouse()
 	xoffset *= this->mouseSensitivity;
 	yoffset *= this->mouseSensitivity;
 
-	this->scene->MouseAimCamera(xoffset, yoffset); //using the x and y offsets aim the camera
+	//this->scene->MouseAimCamera(xoffset, yoffset); //using the x and y offsets aim the camera
 	
+	// value between 0-360 for camera
+	//camera needs to be 5 away from the player at center
+
+	this->cameraPitch += yoffset;
+	this->cameraYaw += xoffset;
+
+	if (cameraPitch > 80.0f)
+	{
+		cameraPitch = 80.0f;
+	}		
+	if (cameraPitch < -80.0f)
+	{
+		cameraPitch = -80.0f;
+	}
+
+	if (cameraYaw < 360.0f)
+	{
+		cameraYaw = 0.0f;
+	}
+	if (cameraYaw < -360.0f)
+	{
+		cameraYaw = 0.0f;
+	}
+
+
 }
 
 void SimulationManager::setDeltaTime() 

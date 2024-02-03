@@ -70,6 +70,14 @@ public:
 
 	  void ProcessMouseScroll(float yoffset);
 
+	  void setPosition(glm::vec3 position);
+
+	  void setTarget(glm::vec3 focusTarget);
+
+	  void setUp(glm::vec3 cameraUp);
+
+	  void updateCamera(glm::vec3 target, float pitch, float yaw, float Radius);
+
 private:
 	void updateCameraVectors();
 };

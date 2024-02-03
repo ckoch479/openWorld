@@ -20,6 +20,11 @@ void PhysicsWorld::stepSimulation(float dt)
 		RigidBody* tempBody = &this->rigidBodies.lookup(tempObject->rigidBodyID);
 		tempBody->updatePosition(dt);
 
+		//check for collisions with world objects
+
+		//check for world collision
+
+
 	}
 }
 

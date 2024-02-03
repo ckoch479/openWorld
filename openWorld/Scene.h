@@ -152,6 +152,8 @@ public:
 
 	void MouseAimCamera(float xoffset, float yoffset);
 
+	void setCameraPosition(glm::vec3 target, float pitch, float yaw, float Radius);
+
 	ID createLight(DirectionalLight directionalLight);
 	
 	ID createLight(Pointlight pointLight);

@@ -69,12 +69,16 @@ private:
 
 	bool firstMouse = true;
 
-	//for testing to be removed later
-	bool up = false;
-	bool down = false;
-	bool left = false;
-	bool right = false;
-	bool space = false;
+	//testing
+
+	glm::vec3 playerPosition = glm::vec3(1,0,1);
+	float radius = 5.0;
+
+	glm::vec3 CameraPosition;
+	float cameraPitch = 0.0;
+	float cameraYaw = 0.0;
+
+
 };
 
 #endif // !SIMULATIONMANAGER_H
