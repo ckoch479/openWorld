@@ -259,9 +259,9 @@ void Scene::MouseAimCamera(float xoffset, float yoffset)
 	this->MainCamera->ProcessMouseMovement(xoffset, yoffset);
 }
 
-void Scene::setCameraPosition(glm::vec3 target, float pitch, float yaw, float Radius)
+void Scene::setCameraPosition(glm::vec3 target, glm::vec3 position, float pitch, float yaw)
 {
-	this->MainCamera->updateCamera(target,pitch,yaw,Radius);
+	this->MainCamera->updateCamera(target,position, pitch, yaw);
 }
 
 ID Scene::createAnimation(AnimationData* animation)

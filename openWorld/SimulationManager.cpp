@@ -75,9 +75,32 @@ void SimulationManager::run()
 
 	//camera testing
 
-	this->CameraPosition = glm::vec3(1, 2, 4);
+	//this->CameraPosition = glm::vec3(1, 2, 4);
 	//this->scene->setCameraPosition(this->playerPosition, this->cameraPitch, this->cameraYaw, this->radius);
+
+	//distance from player
+	// pitch of the camera
+	//
+	//
 	
+	
+	//float horizontalFromPlayer = this->radius * cos(cameraPitch);
+	//float verticalDistance = this->radius * sin(cameraPitch);
+
+	//float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
+
+	//float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
+
+	//CameraPosition.x = this->playerPosition.x - Xoffset;
+	//
+	//CameraPosition.y = this->playerPosition.y + verticalDistance;
+
+	//CameraPosition.z = this->playerPosition.z - Zoffset;
+
+	//this->cameraYaw = 180 - this->playerRotation + this->cameraFreeRotationAngle;
+
+
+	//this->scene->setCameraPosition(this->playerPosition, this->CameraPosition, this->cameraPitch, this->cameraYaw);
 
 
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
@@ -93,15 +116,56 @@ void SimulationManager::run()
 		checkKeys(); //check for active keys during this loop
 		checkMouse();
 
-		
+		//camera 
+		//
+		float horizontalFromPlayer = radius * cos(cameraPitch);
+		float verticalDistance = radius * sin(cameraPitch);
+
+		std::cout << "before setting\n";
+
+		std::cout << "horizontal from player " << horizontalFromPlayer << "vertical from player " << verticalDistance << std::endl;
+
+		std::cout << "camera position " << this->CameraPosition.x << " " << this->CameraPosition.y << " " << this->CameraPosition.z << std::endl;
+
+		std::cout << "player position " << this->playerPosition.x << " " << this->playerPosition.y << " " << this->playerPosition.z << std::endl;
+
+
+
+		float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
+
+		float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
+
+		CameraPosition.x = this->playerPosition.x + Xoffset;
+
+		CameraPosition.y = this->playerPosition.y + verticalDistance;
+
+		CameraPosition.z = this->playerPosition.z + Zoffset;
+
+		this->cameraYaw = 180 - this->playerRotation + this->cameraFreeRotationAngle;
+
+		this->scene->setCameraPosition(this->playerPosition, this->CameraPosition, this->cameraPitch, this->cameraYaw);
 
 		//update physics
 		this->world->stepSimulation(this->deltaTime);
-		newObject.updateTransforms(this->scene, this->world);
+
+		
 
 		newObject.setPosition(this->playerPosition,this->world);
-		this->scene->setCameraPosition(this->playerPosition, this->cameraPitch, this->cameraYaw, this->radius);
+		glm::mat4 rotation;
+		rotation = glm::rotate(rotation, this->playerRotation, glm::vec3(0, 1, 0));
+		newObject.setRotation(glm::vec3(0, 1, 0), glm::toQuat(rotation), this->world);
+		
+		newObject.updateTransforms(this->scene, this->world);
+		
 
+		std::cout << "after setting: " << std::endl;
+		std::cout << "horizontal from player " << horizontalFromPlayer << "vertical from player " << verticalDistance << std::endl;
+
+		std::cout << "camera position " << this->CameraPosition.x << " " << this->CameraPosition.y << " " << this->CameraPosition.z << std::endl;
+
+		std::cout << "player position " << this->playerPosition.x << " " << this->playerPosition.y << " " << this->playerPosition.z << std::endl;
+
+		//
 
 		//draw contents to actual game window
 		this->renderer->drawWindow(this->scene,this->deltaTime);
@@ -185,26 +249,28 @@ void SimulationManager::checkMouse()
 	// value between 0-360 for camera
 	//camera needs to be 5 away from the player at center
 
-	this->cameraPitch += yoffset;
-	this->cameraYaw += xoffset;
+	this->cameraPitch += yoffset * 0.01;
+	this->cameraFreeRotationAngle += xoffset * 0.01;
 
-	if (cameraPitch > 80.0f)
+	this->playerRotation += xoffset * 0.01;
+
+	if (cameraPitch > 89.0f)
 	{
-		cameraPitch = 80.0f;
+		cameraPitch = 89.0f;
 	}		
-	if (cameraPitch < -80.0f)
+	if (cameraPitch < -89.0f)
 	{
-		cameraPitch = -80.0f;
+		cameraPitch = -89.0f;
 	}
 
-	if (cameraYaw < 360.0f)
+	/*if (cameraYaw > 360.0f)
 	{
-		cameraYaw = 0.0f;
+		this->cameraFreeRotationAngle = 360.0f;
 	}
 	if (cameraYaw < -360.0f)
 	{
-		cameraYaw = 0.0f;
-	}
+		this->cameraFreeRotationAngle = -360.0f;
+	}*/
 
 
 }

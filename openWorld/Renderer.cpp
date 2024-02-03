@@ -175,7 +175,7 @@ void Renderer::setTransforms(ID transformID, Scene& currentScene,Shader& shader)
 
 	model = glm::translate(model, currentScene.Transforms.lookup(transformID).Translation); //translate mesh
 
-	//model = glm::rotate(model, currentScene.Transforms.lookup(transformID).RotationOrigin, currentScene.Transforms.lookup(transformID).rotation);//rotate mesh
+	model * glm::toMat4(currentScene.Transforms.lookup(transformID).rotation);//rotate mesh
 
 	model *= glm::toMat4(currentScene.Transforms.lookup(transformID).rotation);
 

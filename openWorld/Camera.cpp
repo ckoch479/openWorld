@@ -2,7 +2,7 @@
 
 glm::mat4 Camera::GetViewMatrix() 
 {
-	return glm::lookAt(CameraPosition, CameraPosition + Front, Up);
+	return glm::lookAt(CameraPosition, Front, Up);
 }
 
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
@@ -63,42 +63,27 @@ void Camera::ProcessMouseScroll(float yoffset)
 void Camera::updateCameraVectors() 
 {
 	//// calculate the new Front vector
-	//glm::vec3 front;
-	//front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	//front.y = sin(glm::radians(Pitch));
-	//front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	//Front = glm::normalize(front);
-	//// also re-calculate the Right and Up vector
-	//Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	//Up = glm::normalize(glm::cross(Right, Front));
+	glm::vec3 front;
+	front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+	front.y = sin(glm::radians(Pitch));
+	front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+	Front = glm::normalize(front);
+
+	// also re-calculate the Right and Up vector
+	Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	Up = glm::normalize(glm::cross(Right, Front));
 }
 
-void Camera::setPosition(glm::vec3 position)
-{
-	this->CameraPosition = position;
-}
 
-void Camera::setTarget(glm::vec3 focusTarget)
-{
-	this->Front = focusTarget;
-}
-
-void Camera::setUp(glm::vec3 cameraUp)
-{
-	this->Up = cameraUp;
-}
-
-void Camera::updateCamera(glm::vec3 target, float pitch, float yaw, float Radius)
+void Camera::updateCamera(glm::vec3 target, glm::vec3 position, float pitch, float yaw)
 {
 	//target = front
-	this->Front = target;
-	Front = glm::normalize(Front);
-	Right = glm::normalize(glm::cross(Front, WorldUp));
-	Up = glm::normalize(glm::cross(Right, Front));
+    this->Front = target;
 
-	CameraPosition.x = sin(yaw) * Radius;
-	CameraPosition.y = 0.0;
-	CameraPosition.z = cos(yaw) * Radius;
+	this->Pitch = pitch;
+	this->Yaw = yaw;
 
+	//updateCameraVectors();
 
+	this->CameraPosition = position;
 }

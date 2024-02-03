@@ -42,6 +42,6 @@ void main()
 
 	 Normal = mat3(transpose(inverse(modelMatrix))) * aNormal;
 
-	gl_Position = projection * viewModel * totalPosition;
+	gl_Position = projection *  totalPosition * viewModel;
 	TexCoords = aTexCoord;
 }	

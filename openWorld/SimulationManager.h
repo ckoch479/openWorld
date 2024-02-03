@@ -71,12 +71,14 @@ private:
 
 	//testing
 
-	glm::vec3 playerPosition = glm::vec3(1,0,1);
+	glm::vec3 playerPosition = glm::vec3(1,1,1);
+	float playerRotation = 1.0;
 	float radius = 5.0;
 
 	glm::vec3 CameraPosition;
-	float cameraPitch = 0.0;
-	float cameraYaw = 0.0;
+	float cameraPitch = 0.0f;
+	float cameraYaw = 0.0f;
+	float cameraFreeRotationAngle = 0.0f;
 
 
 };

@@ -18,7 +18,7 @@ enum Camera_Movement {
 };
 
 // Default camera values
-const float YAW = -90.0f;
+const float YAW =   0.0f;
 const float PITCH = 0.0f;
 const float SPEED = 2.5f;
 const float SENSITIVITY = 0.1f;
@@ -70,13 +70,8 @@ public:
 
 	  void ProcessMouseScroll(float yoffset);
 
-	  void setPosition(glm::vec3 position);
 
-	  void setTarget(glm::vec3 focusTarget);
-
-	  void setUp(glm::vec3 cameraUp);
-
-	  void updateCamera(glm::vec3 target, float pitch, float yaw, float Radius);
+	  void updateCamera(glm::vec3 target, glm::vec3 position, float pitch, float yaw);
 
 private:
 	void updateCameraVectors();
