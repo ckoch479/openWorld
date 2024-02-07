@@ -207,7 +207,7 @@ ID Scene::createMesh(MeshData mesh)
 }
 
 //test function for transforms
-ID Scene::createTransform(glm::vec3 position, glm::vec3 rotationOrigin, glm::quat rotation, glm::vec3 scale) 
+ID Scene::createTransform(glm::vec3 position, glm::vec3 rotationOrigin, float rotation, glm::vec3 scale) 
 {
 	Transform newTransform;
 	newTransform.Translation = position;
@@ -221,7 +221,7 @@ ID Scene::createTransform(glm::vec3 position, glm::vec3 rotationOrigin, glm::qua
 	return newTransformID;
 }
 
-void Scene::updateTransform(ID transformID, glm::vec3 position, glm::vec3 rotationOrigin, glm::quat rotation, glm::vec3 scale)
+void Scene::updateTransform(ID transformID, glm::vec3 position, glm::vec3 rotationOrigin, float rotation, glm::vec3 scale)
 {
 	Transform* tempTransform;
 	tempTransform = &this->Transforms.lookup(transformID);

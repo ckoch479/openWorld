@@ -10,7 +10,7 @@ RigidBody::~RigidBody()
 
 }
 
-void RigidBody::createRigidBody(glm::vec3 newposition, glm::quat neworientation, float newmass)
+void RigidBody::createRigidBody(glm::vec3 newposition, float neworientation, float newmass)
 {
 	this->position = newposition;
 	this->orientation = neworientation;

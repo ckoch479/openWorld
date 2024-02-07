@@ -36,13 +36,13 @@ void SimulationManager::run()
 	//temporary meshes for world and physics bodies
 	//normals are used for color
 	ModelData testModel = createTestModel(glm::vec3(2,0.5,0),glm::vec3(1,1,1), glm::vec3(0.5, 0.1, 0.1));
-	ID testModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
+	ID testModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), 0, glm::vec3(1.0, 1.0, 1.0));
 	ID testerID = scene->createModel(testModel,testShader);
 	scene->AddInstance(testerID,testModelTransform);
 
 
 	ModelData worldModel = createTestModel(glm::vec3(0, -0.2, 0), glm::vec3(25, 0.2, 25), glm::vec3(0.1, 0.1, 0.6));
-	ID worldModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::quat(0.0, 0, 0.0, 0), glm::vec3(1.0, 1.0, 1.0));
+	ID worldModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), 0, glm::vec3(1.0, 1.0, 1.0));
 	ID worldID = scene->createModel(worldModel, testShader);
 	scene->AddInstance(worldID, worldModelTransform);
 
@@ -55,7 +55,7 @@ void SimulationManager::run()
 	newObject.LoadObjectFromFile("resources/vampire/dancing_vampire.dae", "vampire");
 	ID newAnimationID = scene->createAnimation(newAnimation);
 	
-	newObject.CreateRigidBody(this->playerPosition,glm::quat(), glm::vec3(0,1,0), 10.0f,this->world);
+	newObject.CreateRigidBody(this->playerPosition,0, glm::vec3(0,1,0), 10.0f,this->world);
 	newObject.AddtoPhysicsWorld(this->world);
 
 
@@ -73,35 +73,6 @@ void SimulationManager::run()
 
 	scene->createSpotLight(glm::vec3(-1.0), glm::vec3(-1.0,-1.0,-1.0), glm::vec3(0.020), glm::vec3(0.020), glm::vec3(0.050),1.0f,0.09f,0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
 
-	//camera testing
-
-	//this->CameraPosition = glm::vec3(1, 2, 4);
-	//this->scene->setCameraPosition(this->playerPosition, this->cameraPitch, this->cameraYaw, this->radius);
-
-	//distance from player
-	// pitch of the camera
-	//
-	//
-	
-	
-	//float horizontalFromPlayer = this->radius * cos(cameraPitch);
-	//float verticalDistance = this->radius * sin(cameraPitch);
-
-	//float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
-
-	//float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
-
-	//CameraPosition.x = this->playerPosition.x - Xoffset;
-	//
-	//CameraPosition.y = this->playerPosition.y + verticalDistance;
-
-	//CameraPosition.z = this->playerPosition.z - Zoffset;
-
-	//this->cameraYaw = 180 - this->playerRotation + this->cameraFreeRotationAngle;
-
-
-	//this->scene->setCameraPosition(this->playerPosition, this->CameraPosition, this->cameraPitch, this->cameraYaw);
-
 
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
 	while (this->state == running)
@@ -116,57 +87,29 @@ void SimulationManager::run()
 		checkKeys(); //check for active keys during this loop
 		checkMouse();
 
-		//camera 
-		//
+		//camera ----------------------------------------------------
 		float horizontalFromPlayer = radius * cos(cameraPitch);
 		float verticalDistance = radius * sin(cameraPitch);
-
-		std::cout << "before setting\n";
-
-		std::cout << "horizontal from player " << horizontalFromPlayer << "vertical from player " << verticalDistance << std::endl;
-
-		std::cout << "camera position " << this->CameraPosition.x << " " << this->CameraPosition.y << " " << this->CameraPosition.z << std::endl;
-
-		std::cout << "player position " << this->playerPosition.x << " " << this->playerPosition.y << " " << this->playerPosition.z << std::endl;
-
-
-
-		float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
-
-		float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
-
-		CameraPosition.x = this->playerPosition.x + Xoffset;
-
-		CameraPosition.y = this->playerPosition.y + verticalDistance;
-
-		CameraPosition.z = this->playerPosition.z + Zoffset;
-
 		this->cameraYaw = 180 - this->playerRotation + this->cameraFreeRotationAngle;
+		float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
+		float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
+		this-> CameraPosition.x = this->playerPosition.x - Xoffset;
+		this-> CameraPosition.y = this->playerPosition.y + verticalDistance;
+		this-> CameraPosition.z = this->playerPosition.z - Zoffset;
+		//-----------------------------------------------------------
+		
 
-		this->scene->setCameraPosition(this->playerPosition, this->CameraPosition, this->cameraPitch, this->cameraYaw);
+		
 
 		//update physics
 		this->world->stepSimulation(this->deltaTime);
-
-		
-
 		newObject.setPosition(this->playerPosition,this->world);
-		glm::mat4 rotation;
-		rotation = glm::rotate(rotation, this->playerRotation, glm::vec3(0, 1, 0));
-		newObject.setRotation(glm::vec3(0, 1, 0), glm::toQuat(rotation), this->world);
-		
+		newObject.setRotation(glm::vec3(0, 1, 0), this->playerRotation, this->world);
 		newObject.updateTransforms(this->scene, this->world);
-		
-
-		std::cout << "after setting: " << std::endl;
-		std::cout << "horizontal from player " << horizontalFromPlayer << "vertical from player " << verticalDistance << std::endl;
-
-		std::cout << "camera position " << this->CameraPosition.x << " " << this->CameraPosition.y << " " << this->CameraPosition.z << std::endl;
-
-		std::cout << "player position " << this->playerPosition.x << " " << this->playerPosition.y << " " << this->playerPosition.z << std::endl;
-
 		//
 
+		//set camera position
+		this->scene->setCameraPosition(this->playerPosition + glm::vec3(0,1.5,0), this->CameraPosition, this->cameraPitch, this->cameraYaw);
 		//draw contents to actual game window
 		this->renderer->drawWindow(this->scene,this->deltaTime);
 		
@@ -250,9 +193,18 @@ void SimulationManager::checkMouse()
 	//camera needs to be 5 away from the player at center
 
 	this->cameraPitch += yoffset * 0.01;
-	this->cameraFreeRotationAngle += xoffset * 0.01;
 
-	this->playerRotation += xoffset * 0.01;
+	if (!glfwGetMouseButton(this->renderer->getWindow(), GLFW_MOUSE_BUTTON_RIGHT))
+	{
+		this->playerRotation += xoffset * 0.01;
+	}
+
+	std::cout << "player rotation " << playerRotation << std::endl;
+
+	if (glfwGetMouseButton(this->renderer->getWindow(), GLFW_MOUSE_BUTTON_RIGHT))
+	{
+		this->cameraFreeRotationAngle += xoffset * 0.01;
+	}
 
 	if (cameraPitch > 89.0f)
 	{

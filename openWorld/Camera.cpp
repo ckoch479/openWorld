@@ -78,12 +78,16 @@ void Camera::updateCameraVectors()
 void Camera::updateCamera(glm::vec3 target, glm::vec3 position, float pitch, float yaw)
 {
 	//target = front
-    this->Front = target;
+    glm::vec3 front = target;
+	this->Front = front;//glm::normalize(front);
 
 	this->Pitch = pitch;
 	this->Yaw = yaw;
 
-	//updateCameraVectors();
 
 	this->CameraPosition = position;
+
+	//updateCameraVectors();
+
+	
 }

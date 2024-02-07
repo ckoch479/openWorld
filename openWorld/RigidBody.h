@@ -20,7 +20,7 @@ public:
 	glm::vec3 velocity;
 	glm::vec3 acceleration;
 
-	glm::quat orientation;
+	float orientation;
 	glm::vec3 rotationOrigin;
 
 	glm::vec3 angularVelocity;
@@ -37,7 +37,7 @@ public:
 	//sleeping
 	//user interface hooks I.E. player controlling movement
 
-	void createRigidBody(glm::vec3 newposition, glm::quat neworientation, float newmass);
+	void createRigidBody(glm::vec3 newposition, float neworientation, float newmass);
 
 	void updatePosition(float dt);
 

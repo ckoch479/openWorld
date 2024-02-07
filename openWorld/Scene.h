@@ -50,7 +50,7 @@ struct Transform
 {
 	glm::vec3 Scale;
 	glm::vec3 RotationOrigin;
-	glm::quat rotation;
+	float rotation;
 	glm::vec3 Translation;
 };
 
@@ -137,9 +137,9 @@ public:
 	void UpdateShader(ID modelID, Shader& shader);
 
 	//test function for transforms
-	ID createTransform(glm::vec3 position, glm::vec3 rotationOrigin, glm::quat rotation, glm::vec3 scale);
+	ID createTransform(glm::vec3 position, glm::vec3 rotationOrigin, float rotation, glm::vec3 scale);
 
-	void updateTransform(ID transformID, glm::vec3 position, glm::vec3 rotationOrigin, glm::quat rotation, glm::vec3 scale);
+	void updateTransform(ID transformID, glm::vec3 position, glm::vec3 rotationOrigin, float rotation, glm::vec3 scale);
 	//animations
 
 	ID createAnimation(AnimationData* animation);

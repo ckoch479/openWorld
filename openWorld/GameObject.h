@@ -31,7 +31,7 @@ public:
 
 	void removeObjectFromScene(Scene* scene);
 
-	void CreateRigidBody(glm::vec3 position, glm::quat orientation, glm::vec3 rotationOrigin, float mass, PhysicsWorld* world);
+	void CreateRigidBody(glm::vec3 position, float orientation, glm::vec3 rotationOrigin, float mass, PhysicsWorld* world);
 
 	void AddtoPhysicsWorld(PhysicsWorld* world);
 
@@ -41,7 +41,7 @@ public:
 
 	void setPosition(glm::vec3 position, PhysicsWorld* world); //used to overRide transform data created from physics engine
 
-	void setRotation(glm::vec3 rotationOrigin, glm::quat rotation, PhysicsWorld* world); //used to overRide transform data created from physics engine
+	void setRotation(glm::vec3 rotationOrigin, float rotation, PhysicsWorld* world); //used to overRide transform data created from physics engine
 
 	void setScaling(glm::vec3 scaling);  //used to overRide transform data created from physics engine
 

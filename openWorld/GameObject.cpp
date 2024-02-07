@@ -30,7 +30,7 @@ void GameObject::removeObjectFromScene(Scene* scene)
 	scene->removeModelFromScene(this->sceneModelID);
 }
 
-void GameObject::CreateRigidBody(glm::vec3 position, glm::quat orientation, glm::vec3 rotationOrigin, float mass, PhysicsWorld* world)
+void GameObject::CreateRigidBody(glm::vec3 position, float orientation, glm::vec3 rotationOrigin, float mass, PhysicsWorld* world)
 {
 	this->rigidBodyID = world->createRigidBody(position,orientation,rotationOrigin, mass);
 }
@@ -55,7 +55,7 @@ void GameObject::setPosition(glm::vec3 position, PhysicsWorld* world)
 	world->setPosition(this->rigidBodyID, position);
 }
 
-void GameObject::setRotation(glm::vec3 rotationOrigin, glm::quat rotation, PhysicsWorld* world)
+void GameObject::setRotation(glm::vec3 rotationOrigin, float rotation, PhysicsWorld* world)
 {
 	world->setRotation(this->rigidBodyID,rotation);
 	world->setRotationOrigin(this->rigidBodyID,rotationOrigin);

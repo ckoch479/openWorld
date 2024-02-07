@@ -71,8 +71,8 @@ private:
 
 	//testing
 
-	glm::vec3 playerPosition = glm::vec3(1,1,1);
-	float playerRotation = 1.0;
+	glm::vec3 playerPosition = glm::vec3(0,0,0);
+	float playerRotation = 0.0;
 	float radius = 5.0;
 
 	glm::vec3 CameraPosition;

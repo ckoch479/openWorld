@@ -36,7 +36,7 @@ public:
 
 	ID createRigidBody(RigidBody body);
 
-	ID createRigidBody(glm::vec3 position, glm::quat rotation, glm::vec3 rotationOrigin, float mass);
+	ID createRigidBody(glm::vec3 position, float rotation, glm::vec3 rotationOrigin, float mass);
 
 	ID createPhysicsObject(ID rigidBodyID); //Add collision ID as a parameter later
 
@@ -50,7 +50,7 @@ public:
 
 	void setPosition(ID bodyID, glm::vec3 position);
 
-	void setRotation(ID bodyID, glm::quat rotation);
+	void setRotation(ID bodyID, float rotation);
 
 	void setRotationOrigin(ID bodyID, glm::vec3 origin);
 
@@ -60,7 +60,7 @@ public:
 
 	glm::vec3 getBodyPosition(ID bodyID);
 
-	glm::quat getBodyOrientation(ID bodyID);
+	float getBodyOrientation(ID bodyID);
 	
 	glm::vec3 getBodyRotationOrigin(ID bodyID);
 

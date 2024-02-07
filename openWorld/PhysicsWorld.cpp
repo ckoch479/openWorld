@@ -66,7 +66,7 @@ glm::vec3 PhysicsWorld::getBodyPosition(ID bodyID)
 	return tempBody->position;
 }
 
-glm::quat PhysicsWorld::getBodyOrientation(ID bodyID)
+float PhysicsWorld::getBodyOrientation(ID bodyID)
 {
 	RigidBody* tempBody = &this->rigidBodies.lookup(bodyID);
 	return tempBody->orientation;
@@ -101,7 +101,7 @@ ID PhysicsWorld::createRigidBody(RigidBody body)
 	return bodyID;
 }
 
-ID PhysicsWorld::createRigidBody(glm::vec3 position, glm::quat rotation, glm::vec3 rotationOrigin, float mass)
+ID PhysicsWorld::createRigidBody(glm::vec3 position, float rotation, glm::vec3 rotationOrigin, float mass)
 {
 	ID bodyID;
 	RigidBody newBody;
@@ -123,7 +123,7 @@ void PhysicsWorld::setPosition(ID bodyID, glm::vec3 position)
 	tempBody->position = position;
 }
 
-void PhysicsWorld::setRotation(ID bodyID, glm::quat rotation)
+void PhysicsWorld::setRotation(ID bodyID, float rotation)
 {
 	RigidBody* tempBody = &this->rigidBodies.lookup(bodyID);
 	tempBody->orientation = rotation;
