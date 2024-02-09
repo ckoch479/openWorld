@@ -137,13 +137,13 @@ void AssimpModel::ExtractBoneWeightForVertices(std::vector<AssimpVertex>& vertic
     int& boneCount = m_BoneCounter; // Counter for bones
 
     //using assimp finds the amount of bones in a mesh and then creates a for loop to iterate through each of the bones
-    for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+    for (int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++)
     {
         int boneID = -1;
         // name of the bone is pulled from assimp at the boneIndex number and moved to boneName string
         std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
 
-        boneNames.push_back(boneName);
+        
 
         //if when searching through the class map Bone info the current bone name is at the end
         if (boneInfoMap.find(boneName) == boneInfoMap.end())
@@ -160,7 +160,8 @@ void AssimpModel::ExtractBoneWeightForVertices(std::vector<AssimpVertex>& vertic
             boneID = boneCount;
             //incriment the bonecount
             boneCount++;
-            
+
+            boneNames.push_back(boneName);
             
         }
         else

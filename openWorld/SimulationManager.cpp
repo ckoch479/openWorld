@@ -47,10 +47,10 @@ void SimulationManager::run()
 	scene->AddInstance(worldID, worldModelTransform);
 
 	//object rendering data
-	AnimationData* newAnimation = ResourceManager::loadAnimation("resources/vampire/dancing_vampire.dae","dance");
+	//AnimationData* newAnimation = ResourceManager::loadAnimation("resources/vampire/dancing_vampire.dae","dance");
 
 	//game object class tester
-	GameObject newObject;
+	/*GameObject newObject;
 
 	newObject.LoadObjectFromFile("resources/vampire/dancing_vampire.dae", "vampire");
 	ID newAnimationID = scene->createAnimation(newAnimation);
@@ -60,7 +60,27 @@ void SimulationManager::run()
 
 
 	newObject.addObjectToScene(LightAnimShader,scene, this->world);
-	newObject.setAnimation(newAnimation, scene);
+	newObject.setAnimation(newAnimation, scene);*/
+
+	//load in animations for the player
+	AnimationData* IdleAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/idle.dae", "idle");
+	AnimationData* JoggingAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/Jogging.dae","jog");
+	AnimationData* RunAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/StandardRun.dae","run");
+	//AnimationData* Dying = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/Dying.dae", "dying");
+
+	//create player object
+	GameObject player;
+
+	player.LoadObjectFromFile("resources/Arissa/Arissa.dae", "Arissa");
+	ID IdleAnimationID = scene->createAnimation(IdleAnimation);
+	ID JogginAnimationID = scene->createAnimation(JoggingAnimation);
+	ID RunAnimatonID = scene->createAnimation(RunAnimation);
+
+	player.CreateRigidBody(this->playerPosition, 0, glm::vec3(0, 1, 0), 10.0f, this->world);
+	player.AddtoPhysicsWorld(this->world);
+
+	player.addObjectToScene(LightAnimShader, scene, this->world);
+	player.setAnimation(IdleAnimation, scene);
 
 
 	//create lights for the scene
@@ -99,20 +119,66 @@ void SimulationManager::run()
 		//-----------------------------------------------------------
 		
 
+		// set player movement
+		
+		if(this->keys[GLFW_KEY_W] == true)
+		{
+			this->playerPosition.z += 0.1;
+
+			
+		}
+
+		if (this->keys[GLFW_KEY_S] == true)
+		{
+			this->playerPosition.z -= 0.1;
+
+			this->keys[GLFW_KEY_S] = false;
+		}
+
+		if (this->keys[GLFW_KEY_A] == true)
+		{
+			this->playerPosition.x += 0.1;
+
+			this->keys[GLFW_KEY_A] = false;
+		}
+
+		if (this->keys[GLFW_KEY_D] == true)
+		{
+			this->playerPosition.x -= 0.1;
+
+			this->keys[GLFW_KEY_D] = false;
+		}
+	
+		//set dynamic animations
+
+
+			
+		
+		//
 		
 
 		//update physics
 		this->world->stepSimulation(this->deltaTime);
-		newObject.setPosition(this->playerPosition,this->world);
+		/*newObject.setPosition(this->playerPosition,this->world);
 		newObject.setRotation(glm::vec3(0, 1, 0), this->playerRotation, this->world);
-		newObject.updateTransforms(this->scene, this->world);
+		newObject.updateTransforms(this->scene, this->world);*/
 		//
+
+		player.setPosition(this->playerPosition, this->world);
+		player.setRotation(glm::vec3(0, 1, 0), this->playerRotation, this->world);
+		player.updateTransforms(this->scene, this->world);
 
 		//set camera position
 		this->scene->setCameraPosition(this->playerPosition + glm::vec3(0,1.5,0), this->CameraPosition, this->cameraPitch, this->cameraYaw);
 		//draw contents to actual game window
 		this->renderer->drawWindow(this->scene,this->deltaTime);
 		
+	
+
+		//reset keys
+		this->keys[GLFW_KEY_W] = false;
+		this->keys[GLFW_KEY_LEFT_SHIFT] = false;
+
 	}
 
 	if (this->state != running && this->state != pause) //if the game is not running or paused shutdown
@@ -122,39 +188,42 @@ void SimulationManager::run()
 
 }
 
-void SimulationManager::checkKeys() 
+void SimulationManager::checkKeys() //temporary keyboard mechanism, need to manually reset keys after checked
 {
 	int state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_W);
 	if(state == GLFW_PRESS)
 	{
-		//this->scene->MoveCamera(FORWARD, this->deltaTime);
-
-		this->playerPosition.z += 0.1;
-		state = GLFW_RELEASE;
+		this->keys[GLFW_KEY_W] = true;
 	}
 
 	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_A);
 	if (state == GLFW_PRESS)
 	{
-		//this->scene->MoveCamera(LEFT, this->deltaTime);
-		this->playerPosition.x += 0.1;
-		state = GLFW_RELEASE;
+		this->keys[GLFW_KEY_A] = true;
 	}
 
 	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_S);
 	if (state == GLFW_PRESS)
 	{
-		//this->scene->MoveCamera(BACKWARD, this->deltaTime);
-		this->playerPosition.z -= 0.1;
-		state = GLFW_RELEASE;
+		this->keys[GLFW_KEY_S] = true;
 	}
 
 	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_D);
 	if (state == GLFW_PRESS)
 	{
-		//this->scene->MoveCamera(RIGHT, this->deltaTime);
-		this->playerPosition.x -= 0.1;
-		state = GLFW_RELEASE;
+		this->keys[GLFW_KEY_D] = true;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_SPACE);
+	if(state == GLFW_PRESS)
+	{
+		this->keys[GLFW_KEY_SPACE] = true;
+	}
+
+	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_LEFT_SHIFT);
+	if (state == GLFW_PRESS)
+	{
+		this->keys[GLFW_KEY_LEFT_SHIFT] = true;
 	}
 
 	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_ESCAPE);
@@ -199,7 +268,7 @@ void SimulationManager::checkMouse()
 		this->playerRotation += xoffset * 0.01;
 	}
 
-	std::cout << "player rotation " << playerRotation << std::endl;
+	//std::cout << "player rotation " << playerRotation << std::endl;
 
 	if (glfwGetMouseButton(this->renderer->getWindow(), GLFW_MOUSE_BUTTON_RIGHT))
 	{

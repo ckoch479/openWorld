@@ -80,6 +80,11 @@ private:
 	float cameraYaw = 0.0f;
 	float cameraFreeRotationAngle = 0.0f;
 
+	bool keys[1024];
+
+	bool KeyChange = false;
+	int currentKey;
+
 
 };
 

@@ -90,6 +90,8 @@ MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 		newbone.BoneId = newModel.getBoneInfoMap()[newbone.boneName].id;
 		newbone.boneMatrix = newModel.getBoneInfoMap()[newbone.boneName].offset;
 
+		std::cout << "BoneNames resourceManager: " << newbone.boneName << std::endl;
+
 		newMesh.skeleton.push_back(newbone);
 	}
 
@@ -114,6 +116,10 @@ ModelData ResourceManager::loadModelDataFromFile(const std::string filepath)
 	AssimpModel model(filepath);
 
 	std::vector <AssimpMesh> modelMeshes = model.getMeshes();
+	if(modelMeshes.size() <= 0)
+	{
+		std::cout << "error occured in modelMeshes!\n";
+	}
 
 	for(int i = 0; i < modelMeshes.size(); i++)
 	{
@@ -150,6 +156,7 @@ ModelData ResourceManager::loadModelDataFromFile(const std::string filepath)
 		//extract diffuse textures and load them with the resource manager
 		for (int DiffuseCounter = 0; DiffuseCounter < diffuseTexturePaths.size(); DiffuseCounter++) 
 		{
+			std::cout <<  "diffuse texture paths: " << diffuseTexturePaths[DiffuseCounter] << "number of times loaded: " << DiffuseCounter << std::endl;
 			newMesh.diffuseTextures.push_back(ResourceManager::loadTexture(diffuseTexturePaths[DiffuseCounter], "diffuse_texture" + std::to_string(DiffuseCounter)));
 		}
 		
@@ -198,6 +205,7 @@ Texture ResourceManager::loadTextureFromFile(std::string filepath)
 	unsigned char* data = stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0);
 
 	Texture newTexture;
+	
 
 	if(data)
 	{

@@ -90,6 +90,9 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\GameObjectBody</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -150,6 +153,9 @@
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
+      <Filter>Header Files\GameObjectHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
       <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
   </ItemGroup>

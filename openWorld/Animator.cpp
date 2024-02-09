@@ -15,15 +15,22 @@ Animator::~Animator()
 
 void Animator::setCurrentAnimation(RenderAnimation* currentAnimation, RenderModel* currentModel)
 {
-	this->currentAnimation = currentAnimation;
-	
 
-	this->currentModel = currentModel;
-
-	for(unsigned int i = 0; i < 100; i++)
+	if(this->currentAnimation != currentAnimation)
 	{
-		this->finalMatrices[i] = glm::mat4(1.0f);
+		this->currentAnimation = currentAnimation;
+
+		this->currentModel = currentModel;
+
+		for (unsigned int i = 0; i < 100; i++)
+		{
+			this->finalMatrices[i] = glm::mat4(1.0f);
+		}
 	}
+	
+	else {}
+
+	
 }
 
 void Animator::updateCurrentAnimation(float& deltaTime, float& currentAnimationTime)

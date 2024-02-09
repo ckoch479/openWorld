@@ -48,6 +48,7 @@ void AssimpSkeletalAnimation::ReadHierarchyData(AssimpNodeData& dest, const aiNo
     }
 
     dest.name = src->mName.data;
+
     dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
     dest.childrenCount = src->mNumChildren;
 

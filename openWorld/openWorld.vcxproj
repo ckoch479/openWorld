@@ -153,6 +153,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="lookup_table.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="lookup_table.h" />
     <ClInclude Include="PhysicsWorld.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RigidBody.h" />
