@@ -19,20 +19,38 @@ float player::GetRotationAngle()
 	return this->rotationAngle;
 }
 
-void player::LoadPlayerModel(const std::string filepath, std::string playername)
+void player::LoadPlayerModel(const std::string filepath, std::string playername, Scene* scene, PhysicsWorld* world, Shader& shader)
 {
 	this->playerName = playername;
 	this->playerModel = ResourceManager::loadModel(filepath,playername);
+
+	this->sceneModelID = scene->createModel(*this->playerModel,shader);
+	this->sceneTransformID = scene->createTransform(this->position,this->rotationAxis, this->rotationAngle, this->scale);
+
+	this->sceneObjectID = scene->AddInstance(this->sceneModelID,this->sceneTransformID);
+
+	this->scenePtr = scene;
+	this->shaderPtr = &shader;
+	this->worldPtr = world;
 }
 
-void player::AddAnimationtoPlayer(AnimationData* animation, std::string name)
+void player::AddAnimationtoPlayer(AnimationData* animation, std::string name) //for if you loaded the animation in manually
 {
 
 }
 
-void player::AddAnimationtoPlayer(std::string filepath, std::string name) //for if you loaded the animation into the scene manually
+void player::AddAnimationtoPlayer(std::string filepath, std::string name) 
 {
+	std::string animationName = name;
+	AnimationData* animation = ResourceManager::loadAnimation(filepath,name);
 
+	//add animation to the player class for later reference and use
+	this->SavedAnimations.push_back(animationName);
+
+	//add animation to the scene for future reference
+	ID newID = this->scenePtr->createAnimation(animation);
+
+	this->animationIDmap[animationName] = newID;
 }
 
 std::string player::getCurrentAnimation()
@@ -42,7 +60,11 @@ std::string player::getCurrentAnimation()
 
 void player::setCurrentAnimation(std::string animationName)
 {
-	this->currentAnimationName = animationName;
+	if (this->currentAnimationName != animationName)
+	{
+		this->currentAnimationName = animationName;
+		setActiveAnimation(this->currentAnimationName);
+	}
 }
 
 void player::setPosition(glm::vec3 position)
@@ -55,9 +77,36 @@ void player::setRotationAngle(float angle)
 	this->rotationAngle = angle;
 }
 
-void player::setRelativePosition(playerRelativePosition relativePosition, float distance)
+void player::setRelativePosition(playerRelativePosition relativePosition, float deltaTime)
 {
+	float velocity = this->movementSpeed * deltaTime;
+	switch(relativePosition)
+	{
+	case (PlayerFront):
 
+		this->position += this->playerFront * velocity;
+		break;
+
+	case (PlayerLeft):
+
+		this->position -= this->playerRight * velocity;
+
+		break;
+
+	case (PlayerRight):
+
+		this->position += this->playerRight * velocity;
+		
+		break;
+
+	case (PlayerBack):
+
+		this->position -= this->playerFront * velocity;
+		
+		break;
+	}
+
+	calculateVectors();
 }
 
 void player::setPlayerFront(glm::vec3 front)
@@ -65,12 +114,36 @@ void player::setPlayerFront(glm::vec3 front)
 	this->playerFront = front;
 }
 
-void player::calculatePlayerFront()
+void player::setActiveAnimation(std::string animationName)
 {
-
+	this->scenePtr->UpdateAnimation(this->sceneModelID,this->animationIDmap[animationName]);
 }
 
-void player::setCurrentAnimationActive(std::string animationName)
+void player::setMovementSpeed(float speed) 
 {
+	this->movementSpeed = speed;
+}
+
+void player::setPlayerYaw(float yaw)
+{
+	this->yaw = yaw;
+	calculateVectors();
+}
+
+void player::calculateVectors()
+{
+	glm::vec3 Front;
+	Front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	Front.y = sin(glm::radians(pitch));
+	Front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	this->playerFront = glm::normalize(Front);
+	// also re-calculate the Right and Up vector
+	this->playerRight = glm::normalize(glm::cross(playerFront, glm::vec3(0,1,0)));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	this->playerUp = glm::normalize(glm::cross(playerRight, playerFront));
+}
+
+void player::renderPlayer(float dt, Scene* scene, PhysicsWorld* world)
+{
+	scene->updateTransform(this->sceneTransformID, this->position, this->rotationAxis, this->yaw, this->scale);
 
 }

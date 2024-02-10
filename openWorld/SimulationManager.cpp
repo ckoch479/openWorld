@@ -47,29 +47,25 @@ void SimulationManager::run()
 	scene->AddInstance(worldID, worldModelTransform);
 
 	//object rendering data
-	//AnimationData* newAnimation = ResourceManager::loadAnimation("resources/vampire/dancing_vampire.dae","dance");
-
-	//game object class tester
-	/*GameObject newObject;
-
-	newObject.LoadObjectFromFile("resources/vampire/dancing_vampire.dae", "vampire");
-	ID newAnimationID = scene->createAnimation(newAnimation);
-	
-	newObject.CreateRigidBody(this->playerPosition,0, glm::vec3(0,1,0), 10.0f,this->world);
-	newObject.AddtoPhysicsWorld(this->world);
-
-
-	newObject.addObjectToScene(LightAnimShader,scene, this->world);
-	newObject.setAnimation(newAnimation, scene);*/
-
+	// 
 	//load in animations for the player
 	AnimationData* IdleAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/idle.dae", "idle");
 	AnimationData* JoggingAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/Jogging.dae","jog");
 	AnimationData* RunAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/StandardRun.dae","run");
 	//AnimationData* Dying = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/Dying.dae", "dying");
 
+	player newPlayer;
+
+	newPlayer.LoadPlayerModel("resources/Arissa/Arissa.dae", "Arissa", this->scene, this->world, LightAnimShader);
+	newPlayer.AddAnimationtoPlayer("resources/Arissa/ArissaAnimations/idle.dae", "idle");
+	newPlayer.AddAnimationtoPlayer("resources/Arissa/ArissaAnimations/Jogging.dae", "jog");
+	newPlayer.AddAnimationtoPlayer("resources/Arissa/ArissaAnimations/StandardRun.dae", "run");
+
+	newPlayer.setCurrentAnimation("idle");
+	newPlayer.setMovementSpeed(0.1);
+
 	//create player object
-	GameObject player;
+	/*GameObject player;
 
 	player.LoadObjectFromFile("resources/Arissa/Arissa.dae", "Arissa");
 	ID IdleAnimationID = scene->createAnimation(IdleAnimation);
@@ -80,7 +76,7 @@ void SimulationManager::run()
 	player.AddtoPhysicsWorld(this->world);
 
 	player.addObjectToScene(LightAnimShader, scene, this->world);
-	player.setAnimation(IdleAnimation, scene);
+	player.setAnimation(IdleAnimation, scene);*/
 
 
 	//create lights for the scene
@@ -93,6 +89,11 @@ void SimulationManager::run()
 
 	scene->createSpotLight(glm::vec3(-1.0), glm::vec3(-1.0,-1.0,-1.0), glm::vec3(0.020), glm::vec3(0.020), glm::vec3(0.050),1.0f,0.09f,0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
 
+	bool idle = false;
+	bool walk = false;
+	bool run = false;
+
+	
 
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
 	while (this->state == running)
@@ -107,52 +108,91 @@ void SimulationManager::run()
 		checkKeys(); //check for active keys during this loop
 		checkMouse();
 
+		glm::vec3 playerPositions;
+		float playerOrientation = 0;
+
+		playerPositions = newPlayer.GetCurrentPosition();
+		newPlayer.setPlayerYaw(this->cameraYaw * -1);
+
 		//camera ----------------------------------------------------
 		float horizontalFromPlayer = radius * cos(cameraPitch);
 		float verticalDistance = radius * sin(cameraPitch);
 		this->cameraYaw = 180 - this->playerRotation + this->cameraFreeRotationAngle;
 		float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
 		float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
-		this-> CameraPosition.x = this->playerPosition.x - Xoffset;
-		this-> CameraPosition.y = this->playerPosition.y + verticalDistance;
-		this-> CameraPosition.z = this->playerPosition.z - Zoffset;
+		this-> CameraPosition.x = playerPositions.x - Xoffset;
+		this-> CameraPosition.y = playerPositions.y + verticalDistance;
+		this-> CameraPosition.z = playerPositions.z - Zoffset;
 		//-----------------------------------------------------------
 		
 
 		// set player movement
+
+		newPlayer.renderPlayer(this->deltaTime,this->scene,this->world);
 		
 		if(this->keys[GLFW_KEY_W] == true)
 		{
-			this->playerPosition.z += 0.1;
+			//this->playerPosition.z += 0.1;
 
-			
+			newPlayer.setRelativePosition(PlayerFront, this->deltaTime);
+
+			/*if (this->keys[GLFW_KEY_LEFT_SHIFT] == false)
+			{
+				if (walk == false)
+				{
+					player.setAnimation(JoggingAnimation, scene);
+					walk = true;
+					idle = false;
+					run = false;
+				}
+			}*/
 		}
 
 		if (this->keys[GLFW_KEY_S] == true)
 		{
-			this->playerPosition.z -= 0.1;
+			//this->playerPosition.z -= 0.1;
 
 			this->keys[GLFW_KEY_S] = false;
 		}
 
 		if (this->keys[GLFW_KEY_A] == true)
 		{
-			this->playerPosition.x += 0.1;
+			//this->playerPosition.x += 0.1;
 
 			this->keys[GLFW_KEY_A] = false;
 		}
 
 		if (this->keys[GLFW_KEY_D] == true)
 		{
-			this->playerPosition.x -= 0.1;
+			//this->playerPosition.x -= 0.1;
 
 			this->keys[GLFW_KEY_D] = false;
 		}
 	
 		//set dynamic animations
 
-
+		if(this->keys[GLFW_KEY_W] == true && this->keys[GLFW_KEY_LEFT_SHIFT] == true)
+		{
+			/*if (run == false) 
+			{
+				player.setAnimation(RunAnimation, scene);
+				walk = false;
+				idle = false;
+				run = true;
+			}*/
+		}
 			
+		if (this->keys[GLFW_KEY_W] == false && this->keys[GLFW_KEY_LEFT_SHIFT] == false) 
+		{
+			/*if (idle == false)
+			{
+				player.setAnimation(IdleAnimation, scene);
+				walk = false;
+				idle = true;
+				run = false;
+			}*/
+		}
+		
 		
 		//
 		
@@ -164,9 +204,9 @@ void SimulationManager::run()
 		newObject.updateTransforms(this->scene, this->world);*/
 		//
 
-		player.setPosition(this->playerPosition, this->world);
+		/*player.setPosition(this->playerPosition, this->world);
 		player.setRotation(glm::vec3(0, 1, 0), this->playerRotation, this->world);
-		player.updateTransforms(this->scene, this->world);
+		player.updateTransforms(this->scene, this->world);*/
 
 		//set camera position
 		this->scene->setCameraPosition(this->playerPosition + glm::vec3(0,1.5,0), this->CameraPosition, this->cameraPitch, this->cameraYaw);

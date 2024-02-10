@@ -18,6 +18,8 @@
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
+#include "player.h"
+
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
 
