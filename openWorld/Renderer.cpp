@@ -89,7 +89,7 @@ void Renderer::drawWindow(Scene* scene, float dt)
 
 			//set up scene lighting
 			model->Modelshader->setVec3("viewPos", scene->MainCamera->CameraPosition);
-			model->Modelshader->setFloat("material.shininess", 132.0f);
+			model->Modelshader->setFloat("material.shininess", 32.0f);
 			//point Lights
 			for (unsigned int i = 0; i < scene->numPointLights; i++)
 			{
@@ -174,8 +174,6 @@ void Renderer::setTransforms(ID transformID, Scene& currentScene,Shader& shader)
 	glm::mat4 projection(1.0f);
 
 	model = glm::translate(model, currentScene.Transforms.lookup(transformID).Translation); //translate mesh
-
-	//model * glm::toMat4(currentScene.Transforms.lookup(transformID).rotation);//rotate mesh
 
 	model = glm::rotate(model, currentScene.Transforms.lookup(transformID).rotation, currentScene.Transforms.lookup(transformID).RotationOrigin);
 

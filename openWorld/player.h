@@ -67,17 +67,17 @@ private:
 
 	void setActiveAnimation(std::string animationName);
 
-	glm::vec3 position = glm::vec3(0.0);
+	glm::vec3 position = glm::vec3(0, 0, 0);
 	glm::vec3 rotationAxis = glm::vec3(0,1,0);
 	float rotationAngle = 0;
 	glm::vec3 scale = glm::vec3(1.0f);
 
-	glm::vec3 playerFront;
-	glm::vec3 playerRight;
-	glm::vec3 playerUp;
+	glm::vec3 playerFront = glm::vec3(0,0,1);
+	glm::vec3 playerRight = glm::vec3(1,0,0);
+	glm::vec3 playerUp = glm::vec3(0,1,0);
 
 	float yaw = 0;
-	float pitch = 0;
+	float pitch = 1;
 
 	float movementSpeed;
 	

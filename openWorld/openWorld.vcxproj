@@ -163,6 +163,7 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationDebug.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="SimulationManager.h" />
     <ClInclude Include="testingBoxMeshFunctions.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="worldMap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\3.3.shader.fs" />

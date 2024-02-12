@@ -19,6 +19,7 @@
 #include "Includes/glm/gtc/type_ptr.hpp"
 
 #include "player.h"
+#include "worldMap.h"
 
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H

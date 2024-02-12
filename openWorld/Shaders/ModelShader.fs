@@ -8,5 +8,6 @@ uniform sampler2D specular_texture0;
 
 void main()
 {
-    FragColor = mix(texture(diffuse_texture0,TexCoords), texture(specular_texture0,TexCoords),0.5f);
+    //FragColor = mix(texture(diffuse_texture0,TexCoords), texture(specular_texture0,TexCoords),0.5f);
+    FragColor = vec4(0,0.4,0,1);
 } 

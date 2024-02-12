@@ -79,12 +79,15 @@ void player::setRotationAngle(float angle)
 
 void player::setRelativePosition(playerRelativePosition relativePosition, float deltaTime)
 {
+	calculateVectors();
+
 	float velocity = this->movementSpeed * deltaTime;
 	switch(relativePosition)
 	{
 	case (PlayerFront):
 
 		this->position += this->playerFront * velocity;
+
 		break;
 
 	case (PlayerLeft):
@@ -106,7 +109,7 @@ void player::setRelativePosition(playerRelativePosition relativePosition, float 
 		break;
 	}
 
-	calculateVectors();
+	
 }
 
 void player::setPlayerFront(glm::vec3 front)
@@ -132,11 +135,14 @@ void player::setPlayerYaw(float yaw)
 
 void player::calculateVectors()
 {
+
 	glm::vec3 Front;
-	Front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	Front.y = sin(glm::radians(pitch));
-	Front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	Front.x = cos(pitch) * sin(yaw);
+	Front.y = 0;
+	Front.z = cos(pitch) * cos(yaw);
+
 	this->playerFront = glm::normalize(Front);
+
 	// also re-calculate the Right and Up vector
 	this->playerRight = glm::normalize(glm::cross(playerFront, glm::vec3(0,1,0)));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	this->playerUp = glm::normalize(glm::cross(playerRight, playerFront));
