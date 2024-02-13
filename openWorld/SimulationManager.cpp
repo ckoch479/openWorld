@@ -167,6 +167,7 @@ void SimulationManager::run()
 		newPlayer.renderPlayer(this->deltaTime, this->scene, this->world);
 		
 		float terrainHeight = newMap.getTerrainHeight(playerPosition.x, playerPosition.z);
+		std::cout << "terrain Height: " << terrainHeight << std::endl;
 		if(this->playerPosition.y < terrainHeight || this->playerPosition.y > terrainHeight + 1)
 		{
 			newPlayer.setPosition(glm::vec3(playerPosition.x,terrainHeight,playerPosition.z));

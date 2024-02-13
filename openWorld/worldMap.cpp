@@ -23,6 +23,9 @@ void worldMap::GenerateMap(std::string filename, std::string mapName, Scene* sce
 
 float worldMap::getTerrainHeight(float x, float z)
 {
+	glm::vec3 playerPosition(x, 0.0, z); //player position passed in with y at 0
+
+
 	return this->XZtable[x][z];
 }
 
@@ -40,10 +43,14 @@ void worldMap::generateTerrainHeight()
 
 		for (int j = 0; j < this->worldModel->meshes[i].vertices.size(); j++) 
 		{
-			glm::vec3* tempVec = &this->worldModel->meshes[i].vertices[i].vertexPosition;
-			this->XZtable[tempVec->x][tempVec->z] = tempVec->y; //insert the x value first then the z value leaving the y value as a key of a key
+			glm::vec3* tempVec = &this->worldModel->meshes[i].vertices[j].vertexPosition;
+			this->XZtable[tempVec->x*100][tempVec->z*100] = tempVec->y*5; //insert the x value first then the z value leaving the y value as a key of a key
+
+			//std::cout << "vertex X, Y, Z: " << tempVec->x << " " << tempVec->y << " " << tempVec->z << std::endl;
 		}
 	}
 
 }
+
+
 

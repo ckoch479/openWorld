@@ -163,6 +163,7 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="worldGenerator.cpp" />
     <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +188,7 @@
     <ClInclude Include="SimulationManager.h" />
     <ClInclude Include="testingBoxMeshFunctions.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="worldGenerator.h" />
     <ClInclude Include="worldMap.h" />
   </ItemGroup>
   <ItemGroup>
