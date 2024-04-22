@@ -8,6 +8,7 @@ std::unordered_map <std::string, ModelData>		ResourceManager::models;    //conta
 MeshData* ResourceManager::loadMesh(std::string filepath, std::string name)
 {
 	meshes[name] = loadMeshDataFromFile(filepath);
+	
 	return &meshes[name];
 }
 
@@ -18,6 +19,8 @@ MeshData* ResourceManager::getMesh(std::string name)
 
 MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 {
+	std::cout << "Mesh Loaded!\n";
+
 	MeshData newMesh;
 
 	//get data from assimpMesh class
@@ -100,7 +103,9 @@ MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
 
 ModelData* ResourceManager::loadModel(const std::string filepath, std::string name)
 {
+	std::cout << "Attempting to load Model From file!\n";
 	models[name] = loadModelDataFromFile(filepath);
+	
 	return &models[name];
 }
 
@@ -111,6 +116,7 @@ ModelData* ResourceManager::getModel(std::string name)
 
 ModelData ResourceManager::loadModelDataFromFile(const std::string filepath)
 {
+	std::cout << "loading Model!\n";
 	ModelData newModel;
 
 	AssimpModel model(filepath);
@@ -120,6 +126,8 @@ ModelData ResourceManager::loadModelDataFromFile(const std::string filepath)
 	{
 		std::cout << "error occured in modelMeshes!\n";
 	}
+
+	std::map <std::string, bool> loadedtextures;
 
 	for(int i = 0; i < modelMeshes.size(); i++)
 	{
@@ -156,14 +164,32 @@ ModelData ResourceManager::loadModelDataFromFile(const std::string filepath)
 		//extract diffuse textures and load them with the resource manager
 		for (int DiffuseCounter = 0; DiffuseCounter < diffuseTexturePaths.size(); DiffuseCounter++) 
 		{
-			std::cout <<  "diffuse texture paths: " << diffuseTexturePaths[DiffuseCounter] << "number of times loaded: " << DiffuseCounter << std::endl;
-			newMesh.diffuseTextures.push_back(ResourceManager::loadTexture(diffuseTexturePaths[DiffuseCounter], "diffuse_texture" + std::to_string(DiffuseCounter)));
+
+			if (loadedtextures[diffuseTexturePaths[DiffuseCounter]] != true) 
+			{
+				std::cout << "diffuse texture paths: " << diffuseTexturePaths[DiffuseCounter] << "number of times loaded: " << DiffuseCounter << std::endl;
+				newMesh.diffuseTextures.push_back(ResourceManager::loadTexture(diffuseTexturePaths[DiffuseCounter], "diffuse_texture" + std::to_string(DiffuseCounter)));
+				loadedtextures[diffuseTexturePaths[DiffuseCounter]] = true;
+			}
+			
+			else 
+			{
+				std::cout << "texture already loaded!\n";
+			}
 		}
 		
-		//exract specular textures and load them with the resource manager
+		//extract specular textures and load them with the resource manager
 		for (int SpecularCounter = 0; SpecularCounter < specularTexturePaths.size(); SpecularCounter++)
 		{
-			newMesh.specularTextures.push_back(ResourceManager::loadTexture(diffuseTexturePaths[SpecularCounter], "specular_texture" + std::to_string(SpecularCounter)));
+
+			if (loadedtextures[specularTexturePaths[SpecularCounter]] != true)
+			{
+				newMesh.specularTextures.push_back(ResourceManager::loadTexture(diffuseTexturePaths[SpecularCounter], "specular_texture" + std::to_string(SpecularCounter)));
+				loadedtextures[specularTexturePaths[SpecularCounter]] = true;
+			
+			}
+		
+
 		}
 
 
@@ -188,6 +214,7 @@ ModelData ResourceManager::loadModelDataFromFile(const std::string filepath)
 Texture* ResourceManager::loadTexture(const std::string filepath, std::string name)
 {
 	textures[name] = loadTextureFromFile(filepath);
+	std::cout << "texture Loaded!\n";
 	return &textures[name];
 }
 

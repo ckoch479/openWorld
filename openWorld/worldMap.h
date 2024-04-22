@@ -9,6 +9,7 @@
 
 #include "ResourceManager.h"
 #include "Scene.h"
+#include "PhysicsWorld.h"
 
 #ifndef WORLDMAP_H
 #define WORLDMAP_H
@@ -24,7 +25,7 @@ public:
 
 	float getTerrainHeight(float x, float z); //input x,z coordinates for the world and the height will be returned
 
-
+	void addMaptoPhysicsWorld(PhysicsWorld* world);
 
 	void addStaticObject();
 	
@@ -36,6 +37,11 @@ private:
 	ID worldModelID; //for rendering
 	ID instanceID;
 	std::map <float, std::map<float, float>> XZtable; 
+
+	int terrainWidth = 0;
+	int numXcoords = 0;
+
+	std::vector <glm::vec3> terrainMesh;
 
 	
 };

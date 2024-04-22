@@ -79,8 +79,8 @@
     <IncludePath>C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include\reactphysics3d;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include\reactphysics3d;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp\include\assimp;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\KHR;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp\include;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\glad;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
@@ -118,12 +118,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;NOMINMAX</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mt.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -151,6 +153,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Includes\glad\glad.c" />
     <ClCompile Include="lookup_table.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="player.cpp" />
@@ -177,6 +180,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Includes\glad\glad.h" />
     <ClInclude Include="lookup_table.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />
@@ -196,6 +200,8 @@
     <None Include="Shaders\3.3.shader.vs" />
     <None Include="Shaders\AnimationShader.fs" />
     <None Include="Shaders\AnimationShader.vs" />
+    <None Include="Shaders\cubeMap.fs" />
+    <None Include="Shaders\cubeMap.vs" />
     <None Include="Shaders\LightAndAnimationShader.fs" />
     <None Include="Shaders\LightAndAnimationShader.vs" />
     <None Include="Shaders\ModelShader.fs" />

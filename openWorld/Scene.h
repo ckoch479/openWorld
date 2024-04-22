@@ -49,9 +49,11 @@ struct RenderModel
 struct Transform 
 {
 	glm::vec3 Scale;
-	glm::vec3 RotationOrigin;
-	float rotation;
+	//glm::vec3 RotationOrigin;
+	//float rotation;
 	glm::vec3 Translation;
+
+	glm::quat rotationQuat;
 };
 
 struct Instance 
@@ -137,9 +139,9 @@ public:
 	void UpdateShader(ID modelID, Shader& shader);
 
 	//test function for transforms
-	ID createTransform(glm::vec3 position, glm::vec3 rotationOrigin, float rotation, glm::vec3 scale);
+	ID createTransform(glm::vec3 position, glm::quat rotation, glm::vec3 scale);
 
-	void updateTransform(ID transformID, glm::vec3 position, glm::vec3 rotationOrigin, float rotation, glm::vec3 scale);
+	void updateTransform(ID transformID, glm::vec3 position, glm::quat rotation, glm::vec3 scale);
 	//animations
 
 	ID createAnimation(AnimationData* animation);
@@ -167,8 +169,14 @@ public:
 	ID createSpotLight(glm::vec3 position,glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float innerCutoff, float outerCutoff);
 
 	void MovePointLight(ID pointLightID, glm::vec3 translation);
+	
+	void createCubeMap(std::vector <std::string> cubeMapTexturePaths, Shader* cubeMapshader);
 
 private:
+
+	void createCubeMapVAO();
+
+	unsigned int loadCubeMapTextures(std::vector <std::string> texturePaths);
 
 	lookup_table<Instance> Instances;
 	lookup_table<RenderMesh> Meshes;
@@ -190,6 +198,13 @@ private:
 	ID directionLightID;
 
 	Camera* MainCamera;
+
+	float cubeMapLoaded = false; //used in the renderer to check status of a cubemap
+	Shader* cubeMapShader; //created when a cube map is created
+	unsigned int cubeMapVAO;
+	unsigned int cubeMapVBO;
+
+	unsigned int cubeMaptextureID;
 
 	unsigned int InstanceCount = 0;
 	unsigned int numPointLights = 0;

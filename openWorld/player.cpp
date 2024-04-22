@@ -25,7 +25,7 @@ void player::LoadPlayerModel(const std::string filepath, std::string playername,
 	this->playerModel = ResourceManager::loadModel(filepath,playername);
 
 	this->sceneModelID = scene->createModel(*this->playerModel,shader);
-	this->sceneTransformID = scene->createTransform(this->position,this->rotationAxis, this->rotationAngle, this->scale);
+	this->sceneTransformID = scene->createTransform(this->position,glm::quat(glm::vec3(0,this->rotationAngle,0)), this->scale);
 
 	this->sceneObjectID = scene->AddInstance(this->sceneModelID,this->sceneTransformID);
 
@@ -150,6 +150,6 @@ void player::calculateVectors()
 
 void player::renderPlayer(float dt, Scene* scene, PhysicsWorld* world)
 {
-	scene->updateTransform(this->sceneTransformID, this->position, this->rotationAxis, this->yaw, this->scale);
+	scene->updateTransform(this->sceneTransformID, this->position, glm::quat(glm::vec3(0,this->yaw,0)), this->scale);
 
 }

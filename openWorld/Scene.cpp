@@ -1,6 +1,9 @@
 #include "Scene.h"
 
-Scene::Scene() {};
+Scene::Scene() 
+{
+
+};
 
 ID Scene::AddInstance(ID& MeshID, ID& TransformID)
 {
@@ -59,6 +62,18 @@ ID Scene::createModel(ModelData model, Shader& shader)
 
 		newModel.boneMap[model.skeleton[i].boneName] = newbone;
 	}
+
+	/*if(model.skeleton.size() > 1)
+	{
+		for(unsigned int i = 0; i < 100; i++)
+		{
+			BoneData newbone;
+			newbone.BoneId = i;
+			newbone.boneMatrix = glm::mat4(1.0f);
+			newbone.boneName = "noBone" + i;
+			newModel.boneMap[newbone.boneName] = newbone;
+		}
+	}*/
 
 	//set the shader used for this model and meshes
 	newModel.Modelshader = &shader;
@@ -207,13 +222,14 @@ ID Scene::createMesh(MeshData mesh)
 }
 
 //test function for transforms
-ID Scene::createTransform(glm::vec3 position, glm::vec3 rotationOrigin, float rotation, glm::vec3 scale) 
+ID Scene::createTransform(glm::vec3 position, glm::quat rotation, glm::vec3 scale) 
 {
 	Transform newTransform;
 	newTransform.Translation = position;
-	newTransform.RotationOrigin = rotationOrigin;
-	newTransform.rotation = rotation;
+	//newTransform.RotationOrigin = rotationOrigin;
+	//newTransform.rotation = rotation;
 	newTransform.Scale = scale;
+	newTransform.rotationQuat = rotation;
 
 	ID newTransformID;
 
@@ -221,13 +237,14 @@ ID Scene::createTransform(glm::vec3 position, glm::vec3 rotationOrigin, float ro
 	return newTransformID;
 }
 
-void Scene::updateTransform(ID transformID, glm::vec3 position, glm::vec3 rotationOrigin, float rotation, glm::vec3 scale)
+void Scene::updateTransform(ID transformID, glm::vec3 position, glm::quat rotation, glm::vec3 scale)
 {
 	Transform* tempTransform;
 	tempTransform = &this->Transforms.lookup(transformID);
 	tempTransform->Translation = position;
-	tempTransform->RotationOrigin = rotationOrigin;
-	tempTransform->rotation = rotation;
+	//tempTransform->RotationOrigin = rotationOrigin;
+	//tempTransform->rotation = rotation;
+	tempTransform->rotationQuat = rotation;
 	tempTransform->Scale = scale;
 
 	if(!tempTransform)
@@ -290,6 +307,108 @@ ID Scene::createAnimation(AnimationData* animation, std::string name)
 	animationID = animations.add(newAnimation);
 
 	return animationID;
+}
+
+void Scene::createCubeMap(std::vector <std::string> cubeMapTexturePaths, Shader* cubeMapshader)
+{
+	//create shader
+	
+	this->cubeMapShader = cubeMapshader;
+
+	//load and create textures
+	this->cubeMaptextureID = loadCubeMapTextures(cubeMapTexturePaths);
+
+	//create VAO/VBO
+	createCubeMapVAO();
+
+	//set skybox to true
+	this->cubeMapLoaded = true;
+}
+
+unsigned int Scene::loadCubeMapTextures(std::vector <std::string> texturePaths)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	int width, height, nrComponents;
+	for (unsigned int i = 0; i < texturePaths.size(); i++)
+	{
+		unsigned char* data = stbi_load(texturePaths[i].c_str(), &width, &height, &nrComponents, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << texturePaths[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return textureID;
+}
+
+void Scene::createCubeMapVAO()
+{
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+
+	glGenVertexArrays(1, &cubeMapVAO);
+	glGenBuffers(1, &cubeMapVBO);
+	glBindVertexArray(cubeMapVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeMapVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 }
 
 //ID Scene::createMesh(MeshData mesh, Shader& shader, AnimationData* animation)

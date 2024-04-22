@@ -31,25 +31,13 @@ public:
 
 	void removeObjectFromScene(Scene* scene);
 
-	void CreateRigidBody(glm::vec3 position, float orientation, glm::vec3 rotationOrigin, float mass, PhysicsWorld* world);
+	void addObjectToPhysicsWorld(PhysicsWorld* world);
 
-	void AddtoPhysicsWorld(PhysicsWorld* world);
-
-	void removeFromPhysicsWorld(PhysicsWorld* world);
-
-	void applyForce(glm::vec3 direction, PhysicsWorld* world);
-
-	void setPosition(glm::vec3 position, PhysicsWorld* world); //used to overRide transform data created from physics engine
-
-	void setRotation(glm::vec3 rotationOrigin, float rotation, PhysicsWorld* world); //used to overRide transform data created from physics engine
-
-	void setScaling(glm::vec3 scaling);  //used to overRide transform data created from physics engine
-
-	void setAnimation(AnimationData* animation, Scene* scene);
-
-	void setAnimation(ID animationID, Scene* scene);
+	void addForce(glm::vec3 force, PhysicsWorld* world);
 
 	void updateTransforms(Scene* scene, PhysicsWorld* world);
+
+	void setPosition(glm::vec3 newPosition);
 
 private:
 
@@ -62,14 +50,16 @@ private:
 	ID sceneTransformID;
 
 	ID physicsWorldObjectID;
-	ID rigidBodyID;
 
-	//physics and collision info
-	std::vector <orientedBoundingBox> orientedBoundingBoxes; //oriented bounding boxes based off the vertices and bones of the model, 1 OBB per bone
-	
+	glm::vec3 Position;
+
+	glm::quat rotation;
+
 	glm::vec3 objectScale;
 
 	std::string objectName;
+
+	std::vector <glm::vec3> objectMeshData;
 
 };
 #endif

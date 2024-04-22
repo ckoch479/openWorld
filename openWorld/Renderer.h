@@ -50,8 +50,8 @@ private:
 	/*float DeltaTime = 0.0f;
 	float LastFrame = 1.0f;*/
 
-	float SCR_WIDTH = 800;
-	float SCR_HEIGHT = 600;
+	float SCR_WIDTH = 1200;
+	float SCR_HEIGHT = 900;
 
 	void setPointLightUniform(Pointlight light, Shader& shader, int iter);
 
@@ -60,6 +60,9 @@ private:
 	void setSpotLightUniforms(SpotLight light, Shader& shader);
 
 	void setTransforms(ID transformID, Scene& currentScene, Shader& shader);
+
+	void drawSkyBox(Scene* scene);
+	
 	
 
 };

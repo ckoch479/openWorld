@@ -27,6 +27,7 @@ void Texture::generate(unsigned int width, unsigned int height, unsigned char* d
 	this->height = height;
 
 	std::cout << "image format type: " << this->imageFormat << std::endl;
+	std::cout << "texture ID: " << this->id << std::endl;
 
 	glBindTexture(GL_TEXTURE_2D, this->id);
 	glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -42,4 +43,5 @@ void Texture::generate(unsigned int width, unsigned int height, unsigned char* d
 void Texture::bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, this->id);
+	
 }

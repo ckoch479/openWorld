@@ -10,7 +10,7 @@ RigidBody::~RigidBody()
 
 }
 
-void RigidBody::createRigidBody(glm::vec3 newposition, float neworientation, float newmass)
+void RigidBody::createRigidBody(glm::vec3 newposition, glm::quat neworientation, float newmass)
 {
 	this->position = newposition;
 	this->orientation = neworientation;
@@ -19,7 +19,7 @@ void RigidBody::createRigidBody(glm::vec3 newposition, float neworientation, flo
 	this->velocity = glm::vec3(0.0f);
 	this->acceleration = glm::vec3(0.0f);
 
-	this->rotationOrigin = glm::vec3(0.0, 1.0, 0.0);
+	
 	this->angularVelocity = glm::vec3(0.0f);
 	this->angularAcceleration = glm::vec3(0.0f);
 }

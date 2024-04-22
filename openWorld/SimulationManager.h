@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
 #include <iostream>
@@ -68,7 +68,7 @@ private:
 	float lastMouseX = 400.0f;
 	float lastMouseY = 300.0f;
 
-	float mouseSensitivity = 0.5f;
+	float mouseSensitivity = 0.3f;
 
 	bool firstMouse = true;
 

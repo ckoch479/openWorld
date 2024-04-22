@@ -35,6 +35,7 @@ void Renderer::init()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
 	this->animator = new Animator;
 
@@ -117,26 +118,42 @@ void Renderer::drawWindow(Scene* scene, float dt)
 
 				glBindVertexArray(mesh->MeshVAO);
 
+
+				
 				//textures
 				if (mesh->hasDiffuseTextures == true)
 				{
-					glActiveTexture(GL_TEXTURE0);
+					glActiveTexture(GL_TEXTURE0 + mesh->meshDiffuseTextures[0]->id);
 					mesh->meshDiffuseTextures[0]->bind();
+					model->Modelshader->setInt("diffuse", mesh->meshDiffuseTextures[0]->id);
+					
+					
 				}
 
 				if (mesh->hasSpecularTextures == true)
 				{
-					glActiveTexture(GL_TEXTURE1);
+					//glActiveTexture(GL_TEXTURE0 + mesh->meshSpecularTextures[0]->id);
 					mesh->meshSpecularTextures[0]->bind();
+					model->Modelshader->setInt("specular", mesh->meshSpecularTextures[0]->id);
 				}
+
+				
 
 				glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mesh->IndexCount), GL_UNSIGNED_INT, 0);
 
 				//glDrawArrays(GL_TRIANGLES, 0, 100000);
 				glBindVertexArray(0);
+
+				glActiveTexture(GL_TEXTURE0);
+			
 			}
 
-			
+
+		}
+
+		if(scene->cubeMapLoaded == true)
+		{
+			drawSkyBox(scene);
 		}
 
 		glfwSwapBuffers(this->window);
@@ -175,12 +192,13 @@ void Renderer::setTransforms(ID transformID, Scene& currentScene,Shader& shader)
 
 	model = glm::translate(model, currentScene.Transforms.lookup(transformID).Translation); //translate mesh
 
-	model = glm::rotate(model, currentScene.Transforms.lookup(transformID).rotation, currentScene.Transforms.lookup(transformID).RotationOrigin);
+	glm::mat4 rotationMat = glm::toMat4(currentScene.Transforms.lookup(transformID).rotationQuat);
+	model = model * rotationMat;
 
 	model = glm::scale(model, currentScene.Transforms.lookup(transformID).Scale);//scale mesh
 
 	view = currentScene.MainCamera->GetViewMatrix();
-	projection = glm::perspective(glm::radians(currentScene.MainCamera->Zoom), ((float)SCR_WIDTH / (float)SCR_HEIGHT), 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(currentScene.MainCamera->Zoom), ((float)SCR_WIDTH / (float)SCR_HEIGHT), 0.1f, 10000.0f);
 	shader.setMat4("modelMatrix", model);
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
@@ -217,6 +235,27 @@ void Renderer::setSpotLightUniforms(SpotLight light, Shader& shader)
 	shader.setFloat("spotLight.quadratic", light.quadratic);
 	shader.setFloat("spotLight.cutOff", light.cutoff);
 	shader.setFloat("spotLight.outerCutOff", light.outerCutoff);
+}
+
+void Renderer::drawSkyBox(Scene* scene)
+{
+	// draw skybox as last
+	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+	scene->cubeMapShader->use();
+	
+	glm::mat4 view(1.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(scene->MainCamera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+	view = glm::mat4(glm::mat3(scene->MainCamera->GetViewMatrix())); // remove translation from the view matrix
+	scene->cubeMapShader->setMat4("view", view);
+	scene->cubeMapShader->setMat4("projection", projection);
+	// skybox cube
+	glBindVertexArray(scene->cubeMapVAO);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, scene->cubeMaptextureID);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+	glDepthFunc(GL_LESS); // set depth function back to default
 }
 
 

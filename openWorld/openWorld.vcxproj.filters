@@ -96,6 +96,12 @@
     <ClCompile Include="worldMap.cpp">
       <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
+    <ClCompile Include="worldGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\glad\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -164,6 +170,12 @@
     <ClInclude Include="worldMap.h">
       <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
+    <ClInclude Include="worldGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\glad\glad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\3.3.shader.fs">
@@ -200,6 +212,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Shaders\PhysicsTestShader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\cubeMap.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\cubeMap.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

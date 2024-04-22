@@ -15,11 +15,29 @@
 #ifndef PHYSICSWORLD_H
 #define PHYSICSWORLD_H
 
+struct AABBCollider
+{
+	glm::vec3 topA;
+	glm::vec3 topB;
+	glm::vec3 topC;
+	glm::vec3 topD;
+
+	glm::vec3 bottomA;
+	glm::vec3 bottomB;
+	glm::vec3 bottomC;
+	glm::vec3 bottomD;
+};
+
 struct physicsObject
 {
 	ID rigidBodyID;
-	//std::vector <ID> colliderIDs;
-	//sphereCollider broadCollisionCollider; //collider will be a sphere collider for ease of use and calculation
+	//starting with simple AABB for testing
+	AABBCollider objectCollider;
+	RigidBody objectBody;
+
+	std::vector <glm::vec3> forcesApplied;
+	std::vector <glm::vec3> torqueApplied;
+
 };
 
 class PhysicsWorld
@@ -36,23 +54,23 @@ public:
 
 	ID createRigidBody(RigidBody body);
 
-	ID createRigidBody(glm::vec3 position, float rotation, glm::vec3 rotationOrigin, float mass);
+	ID createRigidBody(glm::vec3 position, glm::quat rotation, float mass);
 
-	ID createPhysicsObject(ID rigidBodyID); //Add collision ID as a parameter later
-
-	ID createPhysicsObject(RigidBody* body, std::vector <orientedBoundingBox> colliders);
+	ID createPhysicsObject(std::vector <glm::vec3> &meshData, glm::vec3 startingPosition, glm::quat rotation);
 
 	void deletePhysicsObject(ID objectID);
 
+	void addTerrainMeshVertices(std::vector <glm::vec3> verts);
+
 	//manipulate object------------------------------------------
 
-	void applyForce(ID bodyID,glm::vec3 force);
+	void applyForce(ID objectID,glm::vec3 force);
 
 	void setPosition(ID bodyID, glm::vec3 position);
 
-	void setRotation(ID bodyID, float rotation);
+	void setRotation(ID bodyID, glm::quat rotation);
 
-	void setRotationOrigin(ID bodyID, glm::vec3 origin);
+	
 
 
 
@@ -60,11 +78,15 @@ public:
 
 	glm::vec3 getBodyPosition(ID bodyID);
 
-	float getBodyOrientation(ID bodyID);
+	glm::quat getBodyOrientation(ID bodyID);
 	
-	glm::vec3 getBodyRotationOrigin(ID bodyID);
+	
 
 	void stepSimulation(float dt);
+
+	std::vector <ID> objectIDs;
+	int numObjects = 0;
+	
 
 private:
 
@@ -74,13 +96,25 @@ private:
 
 	float physicsWorldObjects = 0;
 	float numRigidBodies = 0;
+
 	std::vector <ID> worldObjectIDs;
 
+	std::vector <glm::vec3> WorldMeshVertices; //Vertices for the worlds mesh for ground based collision detection
+	std::map <float, std::map<float, float>> XZtable;
+
+	AABBCollider calculateAABBFromMeshData(std::vector <glm::vec3>& meshData);
 };
 
 //physics simulation methods:
 //Euler method
 //Verlet integration 
 //Runge-Kutta
+
+// new physics world ideas
+// 
+// add game map into physics world to start as a ground mesh with collision detection/resolution
+// 
+// 
+//
 
 #endif
