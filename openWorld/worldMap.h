@@ -28,6 +28,10 @@ public:
 	void addMaptoPhysicsWorld(PhysicsWorld* world);
 
 	void addStaticObject();
+
+	std::vector <glm::vec3> getVertices();
+
+	std::vector <int> getIndices();
 	
 private:
 

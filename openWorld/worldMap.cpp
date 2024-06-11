@@ -15,6 +15,35 @@ void worldMap::addMaptoPhysicsWorld(PhysicsWorld* world)
 	world->addTerrainMeshVertices(this->terrainMesh);
 }
 
+std::vector <glm::vec3> worldMap::getVertices()
+{
+	std::vector <glm::vec3> vertices;
+
+	//for(unsigned int i = 0; i < this->worldModel->meshes.size(); i++)
+	//{
+	//	for(unsigned int j = 0; j < this->worldModel->meshes[i].vertices.size(); j++)
+	//	{
+	//		vertices.push_back(this->worldModel->meshes[i].vertices[j].vertexPosition);
+	//	}
+	//}
+
+	return this->terrainMesh;// vertices;
+}
+
+std::vector <int> worldMap::getIndices()
+{
+	std::vector <int> indices;
+	for(unsigned int i = 0; i < this->worldModel->meshes.size(); i++)
+	{
+		for(unsigned int j = 0; j < this->worldModel->meshes[i].indices.size(); j++)
+		{
+			indices.push_back(this->worldModel->meshes[i].indices[j]);
+		}
+	}
+
+	return indices;
+}
+
 void worldMap::GenerateMap(std::string filename, std::string mapName, Scene* scene, Shader& shader)
 {
 	this->worldModel = ResourceManager::loadModel(filename, mapName); //load map model from file

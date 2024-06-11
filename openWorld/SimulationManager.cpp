@@ -34,29 +34,6 @@ void SimulationManager::run()
 
 	//object physics data
 
-	
-
-	//temporary meshes for world and physics bodies
-	//normals are used for color
-	/*ModelData testModel = createTestModel(glm::vec3(2,0.5,0),glm::vec3(1,1,1), glm::vec3(0.5, 0.1, 0.1));
-	ID testModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), 0, glm::vec3(1.0, 1.0, 1.0));
-	ID testerID = scene->createModel(testModel,testShader);
-	scene->AddInstance(testerID,testModelTransform);*/
-
-
-	/*ModelData worldModel = createTestModel(glm::vec3(0, -0.2, 0), glm::vec3(25, 0.2, 25), glm::vec3(0.1, 0.1, 0.6));
-	ID worldModelTransform = scene->createTransform(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0), 0, glm::vec3(1.0, 1.0, 1.0));
-	ID worldID = scene->createModel(worldModel, testShader);
-	scene->AddInstance(worldID, worldModelTransform);*/
-
-	//object rendering data
-	// 
-	//load in animations for the player
-	//AnimationData* IdleAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/idle.dae", "idle");
-	//AnimationData* JoggingAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/Jogging.dae","jog");
-	//AnimationData* RunAnimation = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/StandardRun.dae","run");
-	//AnimationData* Dying = ResourceManager::loadAnimation("resources/Arissa/ArissaAnimations/Dying.dae", "dying");
-
 	player newPlayer;
 
 	newPlayer.LoadPlayerModel("resources/Arissa/Arissa.dae", "Arissa", this->scene, this->world, LightAnimShader);
@@ -71,14 +48,14 @@ void SimulationManager::run()
 	GameObject newObject;
 	newObject.LoadObjectFromFile("resources/Assets/badCrate.obj", "crate");
 	newObject.setPosition(glm::vec3(-1, 42, -1));
-	newObject.addObjectToPhysicsWorld(this->world);
+
 	newObject.addObjectToScene(LightShader, this->scene, this->world);
 
-	newObject.addForce(glm::vec3(10, 0, 10), this->world);
 
 	worldMap newMap;
 	newMap.GenerateMap("resources/Terrain/firstGameMap1.obj", "map", this->scene, LightShader);
 	newMap.addMaptoPhysicsWorld(this->world);
+
 
 	std::vector <std::string> cubeMapPaths
 	{
@@ -145,7 +122,7 @@ void SimulationManager::run()
 				lastHeight = terrainHeight;
 				newPlayer.setPosition(glm::vec3(playerPosition.x, terrainHeight, playerPosition.z));
 
-				std::cout << "Player Height: " << terrainHeight << std::endl;
+				//std::cout << "Player Height: " << terrainHeight << std::endl;
 			}
 
 			if (terrainHeight == 0)
@@ -215,13 +192,15 @@ void SimulationManager::run()
 
 		newPlayer.renderPlayer(this->deltaTime, this->scene, this->world);
 	
-		newObject.addForce(glm::vec3(0, -9.8, 0), this->world);
+
+		
+		//newObject.addForce(glm::vec3(0, -9.8, 0), this->world);
 		newObject.updateTransforms(this->scene, this->world);
 
 		//update physics
 		this->world->stepSimulation(this->deltaTime);
 
-		
+	
 
 		//set camera position
 		this->scene->setCameraPosition(this->playerPosition + glm::vec3(0,1.5,0), this->CameraPosition, this->cameraPitch, this->cameraYaw);

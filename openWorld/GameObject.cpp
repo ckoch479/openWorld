@@ -60,10 +60,10 @@ void GameObject::addForce(glm::vec3 force, PhysicsWorld* world)
 
 void GameObject::updateTransforms(Scene* scene, PhysicsWorld* world)
 {
-	this->Position = world->getBodyPosition(this->physicsWorldObjectID);
-	this->rotation = world->getBodyOrientation(this->physicsWorldObjectID);
+	//this->Position = world->getBodyPosition(this->physicsWorldObjectID);
+	//this->rotation = world->getBodyOrientation(this->physicsWorldObjectID);
 
-	std::cout << Position.x << " " << Position.y << " " << Position.z << std::endl;
+	//std::cout << Position.x << " " << Position.y << " " << Position.z << std::endl;
 	
 	scene->updateTransform(this->sceneTransformID, this->Position, this->rotation, this->objectScale);
 }

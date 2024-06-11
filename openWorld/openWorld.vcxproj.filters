@@ -96,9 +96,6 @@
     <ClCompile Include="worldMap.cpp">
       <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
-    <ClCompile Include="worldGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Includes\glad\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -169,9 +166,6 @@
     </ClInclude>
     <ClInclude Include="worldMap.h">
       <Filter>Header Files\GameObjectHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="worldGenerator.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Includes\glad\glad.h">
       <Filter>Header Files</Filter>

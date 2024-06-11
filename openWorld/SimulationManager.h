@@ -21,6 +21,8 @@
 #include "player.h"
 #include "worldMap.h"
 
+#include "reactphysics3d/reactphysics3d.h"
+
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
 
