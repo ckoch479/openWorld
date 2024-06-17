@@ -2,256 +2,535 @@
 
 PhysicsWorld::PhysicsWorld()
 {
-
+	this->physicsCommon = new reactphysics3d::PhysicsCommon;
+	this->world = physicsCommon->createPhysicsWorld();
+	this->world->setIsDebugRenderingEnabled(false);
+	this->worldListener = new reactPhysicsListener();
+	this->world->setEventListener(this->worldListener);
 }
 
 PhysicsWorld::~PhysicsWorld()
 {
-
+	this->physicsCommon->destroyPhysicsWorld(this->world);
+	delete this->worldListener;
+	delete this->physicsCommon;
 }
 
 void PhysicsWorld::stepSimulation(float dt)
 {
-	for (unsigned int i = 0; i < this->numObjects; i++) //iterate through all physics world objects
-	{
-		physicsObject* tempObject = &objects.lookup(objectIDs[i]); //create a pointer to the main object for ease of use
-
-		float coefficientFrictionKinetic = 0.0; //temporary test value
-		//apply forces to objects:
-
-		for (unsigned int j = 0; j < tempObject->forcesApplied.size(); ++j)
-		{
-			glm::vec3 force(0.0f);
-				force = tempObject->forcesApplied[j];
-			glm::vec3 acceleration = force / tempObject->objectBody.mass; //A = F/M
-
-			tempObject->objectBody.velocity += acceleration * dt; // set object velocity
-
-
-			//calculate friction
-
-			if (tempObject->objectBody.velocity.x > 0) {
-				tempObject->objectBody.velocity.x -= coefficientFrictionKinetic * dt;
-			}
-			else if (tempObject->objectBody.velocity.x < 0) {
-				tempObject->objectBody.velocity.x += coefficientFrictionKinetic * dt;
-			}
-
-			if (tempObject->objectBody.velocity.y > 0) {
-				tempObject->objectBody.velocity.y -= coefficientFrictionKinetic * dt;
-			}
-			else if (tempObject->objectBody.velocity.y < 0) {
-				tempObject->objectBody.velocity.y += coefficientFrictionKinetic * dt;
-			}
-
-			if (tempObject->objectBody.velocity.z > 0) {
-				tempObject->objectBody.velocity.z -= coefficientFrictionKinetic * dt;
-			}
-			else if (tempObject->objectBody.velocity.z < 0) {
-				tempObject->objectBody.velocity.z += coefficientFrictionKinetic * dt;
-			}
-
-			//prevent friction from making the objects velocity reverse
-			if (tempObject->objectBody.velocity.x * force.x <= 0.0) {
-				tempObject->objectBody.velocity.x = 0;
-			}
-
-			if (tempObject->objectBody.velocity.y * force.y <= 0.0) {
-				tempObject->objectBody.velocity.y = 0;
-			}
-
-			if (tempObject->objectBody.velocity.z * force.z <= 0.0) {
-				tempObject->objectBody.velocity.z = 0;
-			}
-
-			tempObject->objectBody.position += tempObject->objectBody.velocity * dt; //set object position
-		}
-
-		tempObject->forcesApplied.clear();
-
-		//rotational force
-		
-		
-
-		//check for collisions
-
-		//terrainCollisionDetection
-		
-		if (tempObject->objectBody.position.y < this->XZtable[tempObject->objectBody.position.x][tempObject->objectBody.position.z])
-		{
-			tempObject->objectBody.position.y = this->XZtable[tempObject->objectBody.position.x][tempObject->objectBody.position.z];
-			//tempObject->objectBody.velocity.y = 0;
-		}
-
-		
-
-		
-			//broad phase collision
-
-
-			//narrow phase collision
-
-		//resolve collisions (update positions of intersecting objects, apply forces to objects affected by collisions)
-
-
-		//update object positions
-
-		
-
-	}
+	this->world->update(dt);
 }
 
-void PhysicsWorld::addTerrainMeshVertices(std::vector <glm::vec3> verts)
+//collider/rigid body creation-----------------------------------------------------------------------------------------
+unsigned int PhysicsWorld::createRigidBody(glm::vec3 position, glm::quat rotation, float mass, std::vector <glm::vec3> vertices, rigidBodyType type)
 {
-	this->WorldMeshVertices = verts;
-
-	for(unsigned int i = 0; i < this->WorldMeshVertices.size(); i++)
-	{
-		this->XZtable[(int)WorldMeshVertices[i].x][(int)WorldMeshVertices[i].z] = WorldMeshVertices[i].y;
-	}
-}
-
-//create a new Physics object and return an ID for the object created
-
-ID PhysicsWorld::createPhysicsObject(std::vector <glm::vec3>& meshData, glm::vec3 startingPosition, glm::quat rotation)
-{
-	ID newObjectID;
-
-
-	physicsObject newObject;
-	newObject.objectBody.position = startingPosition;
-	newObject.objectBody.orientation = rotation;
-	newObject.objectBody.mass = 10.0f;
-	newObject.objectBody.velocity = glm::vec3(0.0f);
-	newObject.objectBody.acceleration = glm::vec3(0.0f);
-	newObject.objectBody.angularAcceleration = glm::vec3(0.0f);
-	newObject.objectBody.angularVelocity = glm::vec3(0.0f);
-	newObject.objectBody.momentOfInteria = glm::vec3(0.0f);
-
-	newObject.objectCollider = calculateAABBFromMeshData(meshData);
-
-	newObjectID = objects.add(newObject); //add physics object to the lookup table
-	objectIDs.push_back(newObjectID);
-
-	numObjects++;
-
-	std::cout << "add new object ID of: " << newObjectID.index << std::endl;
-
-	return newObjectID;
-}
-
-AABBCollider PhysicsWorld::calculateAABBFromMeshData(std::vector <glm::vec3>& meshData)
-{
-	AABBCollider newCollider;
-
-	//take the average width, depth, and height and create an AABB for the mesh
-
-	std::vector <float> widths;
-	std::vector <float> depths;
-	std::vector <float> heights;
+	reactphysics3d::Vector3 Position(position.x, position.y, position.z);
+	//reactphysics3d::Quaternion orientation(rotation.x, rotation.y, rotation.z, rotation.w);
+	rp3d::Quaternion orientation = rp3d::Quaternion::identity();
 	
-	double averageWidth = 0;
-	double averageHeight = 0;
-	double averageDepth = 0;
-	//seperate the mesh into three float vectors
-	for(unsigned int i = 0; i < meshData.size(); i++)
+	reactphysics3d::Transform transform(Position,orientation);
+
+	int rigidBodyID = getUniqueID();
+	rigidBody RigidBody;
+
+	this->rigidBodies[rigidBodyID] = RigidBody;
+	this->rigidBodies[rigidBodyID].vertices = vertices;
+
+	rp3d::VertexArray vertexArray(&this->rigidBodies[rigidBodyID].vertices[0], sizeof(glm::vec3), vertices.size(), rp3d::VertexArray::DataType::VERTEX_FLOAT_TYPE);
+	
+	reactphysics3d::RigidBody* newBody = this->world->createRigidBody(transform);
+	this->rigidBodies[rigidBodyID].body = newBody;
+	newBody->setMass(mass);
+
+	switch(type)
 	{
-		widths.push_back(meshData[i].x);
-		depths.push_back(meshData[i].z);
-		heights.push_back(meshData[i].y);
+	case(Static):
+		newBody->setType(rp3d::BodyType::STATIC);
+		newBody->setIsAllowedToSleep(false);
+		break;
+	case(Dynamic):
+		newBody->setType(rp3d::BodyType::DYNAMIC);
+		newBody->setIsAllowedToSleep(true);
+		break;
+	case(Kinematic):
+		newBody->setType(rp3d::BodyType::KINEMATIC);
+		newBody->setIsAllowedToSleep(false);
+		break;
 	}
-	//calculate average width
-	for(unsigned int i = 0; i < widths.size(); i++)
+
+	std::vector<rp3d::Message> messages;
+	rp3d::ConvexMesh* convexMesh = this->physicsCommon->createConvexMesh(vertexArray, messages);
+
+	if (messages.size() > 0) {
+
+		for (const rp3d::Message& message : messages) {
+
+			std::string messageType;
+			switch (message.type) {
+			case rp3d::Message::Type::Information:
+				messageType = "info";
+				break;
+			case rp3d::Message::Type::Warning:
+				messageType = "warning";
+				break;
+			case rp3d::Message::Type::Error:
+				messageType = "error";
+				break;
+			}
+
+			std::cout << "Message (" << messageType << "): " << message.text << std::endl;
+		}
+	}
+
+	assert(convexMesh != nullptr);
+
+	rp3d::Vector3 scaling(1, 1, 1);
+
+	rp3d::ConvexMeshShape* convexMeshShape = this->physicsCommon->createConvexMeshShape(convexMesh,scaling);
+	
+	rp3d::Transform identity = rp3d::Transform::identity();
+	
+	this->rigidBodies[rigidBodyID].body = newBody;
+	this->rigidBodies[rigidBodyID].collider = newBody->addCollider(convexMeshShape, identity);
+
+	this->rigidBodies[rigidBodyID].collider->setIsSimulationCollider(true);
+	this->rigidBodies[rigidBodyID].body->updateMassPropertiesFromColliders();
+	this->rigidBodies[rigidBodyID].body->updateLocalCenterOfMassFromColliders();
+
+	//this->rigidBodies[rigidBodyID].body->setIsDebugEnabled(true);
+
+	return rigidBodyID;
+}
+
+unsigned int PhysicsWorld::CreateRigidBody()
+{
+	unsigned int newId = getUniqueID();
+	mRigidBody Body;
+
+	reactphysics3d::Vector3 Position(0,0,0);
+	rp3d::Quaternion orientation = rp3d::Quaternion::identity();
+	reactphysics3d::Transform transform(Position, orientation);
+
+	reactphysics3d::RigidBody* newBody = this->world->createRigidBody(transform);
+	newBody->setType(rp3d::BodyType::STATIC);
+
+	Body.body = newBody;
+	Body.ID = newId;
+	Body.type = Static;
+
+	this->RigidBodies[newId] = Body;
+
+	return newId;
+}
+
+
+void PhysicsWorld::attachConcaveColliderToBody(ColliderTypes type, glm::vec3 relPosition, glm::quat relOrient, std::vector <glm::vec3> vertices, std::vector <unsigned int> indices, unsigned int id)
+{
+	rp3d::RigidBody* body = this->RigidBodies[id].body;
+	
+	rp3d::Vector3 position(relPosition.x, relPosition.y, relPosition.z);
+	rp3d::Quaternion orient;
+	orient.x = relOrient.x;
+	orient.y = relOrient.y;
+	orient.z = relOrient.z;
+	orient.w = relOrient.w;
+
+	rp3d::Transform identity(position, orient);
+
+	int numVerts = vertices.size();
+	int numTriangles = indices.size() / 3;
+
+	rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(numVerts, &vertices[0], sizeof(glm::vec3), numTriangles, &indices[0],
+		3 * sizeof(unsigned int), rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE, rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+
+	std::vector <rp3d::Message> messages;
+	rp3d::TriangleMesh* triangleMesh = this->physicsCommon->createTriangleMesh(*triangleArray, messages);
+
+	if (messages.size() > 0) {
+
+		for (const rp3d::Message& message : messages) {
+
+			std::string messageType;
+			switch (message.type) {
+			case rp3d::Message::Type::Information:
+				messageType = "info";
+				break;
+			case rp3d::Message::Type::Warning:
+				messageType = "warning";
+				break;
+			case rp3d::Message::Type::Error:
+				messageType = "error";
+				break;
+			}
+
+			std::cout << "Message (" << messageType << "): " << message.text << std::endl;
+		}
+	}
+
+	assert(triangleMesh != nullptr);
+
+	rp3d::ConcaveMeshShape* meshShape = this->physicsCommon->createConcaveMeshShape(triangleMesh, rp3d::Vector3(1.0, 1.0, 1.0));
+
+	this->RigidBodies[id].bodyColliders.push_back(body->addCollider(meshShape, identity));
+	
+}
+
+void PhysicsWorld::addCollidertoRigidBody(unsigned int ID, std::vector <glm::vec3>& vertices, glm::vec3 relativePos, glm::quat relOrientation)
+{
+	rigidBody* body = &this->rigidBodies[ID];
+	
+	//create transform
+	rp3d::Vector3 relativePosition = rp3d::Vector3(relativePos.x,relativePos.y,relativePos.z);
+	rp3d::Quaternion relativeOrient(relOrientation.x, relOrientation.y, relOrientation.z, relOrientation.w);
+	rp3d::Transform transform(relativePosition,relativeOrient);
+
+	//create collider shape
+	rp3d::VertexArray vertexArray(&vertices[0], sizeof(glm::vec3), vertices.size(), rp3d::VertexArray::DataType::VERTEX_FLOAT_TYPE);
+
+	std::vector<rp3d::Message> messages;
+	rp3d::ConvexMesh* convexMesh = this->physicsCommon->createConvexMesh(vertexArray, messages);
+
+	if (messages.size() > 0) {
+
+		for (const rp3d::Message& message : messages) {
+
+			std::string messageType;
+			switch (message.type) {
+			case rp3d::Message::Type::Information:
+				messageType = "info";
+				break;
+			case rp3d::Message::Type::Warning:
+				messageType = "warning";
+				break;
+			case rp3d::Message::Type::Error:
+				messageType = "error";
+				break;
+			}
+
+			std::cout << "Message (" << messageType << "): " << message.text << std::endl;
+		}
+	}
+
+	assert(convexMesh != nullptr);
+
+	rp3d::Vector3 scaling(1, 1, 1);
+
+	rp3d::ConvexMeshShape* convexMeshShape = this->physicsCommon->createConvexMeshShape(convexMesh, scaling);
+
+	//add collider to the rigid body
+	body->body->addCollider(convexMeshShape,transform);
+
+}
+
+unsigned int PhysicsWorld::createBoxCollider(glm::vec3 postion, glm::vec3 rotation, glm::vec3 halfExtents, rigidBodyType type)
+{
+	return 0;
+}
+
+unsigned int PhysicsWorld::createSphereCollider(glm::vec3 position, float radius, rigidBodyType type)
+{
+	return 0;
+}
+
+unsigned int PhysicsWorld::createCapsuleShape(glm::vec3 position, glm::quat rotation,float mass, float radius, float height, rigidBodyType type)
+{
+	reactphysics3d::Vector3 Position(position.x, position.y, position.z);
+	
+	rp3d::Quaternion orientation = rp3d::Quaternion::identity();
+
+	reactphysics3d::Transform transform(Position, orientation);
+
+	int rigidBodyID = getUniqueID();
+	rigidBody RigidBody;
+
+	reactphysics3d::RigidBody* newBody = this->world->createRigidBody(transform);
+	this->rigidBodies[rigidBodyID].body = newBody;
+	newBody->setMass(10);
+
+	switch (type)
 	{
-		averageWidth += widths[i];
+	case(Static):
+		newBody->setType(rp3d::BodyType::STATIC);
+		newBody->setIsAllowedToSleep(false);
+		break;
+	case(Dynamic):
+		newBody->setType(rp3d::BodyType::DYNAMIC);
+		newBody->setIsAllowedToSleep(true);
+		break;
+	case(Kinematic):
+		newBody->setType(rp3d::BodyType::KINEMATIC);
+		newBody->setIsAllowedToSleep(false);
+		break;
 	}
-	averageWidth /= widths.size();
-	//calculate average height
-	for (unsigned int i = 0; i < heights.size(); i++)
+
+	rp3d::Transform identity = rp3d::Transform::identity();
+
+	rp3d::CapsuleShape* capsuleShape = this->physicsCommon->createCapsuleShape(radius,height);
+
+	this->rigidBodies[rigidBodyID] = RigidBody;
+
+	this->rigidBodies[rigidBodyID].body = newBody;
+	this->rigidBodies[rigidBodyID].collider = newBody->addCollider(capsuleShape, identity);
+
+	this->rigidBodies[rigidBodyID].collider->setIsSimulationCollider(true);
+	this->rigidBodies[rigidBodyID].body->updateMassPropertiesFromColliders();
+	this->rigidBodies[rigidBodyID].body->updateLocalCenterOfMassFromColliders();
+
+	return rigidBodyID;
+}
+
+void PhysicsWorld::setBodyPosition(unsigned int id, glm::vec3 pos)
+{
+	rigidBody* body = &this->rigidBodies[id];
+	rp3d::Quaternion newQuat = rp3d::Quaternion::identity();
+	rp3d::Transform newTransform(rp3d::Vector3(pos.x, pos.y, pos.z), newQuat);
+	body->body->setTransform(newTransform);
+}
+
+void PhysicsWorld::addForceToBody(unsigned int id, glm::vec3 force)
+{
+	rigidBody* body = &this->rigidBodies[id];
+	body->body->applyWorldForceAtCenterOfMass(rp3d::Vector3(force.x, force.y, force.z));
+}
+
+void PhysicsWorld::changeBodyVelocity(unsigned int id, glm::vec3 newVel)
+{
+	rigidBody* body = &this->rigidBodies[id];
+	rp3d::Vector3 velocity = body->body->getLinearVelocity();
+	body->body->setLinearVelocity(rp3d::Vector3(newVel.x, velocity.y,newVel.z));
+}
+
+void PhysicsWorld::changeBodyFriction(unsigned int id, float frictionCoef)
+{
+	rigidBody* body = &this->rigidBodies[id];
+	rp3d::Material *bodyMat = &body->collider->getMaterial();
+	bodyMat->setFrictionCoefficient(frictionCoef);
+	body->collider->setMaterial(*bodyMat);
+}
+
+void PhysicsWorld::lockBodyRotationAxis(unsigned int id, glm::vec3 locked)
+{
+	rigidBody* body = &this->rigidBodies[id];
+	body->body->setAngularLockAxisFactor(rp3d::Vector3(locked.x, locked.y, locked.z));
+}
+
+void PhysicsWorld::changeColliderOrigin(unsigned int id, glm::vec3 directionalChange) 
+{
+	rigidBody* body = &this->rigidBodies[id];
+	rp3d::Vector3 position(directionalChange.x, directionalChange.y, directionalChange.z);
+		rp3d::Quaternion rotation = rp3d::Quaternion::identity();
+		rp3d::Transform newTransform(position, rotation);
+	body->collider->setLocalToBodyTransform(newTransform);
+}
+
+//concave rigid body does not work as of right now, indices are incorrect i believe
+unsigned int PhysicsWorld::createConcaveRigidbody(glm::vec3 position, glm::quat rotation, std::vector <glm::vec3> vertices, std::vector <unsigned int> indices)
+{
+	unsigned int newId = getUniqueID();
+	int numVerts = vertices.size();
+	int numTriangles = indices.size()/3;
+
+	reactphysics3d::Vector3 Position(position.x, position.y, position.z);
+	rp3d::Quaternion orientation = rp3d::Quaternion::identity();
+
+	reactphysics3d::Transform transform(Position, orientation);
+
+	rigidBody RigidBody;
+
+	this->rigidBodies[newId] = RigidBody;
+	this->rigidBodies[newId].vertices = vertices;
+	this->rigidBodies[newId].indices = indices;
+
+	reactphysics3d::RigidBody* newBody = this->world->createRigidBody(transform);
+	this->rigidBodies[newId].body = newBody;
+
+
+
+	rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(numVerts,&this->rigidBodies[newId].vertices[0],sizeof(glm::vec3),numTriangles,&this->rigidBodies[newId].indices[0],
+		3 * sizeof(unsigned int), rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+
+	std::vector <rp3d::Message> messages;
+	rp3d::TriangleMesh* triangleMesh = this->physicsCommon->createTriangleMesh(*triangleArray,messages);
+
+	if (messages.size() > 0) {
+
+		for (const rp3d::Message& message : messages) {
+
+			std::string messageType;
+			switch (message.type) {
+			case rp3d::Message::Type::Information:
+				messageType = "info";
+				break;
+			case rp3d::Message::Type::Warning:
+				messageType = "warning";
+				break;
+			case rp3d::Message::Type::Error:
+				messageType = "error";
+				break;
+			}
+
+			std::cout << "Message (" << messageType << "): " << message.text << std::endl;
+		}
+	}
+
+	assert(triangleMesh != nullptr);
+
+	rp3d::ConcaveMeshShape* meshShape = this->physicsCommon->createConcaveMeshShape(triangleMesh,rp3d::Vector3(1.0,1.0,1.0));
+
+	rp3d::Transform identity = rp3d::Transform::identity();
+
+	rigidBodies[newId].collider = rigidBodies[newId].body->addCollider(meshShape, identity);
+	this->rigidBodies[newId].body->setType(rp3d::BodyType::STATIC);
+
+	return newId;
+}
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+int PhysicsWorld::getUniqueID()
+{
+	this->physicsWorldObjects++;
+	return this->physicsWorldObjects;
+}
+
+glm::vec3 PhysicsWorld::getBodyPosition(unsigned int id)
+{
+	rp3d::Transform tempTransform = this->rigidBodies[id].body->getTransform();
+	rp3d::Vector3 pos = tempTransform.getPosition();
+	return glm::vec3(pos.x, pos.y, pos.z);
+}
+
+glm::vec3 PhysicsWorld::getConcaveBodyPosition(unsigned int id)
+{
+	rp3d::Transform tempTransform = this->concaveRigidBodies[id].body->getTransform();
+	rp3d::Vector3 pos = tempTransform.getPosition();
+	return glm::vec3(pos.x, pos.y, pos.z);
+}
+
+glm::quat PhysicsWorld::getBodyRotation(unsigned int id)
+{
+	rp3d::Transform tempTransform = this->rigidBodies[id].body->getTransform();
+	rp3d::Quaternion orient = tempTransform.getOrientation();
+	return glm::quat(orient.w,orient.x, orient.y, orient.z);
+}
+
+glm::quat PhysicsWorld::getConcaveBodyRotation(unsigned int id)
+{
+	rp3d::Transform tempTransform = this->concaveRigidBodies[id].body->getTransform();
+	rp3d::Quaternion orient = tempTransform.getOrientation();
+	return glm::quat(orient.w, orient.x, orient.y, orient.z);
+}
+
+std::vector <debugTriangles> PhysicsWorld::debugRenderer()
+{
+	rp3d::DebugRenderer& debugRenderer = this->world->getDebugRenderer();
+	debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE,true);
+	debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
+
+	const int numlines = debugRenderer.getNbLines(); //number of lines;
+	const int numTriangles = debugRenderer.getNbTriangles();
+	std::vector <debugLines> debugData;
+	std::vector <debugTriangles> triangleData;
+
+	for(unsigned int i = 0; i < numTriangles; i++)
 	{
-		averageHeight += heights[i];
+		debugTriangles newTriangle;
+		const rp3d::Array <rp3d::DebugRenderer::DebugTriangle> triangles = debugRenderer.getTriangles();
+		
+		newTriangle.vertex = glm::vec3(triangles[i].point1.x, triangles[i].point1.y, triangles[i].point1.z);
+		newTriangle.vertex2 = glm::vec3(triangles[i].point2.x, triangles[i].point2.y, triangles[i].point2.z);;
+		newTriangle.vertex3 = glm::vec3(triangles[i].point3.x, triangles[i].point3.y, triangles[i].point3.z);;
+		
+
+		switch(triangles[i].color1)
+		{
+		case(0xff0000): //RED
+			newTriangle.color = glm::vec3(255, 0, 0);
+			break;
+		case(0x00ff00): //Green
+			newTriangle.color = glm::vec3(0, 255, 0);
+			break;
+		case(0x0000ff): //BLUE
+			newTriangle.color = glm::vec3(0, 0, 255);
+			break;
+		case(0x000000): //BLACK
+			newTriangle.color = glm::vec3(0, 0, 0);
+			break;
+		case(0xffffff): //WHITE
+			newTriangle.color = glm::vec3(255, 255, 255);
+			break;
+		case(0xffff00): //YELLOW
+			newTriangle.color = glm::vec3(255, 255, 0);
+			break;
+		case(0xff00ff): //MAGENTA
+			newTriangle.color = glm::vec3(255, 0, 255);
+			break;
+		case(0x00ffff): //CYAN
+			newTriangle.color = glm::vec3(0, 255, 255);
+			break;
+		}
+
+		switch (triangles[i].color2)
+		{
+		case(0xff0000): //RED
+			newTriangle.color2 = glm::vec3(255, 0, 0);
+			break;
+		case(0x00ff00): //Green
+			newTriangle.color2 = glm::vec3(0, 255, 0);
+			break;
+		case(0x0000ff): //BLUE
+			newTriangle.color2 = glm::vec3(0, 0, 255);
+			break;
+		case(0x000000): //BLACK
+			newTriangle.color2 = glm::vec3(0, 0, 0);
+			break;
+		case(0xffffff): //WHITE
+			newTriangle.color2 = glm::vec3(255, 255, 255);
+			break;
+		case(0xffff00): //YELLOW
+			newTriangle.color2 = glm::vec3(255, 255, 0);
+			break;
+		case(0xff00ff): //MAGENTA
+			newTriangle.color2 = glm::vec3(255, 0, 255);
+			break;
+		case(0x00ffff): //CYAN
+			newTriangle.color2 = glm::vec3(0, 255, 255);
+			break;
+		}
+
+		switch (triangles[i].color3)
+		{
+		case(0xff0000): //RED
+			newTriangle.color2 = glm::vec3(255, 0, 0);
+			break;
+		case(0x00ff00): //Green
+			newTriangle.color2 = glm::vec3(0, 255, 0);
+			break;
+		case(0x0000ff): //BLUE
+			newTriangle.color2 = glm::vec3(0, 0, 255);
+			break;
+		case(0x000000): //BLACK
+			newTriangle.color2 = glm::vec3(0, 0, 0);
+			break;
+		case(0xffffff): //WHITE
+			newTriangle.color2 = glm::vec3(255, 255, 255);
+			break;
+		case(0xffff00): //YELLOW
+			newTriangle.color2 = glm::vec3(255, 255, 0);
+			break;
+		case(0xff00ff): //MAGENTA
+			newTriangle.color2 = glm::vec3(255, 0, 255);
+			break;
+		case(0x00ffff): //CYAN
+			newTriangle.color2 = glm::vec3(0, 255, 255);
+			break;
+		}
+
+		triangleData.push_back(newTriangle);
 	}
-	averageHeight /= heights.size();
-	//calculate average depth
-	for (unsigned int i = 0; i < depths.size(); i++)
-	{
-		averageDepth += depths[i];
-	}
-	averageDepth /= depths.size();
 
-	newCollider.bottomA = glm::vec3( averageWidth, 0, -averageDepth);
-	newCollider.bottomB = glm::vec3( averageWidth, 0,  averageDepth);
-	newCollider.bottomC = glm::vec3(-averageWidth, 0,  averageDepth);
-	newCollider.bottomD = glm::vec3(-averageWidth, 0, -averageDepth);
-	newCollider.topA = glm::vec3( averageWidth, averageHeight, -averageDepth);
-	newCollider.topB = glm::vec3( averageWidth, averageHeight,  averageDepth);
-	newCollider.topC = glm::vec3(-averageWidth, averageHeight,  averageDepth);
-	newCollider.topD = glm::vec3(-averageWidth, averageHeight, -averageDepth);
-
-	return newCollider;
+	return triangleData;
 }
 
-void PhysicsWorld::deletePhysicsObject(ID objectID)
-{
-	this->rigidBodies.remove(this->objects.lookup(objectID).rigidBodyID); //remove the rigid body attached to this world object
-	this->numRigidBodies--;
-
-	this->objects.remove(objectID); //remove world object itself
-	this->physicsWorldObjects--;
-}
-
-void PhysicsWorld::applyForce(ID objectID, glm::vec3 force)
-{
-	objects.lookup(objectID).forcesApplied.push_back(force);
-}
-
-glm::vec3 PhysicsWorld::getBodyPosition(ID bodyID)
-{
-	physicsObject* tempBody = &this->objects.lookup(bodyID);
-	return tempBody->objectBody.position;
-}
-
-glm::quat PhysicsWorld::getBodyOrientation(ID bodyID)
-{
-	physicsObject* tempBody = &this->objects.lookup(bodyID);
-	return tempBody->objectBody.orientation;
-}
-
-ID PhysicsWorld::createRigidBody(RigidBody body)
-{
-	ID bodyID;
-	bodyID = this->rigidBodies.add(body);
-
-	return bodyID;
-}
-
-ID PhysicsWorld::createRigidBody(glm::vec3 position, glm::quat rotation, float mass)
-{
-	ID bodyID;
-	RigidBody newBody;
-
-	newBody.position = position;
-	newBody.orientation = rotation;
-
-	newBody.mass = mass;
-	newBody.acceleration = glm::vec3(0.0f);
-	newBody.velocity = glm::vec3(0.0f);
-
-	bodyID = this->rigidBodies.add(newBody);
-	return bodyID;
-}
-
-void PhysicsWorld::setPosition(ID bodyID, glm::vec3 position)
-{
-	RigidBody* tempBody = &this->rigidBodies.lookup(bodyID);
-	tempBody->position = position;
-}
-
-void PhysicsWorld::setRotation(ID bodyID, glm::quat rotation)
-{
-	RigidBody* tempBody = &this->rigidBodies.lookup(bodyID);
-	tempBody->orientation = rotation;
-}
 
 
 

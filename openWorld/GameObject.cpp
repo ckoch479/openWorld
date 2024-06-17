@@ -4,7 +4,7 @@ GameObject::GameObject()
 {
 	this->objectScale = glm::vec3(1.0);
 	this->objectName = "default";
-	this->Position = glm::vec3(1.0,1.0,1.0);
+	this->Position = glm::vec3(0.0,0.0,0.0);
 	
 }
 
@@ -26,6 +26,7 @@ void GameObject::LoadObjectFromFile(std::string filepath, std::string objectName
 				glm::vec3 tempVec = tempMesh.vertices[j].vertexPosition;
 				this->objectMeshData.push_back(tempVec);
 			}
+			this->indices = tempMesh.indices;
 	}
 
 	this->objectName = objectName;
@@ -49,13 +50,13 @@ void GameObject::removeObjectFromScene(Scene* scene)
 
 void GameObject::addObjectToPhysicsWorld(PhysicsWorld* world)
 {
-this->physicsWorldObjectID = world->createPhysicsObject(this->objectMeshData, this->Position, this->rotation);
-std::cout << "object added to physics world!\n";
+//this->physicsWorldObjectID = world->createPhysicsObject(this->objectMeshData, this->Position, this->rotation);
+//std::cout << "object added to physics world!\n";
 }
 
 void GameObject::addForce(glm::vec3 force, PhysicsWorld* world)
 {
-	world->applyForce(this->physicsWorldObjectID, force);
+	//world->applyForce(this->physicsWorldObjectID, force);
 }
 
 void GameObject::updateTransforms(Scene* scene, PhysicsWorld* world)
@@ -71,4 +72,20 @@ void GameObject::updateTransforms(Scene* scene, PhysicsWorld* world)
 void GameObject::setPosition(glm::vec3 newPosition)
 {
 	this->Position = newPosition;
+	//std::cout << "object Position: " << newPosition.x << " , " << newPosition.y << " , " << newPosition.z << std::endl;
+}
+
+void GameObject::setOrientation(glm::quat orient)
+{
+	this->rotation = orient;
+}
+
+std::vector <glm::vec3> GameObject::getObjectVertices()
+{	
+	return objectMeshData;
+}
+
+std::vector <unsigned int> GameObject::getObjectIndices()
+{
+	return this->indices;
 }

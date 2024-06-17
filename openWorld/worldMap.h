@@ -31,7 +31,9 @@ public:
 
 	std::vector <glm::vec3> getVertices();
 
-	std::vector <int> getIndices();
+	std::vector <unsigned int> getIndices();
+
+	void updatePosition(Scene* scene,glm::vec3 position);
 	
 private:
 
@@ -40,12 +42,14 @@ private:
 	ModelData* worldModel;
 	ID worldModelID; //for rendering
 	ID instanceID;
+	ID transformID;
 	std::map <float, std::map<float, float>> XZtable; 
 
 	int terrainWidth = 0;
 	int numXcoords = 0;
 
 	std::vector <glm::vec3> terrainMesh;
+	std::vector <unsigned int> indices;
 
 	
 };

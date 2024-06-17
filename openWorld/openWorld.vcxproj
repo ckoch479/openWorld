@@ -164,9 +164,11 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Includes\glad\glad.c" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="lookup_table.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="reactPhysicsListener.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
@@ -190,9 +192,11 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Includes\glad\glad.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="lookup_table.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="reactPhysicsListener.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RigidBody.h" />
@@ -212,6 +216,8 @@
     <None Include="Shaders\cubeMap.vs" />
     <None Include="Shaders\LightAndAnimationShader.fs" />
     <None Include="Shaders\LightAndAnimationShader.vs" />
+    <None Include="Shaders\lineShader.fs" />
+    <None Include="Shaders\lineshader.vs" />
     <None Include="Shaders\ModelShader.fs" />
     <None Include="Shaders\Modelshader.vs" />
     <None Include="Shaders\PhongLightShader.fs" />

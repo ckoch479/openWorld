@@ -39,6 +39,11 @@ public:
 
 	void setPosition(glm::vec3 newPosition);
 
+	void setOrientation(glm::quat orient);
+
+	std::vector <glm::vec3> getObjectVertices();
+	std::vector <unsigned int> getObjectIndices();
+
 private:
 
 	//rendering info
@@ -60,6 +65,7 @@ private:
 	std::string objectName;
 
 	std::vector <glm::vec3> objectMeshData;
+	std::vector <unsigned int> indices;
 
 };
 #endif

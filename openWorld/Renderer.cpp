@@ -156,6 +156,51 @@ void Renderer::drawWindow(Scene* scene, float dt)
 			drawSkyBox(scene);
 		}
 
+		//if(scene->renderDebugTriangles == true)
+		//{
+		//	glDisable(GL_DEPTH_TEST);
+
+		//	Shader* ourShader = scene->triangleShader;
+		//	glBindVertexArray(scene->triangleVAO);
+
+		//	glm::mat4 model(1.0f);
+		//	glm::mat4 view(1.0f);
+		//	glm::mat4 projection(1.0f);
+
+		//	view = scene->MainCamera->GetViewMatrix();
+		//	projection = glm::perspective(glm::radians(scene->MainCamera->Zoom), ((float)SCR_WIDTH / (float)SCR_HEIGHT), 0.1f, 10000.0f);
+		//	
+		//	ourShader->setMat4("view", view);
+		//	ourShader->setMat4("projection", projection);
+
+		//	for(unsigned int i = 0; i < scene->triangleVertexPositions.size(); i++)
+		//	{
+		//		glm::vec3 currentPosition1 = scene->triangleVertexPositions[i].a;
+		//		glm::vec3 currentPosition2 = scene->triangleVertexPositions[i].b;
+		//		glm::vec3 currentPosition3 = scene->triangleVertexPositions[i].c;
+
+		//		model = glm::translate(model, currentPosition1); //translate mesh
+		//		ourShader->setMat4("modelMatrix[0]", model);
+		//		//model = glm::mat4(1.0f);
+		//		//model = glm::translate(model, currentPosition2); //translate mesh
+		//		ourShader->setMat4("modelMatrix[1]", model);
+		//		//model = glm::mat4(1.0f);
+		//		//model = glm::translate(model, currentPosition3); //translate mesh
+		//		ourShader->setMat4("modelMatrix[2]", model);
+
+		//		
+
+		//		//std::cout << "transformVerts: " << currentPosition1.x << " , " << currentPosition1.y << " , " << currentPosition1.z << " , " << std::endl;
+
+		//		glDrawArrays(GL_TRIANGLES, 0, 9);
+		//	}
+		//	
+
+
+		//	glEnable(GL_DEPTH_TEST);
+		//}
+
+
 		glfwSwapBuffers(this->window);
 		glfwPollEvents();
 		

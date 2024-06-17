@@ -30,11 +30,12 @@ void SimulationManager::run()
 	Shader LightAnimShader("Shaders/LightAndAnimationShader.vs", "Shaders/LightAndAnimationShader.fs"); //simple light, mesh, texture and animation shader
 	Shader testShader("Shaders/PhysicsTestShader.vs","Shaders/PhysicsTestShader.fs");
 	Shader cubeMap("Shaders/cubeMap.vs", "Shaders/cubeMap.fs");
+	Shader lineShader("Shaders/lineShader.vs","Shaders/lineShader.fs");
 	//Game objects go here for testing independent parts of the engine--------------------------------------
 
 	//object physics data
 
-	player newPlayer;
+	player newPlayer; //rendering glitch with textures may be due to shader uniforms need to be cleared on some version of opengl or they will remain there
 
 	newPlayer.LoadPlayerModel("resources/Arissa/Arissa.dae", "Arissa", this->scene, this->world, LightAnimShader);
 	
@@ -47,40 +48,81 @@ void SimulationManager::run()
 
 	GameObject newObject;
 	newObject.LoadObjectFromFile("resources/Assets/badCrate.obj", "crate");
-	newObject.setPosition(glm::vec3(-1, 42, -1));
+
+	GameObject newObject2;
+	newObject2.LoadObjectFromFile("resources/Assets/badCrate.obj", "crate2");
 
 	newObject.addObjectToScene(LightShader, this->scene, this->world);
+	newObject2.addObjectToScene(LightShader, this->scene, this->world);
 
-
-	worldMap newMap;
-	newMap.GenerateMap("resources/Terrain/firstGameMap1.obj", "map", this->scene, LightShader);
-	newMap.addMaptoPhysicsWorld(this->world);
-
+	//worldMap newMap;
+	//newMap.GenerateMap("resources/Terrain/flatBox1.obj", "map", this->scene, LightShader);
+	//newMap.GenerateMap("resources/Terrain/terrainobj.obj", "map", this->scene, LightShader);
+	//newMap.GenerateMap("resources/Terrain/flatForest.obj", "map", this->scene, LightShader);
+	//newMap.addMaptoPhysicsWorld(this->world);
 
 	std::vector <std::string> cubeMapPaths
 	{
-		"resources/skybox/right.jpg",
+		/*"resources/skybox/right.jpg",
 		"resources/skybox/left.jpg",
 		"resources/skybox/top.jpg",
 		"resources/skybox/bottom.jpg",
 		"resources/skybox/front.jpg",
-		"resources/skybox/back.jpg"
+		"resources/skybox/back.jpg"*/
+		"resources/darkSkyTexture.png"
+		"resources/darkSkyTexture.png"
+		"resources/darkSkyTexture.png"
+		"resources/darkSkyTexture.png"
+		"resources/darkSkyTexture.png"
+		"resources/darkSkyTexture.png"
+
 	};
 
 	scene->createCubeMap(cubeMapPaths, &cubeMap);
 	
 	
 	//create lights for the scene
-	scene->createDirectionalLight(glm::vec3(0.2f, -1.0f, 0.3f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.4f, 0.4f, 0.4f), glm::vec3(0.5f, 0.5f, 0.5f));
+	scene->createDirectionalLight(glm::vec3(0.2f, -1.0f, 0.3f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.04f, 0.04f, 0.04f), glm::vec3(0.05f, 0.05f, 0.05f));
 
-	scene->createPointLight(glm::vec3(8.0,3,0.2), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
+	scene->createPointLight(glm::vec3(8.0,3,0.2), glm::vec3(0.00f, 0.00f, 0.00f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
 	scene->createPointLight(glm::vec3(13, 2, 5), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
 	scene->createPointLight(glm::vec3(14, 5, 1), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
 	scene->createPointLight(glm::vec3(10, 1, 13), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
 
-	scene->createSpotLight(glm::vec3(-1.0), glm::vec3(-1.0,-1.0,-1.0), glm::vec3(0.020), glm::vec3(0.020), glm::vec3(0.050),1.0f,0.09f,0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(15.0f)));
+	scene->createSpotLight(glm::vec3(-76,20,0), glm::vec3(0.0,-1.0,0.0), glm::vec3(0.90), glm::vec3(0.90), glm::vec3(0.60),1.0f,0.09f,0.032f, glm::cos(glm::radians(12.5f)), glm::cos(glm::radians(22.0f)));
+
+	//reactPhysics3D test area
+	unsigned int worldID,objectID,objectID2;
+	std::vector <glm::vec3> objectVertices = newObject.getObjectVertices();
+	objectID = this->world->createRigidBody(glm::vec3(0, 3, 0), glm::quat(1.0,0,0,0.0f), 10.0f, newObject.getObjectVertices(),Dynamic);
 	
+	objectID2 = this->world->createRigidBody(glm::vec3(0, 3, 0),glm::quat(1.0,0,0,0.0f),10.0f,newObject2.getObjectVertices(),Dynamic);
+
+	//std::vector <glm::vec3> worldVerts = newMap.getVertices();
+	//std::vector <unsigned int> worldIndices = newMap.getIndices();
+
+	//worldID = this->world->createRigidBody(glm::vec3(0.0f,0.0f,0.0f),glm::quat(1.0, 0, 0, 0.0f),100,worldVerts, Static);
+	//worldID = this->world->createConcaveRigidbody(glm::vec3(0.0f),glm::quat(),newMap.getVertices(),newMap.getIndices());
+
+	unsigned int playerId;
+	//newPlayer.setPosition(glm::vec3(0, 1, 0));
+	playerId = this->world->createCapsuleShape(newPlayer.GetCurrentPosition(), glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.6, 1.5, Dynamic);
+
 	float lastHeight = 1;
+	this->world->changeBodyFriction(playerId, 0.5);
+	this->world->lockBodyRotationAxis(playerId, glm::vec3(0, 0, 0));
+	this->world->changeColliderOrigin(playerId, glm::vec3(0, 1.4, 0));
+
+	Level level1;
+
+	level1.setLevelScene(this->scene);
+	level1.setLevelPhysicsWorld(this->world);
+	
+	level1.setLevelModel("resources/Terrain/flatForest.obj");
+	level1.renderMap(&LightShader);
+
+	
+
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
 	while (this->state == running)
 	{
@@ -94,9 +136,17 @@ void SimulationManager::run()
 		checkKeys(); //check for active keys during this loop
 		checkMouse();
 
+		newObject.setPosition(this->world->getBodyPosition(objectID));
+		newObject.setOrientation(this->world->getBodyRotation(objectID));
 
+		newObject2.setPosition(this->world->getBodyPosition(objectID2));
+		newObject2.setOrientation(this->world->getBodyRotation(objectID2));
+
+		//newMap.updatePosition(this->scene,this->world->getBodyPosition(worldID));
+
+		newPlayer.setPosition(this->world->getBodyPosition(playerId));
 		this->playerPosition = newPlayer.GetCurrentPosition();
-		
+
 		//camera ----------------------------------------------------
 		float horizontalFromPlayer = radius * cos(cameraPitch);
 		float verticalDistance = radius * sin(cameraPitch);
@@ -111,28 +161,6 @@ void SimulationManager::run()
 		newPlayer.setPlayerYaw(this->playerRotation);
 
 		//world collision
-		float terrainHeight = newMap.getTerrainHeight(playerPosition.x, playerPosition.z);
-
-		//std::cout << terrainHeight << std::endl;
-
-		if (this->playerPosition.y < terrainHeight || this->playerPosition.y > terrainHeight + 0.1)
-		{
-			if (terrainHeight > 0)
-			{
-				lastHeight = terrainHeight;
-				newPlayer.setPosition(glm::vec3(playerPosition.x, terrainHeight, playerPosition.z));
-
-				//std::cout << "Player Height: " << terrainHeight << std::endl;
-			}
-
-			if (terrainHeight == 0)
-			{
-				newPlayer.setPosition(glm::vec3(playerPosition.x, lastHeight, playerPosition.z));
-
-				terrainHeight = lastHeight;
-			}
-
-		}
 
 		// set player movement
 
@@ -143,37 +171,34 @@ void SimulationManager::run()
 		
 		if(this->keys[GLFW_KEY_W] == true && this->keys[GLFW_KEY_LEFT_SHIFT] != true)
 		{
-			newPlayer.setRelativePosition(PlayerFront, this->deltaTime);
 			newPlayer.setCurrentAnimation("jog");
+			this->world->changeBodyVelocity(playerId, 4.0f * newPlayer.getPlayerFront());
 
 			this->keys[GLFW_KEY_W] = false;
 		}
 
 		if (this->keys[GLFW_KEY_W] == true && this->keys[GLFW_KEY_LEFT_SHIFT] == true)
 		{
-			newPlayer.setRelativePosition(PlayerFront, this->deltaTime);
 			newPlayer.setCurrentAnimation("run");
-
+			this->world->changeBodyVelocity(playerId, 8.0f * newPlayer.getPlayerFront());
 			this->keys[GLFW_KEY_W] = false;
 		}
 
-		
-
 		if (this->keys[GLFW_KEY_S] == true)
 		{
-			newPlayer.setRelativePosition(PlayerBack, this->deltaTime);
+			this->world->changeBodyVelocity(playerId, 4.0f * -newPlayer.getPlayerFront());
 			this->keys[GLFW_KEY_S] = false;
 		}
 
 		if (this->keys[GLFW_KEY_A] == true)
 		{
-			newPlayer.setRelativePosition(PlayerLeft, this->deltaTime);
+			this->world->changeBodyVelocity(playerId, 4.0f * -newPlayer.getPlayerRight());
 			this->keys[GLFW_KEY_A] = false;
 		}
 
 		if (this->keys[GLFW_KEY_D] == true)
 		{
-			newPlayer.setRelativePosition(PlayerRight, this->deltaTime);
+			this->world->changeBodyVelocity(playerId, 4.0f * newPlayer.getPlayerRight());
 			this->keys[GLFW_KEY_D] = false;
 		}
 
@@ -187,26 +212,32 @@ void SimulationManager::run()
 			newPlayer.setMovementSpeed(8);
 			this->keys[GLFW_KEY_LEFT_SHIFT] = false;
 		}
+		if (this->keys[GLFW_KEY_SPACE] == true) 
+		{
+			this->world->addForceToBody(playerId,40.0f * newPlayer.getPlayerUp());
+			this->keys[GLFW_KEY_SPACE] = false;
+		}
 	
 		
 
 		newPlayer.renderPlayer(this->deltaTime, this->scene, this->world);
 	
-
-		
-		//newObject.addForce(glm::vec3(0, -9.8, 0), this->world);
 		newObject.updateTransforms(this->scene, this->world);
+		newObject2.updateTransforms(this->scene, this->world);
+		
 
 		//update physics
-		this->world->stepSimulation(this->deltaTime);
-
-	
-
+		accumulator += deltaTime;
+		while(accumulator >= timestep)
+		{
+			this->world->stepSimulation(this->deltaTime);
+			accumulator -= timestep;
+		}
+		
 		//set camera position
 		this->scene->setCameraPosition(this->playerPosition + glm::vec3(0,1.5,0), this->CameraPosition, this->cameraPitch, this->cameraYaw);
 		//draw contents to actual game window
 		this->renderer->drawWindow(this->scene,this->deltaTime);
-
 
 	}
 
@@ -330,6 +361,7 @@ void SimulationManager::setDeltaTime()
 	float currentFrame = glfwGetTime();
 	this->deltaTime = currentFrame - lastFrame;
 	this->lastFrame = currentFrame;
+	
 }
 
 void SimulationManager::shutDown() 

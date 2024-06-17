@@ -12,43 +12,29 @@ worldMap::~worldMap()
 
 void worldMap::addMaptoPhysicsWorld(PhysicsWorld* world)
 {
-	world->addTerrainMeshVertices(this->terrainMesh);
+	//world->addTerrainMeshVertices(this->terrainMesh);
 }
 
 std::vector <glm::vec3> worldMap::getVertices()
 {
-	std::vector <glm::vec3> vertices;
-
-	//for(unsigned int i = 0; i < this->worldModel->meshes.size(); i++)
-	//{
-	//	for(unsigned int j = 0; j < this->worldModel->meshes[i].vertices.size(); j++)
-	//	{
-	//		vertices.push_back(this->worldModel->meshes[i].vertices[j].vertexPosition);
-	//	}
-	//}
-
-	return this->terrainMesh;// vertices;
+	return this->terrainMesh;
 }
 
-std::vector <int> worldMap::getIndices()
+void worldMap::updatePosition(Scene* scene, glm::vec3 position)
 {
-	std::vector <int> indices;
-	for(unsigned int i = 0; i < this->worldModel->meshes.size(); i++)
-	{
-		for(unsigned int j = 0; j < this->worldModel->meshes[i].indices.size(); j++)
-		{
-			indices.push_back(this->worldModel->meshes[i].indices[j]);
-		}
-	}
+	scene->updateTransform(this->transformID, position, glm::quat(), glm::vec3(1.0f));
+}
 
-	return indices;
+std::vector <unsigned int> worldMap::getIndices()
+{
+	return this->indices;
 }
 
 void worldMap::GenerateMap(std::string filename, std::string mapName, Scene* scene, Shader& shader)
 {
 	this->worldModel = ResourceManager::loadModel(filename, mapName); //load map model from file
 	this->worldModelID = scene->createModel(*this->worldModel,shader);
-	ID transformID = scene->createTransform(glm::vec3(0.0,0.0,0.0),glm::quat(), glm::vec3(1.0, 1.0, 1.0));
+	this->transformID = scene->createTransform(glm::vec3(0.0,0.0,0.0),glm::quat(), glm::vec3(1.0, 1.0, 1.0));
 	ID sceneObjectID = scene->AddInstance(this->worldModelID, transformID);
 	this->instanceID = sceneObjectID;
 	generateTerrainHeight();
@@ -145,7 +131,7 @@ void worldMap::generateTerrainHeight()
 	}
 
 	this->terrainWidth = uniqueTerrainXvalues.size() * 2;
-
+	this->indices = this->worldModel->meshes[0].indices;
 	
 	
 }

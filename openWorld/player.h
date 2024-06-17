@@ -61,13 +61,19 @@ public:
 
 	void renderPlayer(float dt, Scene* scene, PhysicsWorld* world);
 
+	glm::vec3 getPlayerFront();
+	
+	glm::vec3 getPlayerRight();
+
+	glm::vec3 getPlayerUp();
+
 private:
 
 	void calculateVectors();
 
 	void setActiveAnimation(std::string animationName);
 
-	glm::vec3 position = glm::vec3(0, 0, 0);
+	glm::vec3 position = glm::vec3(0, 10, 0);
 	glm::vec3 rotationAxis = glm::vec3(0,1,0);
 	float rotationAngle = 0;
 	glm::vec3 scale = glm::vec3(1.0f);

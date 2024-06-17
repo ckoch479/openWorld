@@ -99,6 +99,12 @@
     <ClCompile Include="Includes\glad\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="reactPhysicsListener.cpp">
+      <Filter>Source Files\PhysicsandDynamicsBody</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files\GameObjectBody</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -170,6 +176,12 @@
     <ClInclude Include="Includes\glad\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="reactPhysicsListener.h">
+      <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\GameObjectHeaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\3.3.shader.fs">
@@ -212,6 +224,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Shaders\cubeMap.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\lineShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\lineshader.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

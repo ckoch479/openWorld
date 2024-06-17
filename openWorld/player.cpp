@@ -77,6 +77,21 @@ void player::setRotationAngle(float angle)
 	this->rotationAngle = angle;
 }
 
+glm::vec3 player::getPlayerFront()
+{
+	return this->playerFront;
+}
+
+glm::vec3 player::getPlayerRight()
+{
+	return this->playerRight;
+}
+
+glm::vec3 player::getPlayerUp()
+{
+	return this->playerUp;
+}
+
 void player::setRelativePosition(playerRelativePosition relativePosition, float deltaTime)
 {
 	calculateVectors();

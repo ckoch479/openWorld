@@ -49,10 +49,7 @@ struct RenderModel
 struct Transform 
 {
 	glm::vec3 Scale;
-	//glm::vec3 RotationOrigin;
-	//float rotation;
 	glm::vec3 Translation;
-
 	glm::quat rotationQuat;
 };
 
@@ -65,7 +62,6 @@ struct Instance
 struct DirectionalLight
 {
 	glm::vec3 direction;
-
 	glm::vec3 ambient;
 	glm::vec3 diffuse;
 	glm::vec3 specular;
@@ -100,13 +96,25 @@ struct SpotLight
 	float outerCutoff;
 };
 
-
 struct RenderAnimation
 {
 	AnimationData animationData;
 	std::string name;
 	float currentPoint;
-	
+};
+
+struct RenderTriangleVertex
+{
+	glm::vec3 vertexPosition;
+	glm::vec3 color;
+	int vertexId;
+};
+
+struct triangleTransforms
+{
+	glm::vec3 a;
+	glm::vec3 b;
+	glm::vec3 c;
 };
 
 #define MAX_NR_SPOT_LIGHTS 6;
@@ -172,9 +180,15 @@ public:
 	
 	void createCubeMap(std::vector <std::string> cubeMapTexturePaths, Shader* cubeMapshader);
 
+	void setDebugTriangleRenderStatus(bool set);
+
+	void debugTriangleInfo(std::vector< triangleTransforms> triangles,Shader* triangleShader);
+
 private:
 
 	void createCubeMapVAO();
+
+	void createTriangleVAO();
 
 	unsigned int loadCubeMapTextures(std::vector <std::string> texturePaths);
 
@@ -205,6 +219,15 @@ private:
 	unsigned int cubeMapVBO;
 
 	unsigned int cubeMaptextureID;
+
+	std::vector <RenderTriangleVertex> triangleVertices; //vertices used to render a simple triangle and change it's position
+	std::vector <triangleTransforms> triangleVertexPositions;
+	Shader* triangleShader;
+
+	unsigned int triangleVAO;
+	unsigned int triangleVBO;
+
+	bool renderDebugTriangles = false;
 
 	unsigned int InstanceCount = 0;
 	unsigned int numPointLights = 0;

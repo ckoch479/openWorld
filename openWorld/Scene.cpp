@@ -325,6 +325,68 @@ void Scene::createCubeMap(std::vector <std::string> cubeMapTexturePaths, Shader*
 	this->cubeMapLoaded = true;
 }
 
+void Scene::setDebugTriangleRenderStatus(bool set)
+{
+	this->renderDebugTriangles = set;
+	createTriangleVAO();
+	std::cout << "render triangles set to true!\n";
+}
+
+void Scene::debugTriangleInfo(std::vector< triangleTransforms> triangles, Shader* triangleShader)
+{
+	this->triangleVertexPositions = triangles;
+	this->triangleShader = triangleShader;
+	
+	/*for(unsigned int i = 0; i < triangles.size(); i++)
+	{
+		std::cout << "triangleVert1" << triangles[i].a.x << " , " << triangles[i].a.y << " , " << triangles[i].a.z << std::endl;
+		std::cout << "triangleVert2" << triangles[i].b.x << " , " << triangles[i].b.y << " , " << triangles[i].b.z << std::endl;
+		std::cout << "triangleVert3" << triangles[i].c.x << " , " << triangles[i].c.y << " , " << triangles[i].c.z << std::endl;
+	}*/
+}
+
+void Scene::createTriangleVAO() 
+{
+	glm::vec3 defaultColor(0.0f,0.0f,0.0f);
+
+	RenderTriangleVertex point1;
+	point1.vertexPosition = glm::vec3(-0.5f, -0.5f, 0.0f);
+	point1.color = defaultColor;
+	point1.vertexId = 0;
+
+	RenderTriangleVertex point2;
+	point2.vertexPosition = glm::vec3(0.5f, -0.5f, 0.0f);
+	point2.color = defaultColor;
+	point1.vertexId = 1;
+
+	RenderTriangleVertex point3;
+	point3.vertexPosition = glm::vec3(0.0f, 0.5f, 0.0f);
+	point3.color = defaultColor;
+	point1.vertexId = 2;
+
+	this->triangleVertices.push_back(point1);
+	this->triangleVertices.push_back(point2);
+	this->triangleVertices.push_back(point3);
+	//create VAO
+	glGenVertexArrays(1, &triangleVAO);
+	glGenBuffers(1, &triangleVBO);
+
+	glBindVertexArray(triangleVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), &triangleVertices[0], GL_STATIC_DRAW);
+
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(RenderTriangleVertex), (void*)offsetof(RenderTriangleVertex, vertexPosition));
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(RenderTriangleVertex), (void*)offsetof(RenderTriangleVertex,color));
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 1, GL_INT, GL_FALSE, sizeof(RenderTriangleVertex), (void*)offsetof(RenderTriangleVertex, vertexId));
+	glEnableVertexAttribArray(2);
+
+	std::cout << "triangle VAO created!\n";
+}
+
 unsigned int Scene::loadCubeMapTextures(std::vector <std::string> texturePaths)
 {
 	unsigned int textureID;
@@ -354,6 +416,7 @@ unsigned int Scene::loadCubeMapTextures(std::vector <std::string> texturePaths)
 
 	return textureID;
 }
+
 
 void Scene::createCubeMapVAO()
 {

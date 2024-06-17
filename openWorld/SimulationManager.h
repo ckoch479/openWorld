@@ -20,8 +20,7 @@
 
 #include "player.h"
 #include "worldMap.h"
-
-#include "reactphysics3d/reactphysics3d.h"
+#include "Level.h"
 
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
@@ -89,6 +88,9 @@ private:
 
 	bool KeyChange = false;
 	int currentKey;
+
+	float timestep = 1.0f / 60;
+	float accumulator = 0.0f;
 
 
 };
