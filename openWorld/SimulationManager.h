@@ -7,13 +7,14 @@
 #include <vector>
 #include <map>
 
+#include "windowManager.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "Camera.h"
 #include "Shader.h"
 
 #include "GameObject.h"
-
+#include "thirdPersonCamera.h"
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
@@ -44,8 +45,6 @@ public:
 
 	void shutDown();
 
-	void checkKeys();
-
 	void checkMouse();
 
 	void setDeltaTime();
@@ -54,6 +53,7 @@ private:
 	Scene* scene;
 	Renderer* renderer;
 	PhysicsWorld* world;
+	windowManager* WindowManager;
 	//InputManager* inputs;
 	//resource manager
 	//platform detection
@@ -83,11 +83,6 @@ private:
 	float cameraPitch = 0.0f;
 	float cameraYaw = 0.0f;
 	float cameraFreeRotationAngle = 0.0f;
-
-	bool keys[1024];
-
-	bool KeyChange = false;
-	int currentKey;
 
 	float timestep = 1.0f / 60;
 	float accumulator = 0.0f;

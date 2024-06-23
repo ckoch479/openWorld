@@ -71,24 +71,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64\include;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp\include;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include\reactphysics3d;$(IncludePath)</IncludePath>
-    <ExecutablePath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp\include;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\reactphysics3d;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\include;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64\include;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp\include;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include\reactphysics3d;$(IncludePath)</IncludePath>
-    <ExecutablePath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp\include;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\reactphysics3d;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\include;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp\include\assimp;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64\include;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp\include;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\KHR;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp\include;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\glad;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\include;$(IncludePath)</IncludePath>
-    <ExecutablePath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp\include;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\reactphysics3d;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\include;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64\include;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp\include;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\glfw-3.4.bin.WIN64;C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\reactphysics3d\include\reactphysics3d;$(IncludePath)</IncludePath>
-    <ExecutablePath>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\lib-vc2022;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp\include;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\reactphysics3d;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\glfw-3.4.bin.WIN64\include;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>assimp-vc143-mt.lib;glfw3_mt.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,7 +119,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>assimp-vc143-mt.lib;glfw3_mt.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,7 +132,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp;C:\Users\ckoch\source\repos\openWorld\openWorld\Includes\Assimp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp-vc143-mt.lib;glfw3_mt.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -151,7 +151,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>assimp-vc143-mt.lib;glfw3_mt.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\ckoch\source\repos\openWorld1\openWorld\Includes\Assimp;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Cameron\source\repos\openWorld\openWorld\Includes;C:\Users\Cameron\source\repos\openWorld\openWorld\Includes\Assimp;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -168,6 +168,7 @@
     <ClCompile Include="lookup_table.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerEntity.cpp" />
     <ClCompile Include="reactPhysicsListener.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -178,6 +179,8 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="thirdPersonCamera.cpp" />
+    <ClCompile Include="windowManager.cpp" />
     <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -192,12 +195,16 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Includes\glad\glad.h" />
+    <ClInclude Include="keyDefinitions.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="lookup_table.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="playerActionDefinitions.h" />
+    <ClInclude Include="playerEntity.h" />
     <ClInclude Include="reactPhysicsListener.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="renderingInfoDefinitions.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Scene.h" />
@@ -205,6 +212,8 @@
     <ClInclude Include="SimulationManager.h" />
     <ClInclude Include="testingBoxMeshFunctions.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="thirdPersonCamera.h" />
+    <ClInclude Include="windowManager.h" />
     <ClInclude Include="worldMap.h" />
   </ItemGroup>
   <ItemGroup>

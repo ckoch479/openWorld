@@ -336,13 +336,6 @@ void Scene::debugTriangleInfo(std::vector< triangleTransforms> triangles, Shader
 {
 	this->triangleVertexPositions = triangles;
 	this->triangleShader = triangleShader;
-	
-	/*for(unsigned int i = 0; i < triangles.size(); i++)
-	{
-		std::cout << "triangleVert1" << triangles[i].a.x << " , " << triangles[i].a.y << " , " << triangles[i].a.z << std::endl;
-		std::cout << "triangleVert2" << triangles[i].b.x << " , " << triangles[i].b.y << " , " << triangles[i].b.z << std::endl;
-		std::cout << "triangleVert3" << triangles[i].c.x << " , " << triangles[i].c.y << " , " << triangles[i].c.z << std::endl;
-	}*/
 }
 
 void Scene::createTriangleVAO() 

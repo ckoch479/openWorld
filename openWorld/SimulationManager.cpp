@@ -8,8 +8,10 @@ void SimulationManager::Init()
 	
 	//init glfw/glut
 	//create window	
+	this->WindowManager = new windowManager;
+
 	this->renderer = new Renderer;
-	renderer->init();
+	renderer->init(this->WindowManager->getCurrentWindow());
 	
 	this->scene = new Scene;
 	scene->Init();
@@ -18,6 +20,11 @@ void SimulationManager::Init()
 
 	this->state = running;
 };
+
+void SimulationManager::shutDown()
+{
+	
+}
 
 void SimulationManager::run() 
 {
@@ -48,7 +55,7 @@ void SimulationManager::run()
 
 	GameObject newObject;
 	newObject.LoadObjectFromFile("resources/Assets/badCrate.obj", "crate");
-
+	
 	GameObject newObject2;
 	newObject2.LoadObjectFromFile("resources/Assets/badCrate.obj", "crate2");
 
@@ -69,11 +76,11 @@ void SimulationManager::run()
 		"resources/skybox/bottom.jpg",
 		"resources/skybox/front.jpg",
 		"resources/skybox/back.jpg"*/
-		"resources/darkSkyTexture.png"
-		"resources/darkSkyTexture.png"
-		"resources/darkSkyTexture.png"
-		"resources/darkSkyTexture.png"
-		"resources/darkSkyTexture.png"
+		"resources/darkSkyTexture.png",
+		"resources/darkSkyTexture.png",
+		"resources/darkSkyTexture.png",
+		"resources/darkSkyTexture.png",
+		"resources/darkSkyTexture.png",
 		"resources/darkSkyTexture.png"
 
 	};
@@ -82,7 +89,7 @@ void SimulationManager::run()
 	
 	
 	//create lights for the scene
-	scene->createDirectionalLight(glm::vec3(0.2f, -1.0f, 0.3f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.04f, 0.04f, 0.04f), glm::vec3(0.05f, 0.05f, 0.05f));
+	scene->createDirectionalLight(glm::vec3(0.2f, -1.0f, 0.3f), glm::vec3(0.01f, 0.01f, 0.01f), glm::vec3(0.04f, 0.04f, 0.04f), glm::vec3(0.05f, 0.05f, 0.05f));
 
 	scene->createPointLight(glm::vec3(8.0,3,0.2), glm::vec3(0.00f, 0.00f, 0.00f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
 	scene->createPointLight(glm::vec3(13, 2, 5), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
@@ -121,19 +128,15 @@ void SimulationManager::run()
 	level1.setLevelModel("resources/Terrain/flatForest.obj");
 	level1.renderMap(&LightShader);
 
-	
+	thirdPersonCamera playerCamera;
+	float pitch = 0, yaw = 0;
 
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
 	while (this->state == running)
 	{
-		if (renderer->checkWindowCloseState())  //check if user closes out of the window
-		{
-			this->state = shutdown;
-			break;
-		}
+		
 
 		setDeltaTime(); //update deltaTime for this loop
-		checkKeys(); //check for active keys during this loop
 		checkMouse();
 
 		newObject.setPosition(this->world->getBodyPosition(objectID));
@@ -142,84 +145,79 @@ void SimulationManager::run()
 		newObject2.setPosition(this->world->getBodyPosition(objectID2));
 		newObject2.setOrientation(this->world->getBodyRotation(objectID2));
 
-		//newMap.updatePosition(this->scene,this->world->getBodyPosition(worldID));
 
 		newPlayer.setPosition(this->world->getBodyPosition(playerId));
 		this->playerPosition = newPlayer.GetCurrentPosition();
 
-		//camera ----------------------------------------------------
-		float horizontalFromPlayer = radius * cos(cameraPitch);
-		float verticalDistance = radius * sin(cameraPitch);
-		this->cameraYaw = 180 - this->playerRotation + this->cameraFreeRotationAngle;
-		float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
-		float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
-		this-> CameraPosition.x = this->playerPosition.x - Xoffset;
-		this-> CameraPosition.y = this->playerPosition.y + verticalDistance;
-		this-> CameraPosition.z = this->playerPosition.z - Zoffset;
-		//-----------------------------------------------------------
-		
-		newPlayer.setPlayerYaw(this->playerRotation);
+		if (!WindowManager->getCursorStatus()) {
+			////camera ----------------------------------------------------
+			float horizontalFromPlayer = radius * cos(cameraPitch);
+			float verticalDistance = radius * sin(cameraPitch);
+			this->cameraYaw = 180 - this->playerRotation + this->cameraFreeRotationAngle;
+			float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
+			float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
+			this->CameraPosition.x = this->playerPosition.x - Xoffset;
+			this->CameraPosition.y = this->playerPosition.y + verticalDistance;
+			this->CameraPosition.z = this->playerPosition.z - Zoffset;
+			////-----------------------------------------------------------
 
+			newPlayer.setPlayerYaw(this->playerRotation);
+
+			//set camera position
+			//this needs to be fixed is incorrect and pitch/yaw have 0 effect on the actual camera object
+			this->scene->setCameraPosition(this->playerPosition + glm::vec3(0, 1.5, 0), this->CameraPosition, this->cameraPitch, this->cameraYaw);
+		}
 		//world collision
 
 		// set player movement
-
-		if (this->keys[GLFW_KEY_W] != true)
+		if (!this->WindowManager->checkKey(87)) 
 		{
 			newPlayer.setCurrentAnimation("idle");
 		}
 		
-		if(this->keys[GLFW_KEY_W] == true && this->keys[GLFW_KEY_LEFT_SHIFT] != true)
+		if(this->WindowManager->checkKey(87) && !this->WindowManager->checkKey(340))
 		{
 			newPlayer.setCurrentAnimation("jog");
 			this->world->changeBodyVelocity(playerId, 4.0f * newPlayer.getPlayerFront());
-
-			this->keys[GLFW_KEY_W] = false;
 		}
 
-		if (this->keys[GLFW_KEY_W] == true && this->keys[GLFW_KEY_LEFT_SHIFT] == true)
+		if (this->WindowManager->checkKey(87) && this->WindowManager->checkKey(340))
 		{
 			newPlayer.setCurrentAnimation("run");
 			this->world->changeBodyVelocity(playerId, 8.0f * newPlayer.getPlayerFront());
-			this->keys[GLFW_KEY_W] = false;
 		}
 
-		if (this->keys[GLFW_KEY_S] == true)
+		if (this->WindowManager->checkKey(83))
 		{
 			this->world->changeBodyVelocity(playerId, 4.0f * -newPlayer.getPlayerFront());
-			this->keys[GLFW_KEY_S] = false;
 		}
 
-		if (this->keys[GLFW_KEY_A] == true)
+		if (this->WindowManager->checkKey(65))
 		{
 			this->world->changeBodyVelocity(playerId, 4.0f * -newPlayer.getPlayerRight());
-			this->keys[GLFW_KEY_A] = false;
 		}
 
-		if (this->keys[GLFW_KEY_D] == true)
+		if (this->WindowManager->checkKey(68))
 		{
 			this->world->changeBodyVelocity(playerId, 4.0f * newPlayer.getPlayerRight());
-			this->keys[GLFW_KEY_D] = false;
 		}
 
-		if(this->keys[GLFW_KEY_LEFT_SHIFT] == false)
+		if (this->WindowManager->checkKey(32))
 		{
-			newPlayer.setMovementSpeed(4);
+			this->world->addForceToBody(playerId,70.0f * newPlayer.getPlayerUp());
 		}
 
-		if (this->keys[GLFW_KEY_LEFT_SHIFT] == true)
+		if(this->WindowManager->checkKey(342))
 		{
-			newPlayer.setMovementSpeed(8);
-			this->keys[GLFW_KEY_LEFT_SHIFT] = false;
+			//left alt
+			this->WindowManager->enableCursor();
 		}
-		if (this->keys[GLFW_KEY_SPACE] == true) 
+
+		if (this->WindowManager->checkKey(341)) 
 		{
-			this->world->addForceToBody(playerId,40.0f * newPlayer.getPlayerUp());
-			this->keys[GLFW_KEY_SPACE] = false;
+			this->WindowManager->disableCursor();
 		}
 	
-		
-
 		newPlayer.renderPlayer(this->deltaTime, this->scene, this->world);
 	
 		newObject.updateTransforms(this->scene, this->world);
@@ -234,61 +232,22 @@ void SimulationManager::run()
 			accumulator -= timestep;
 		}
 		
-		//set camera position
-		this->scene->setCameraPosition(this->playerPosition + glm::vec3(0,1.5,0), this->CameraPosition, this->cameraPitch, this->cameraYaw);
+		
 		//draw contents to actual game window
 		this->renderer->drawWindow(this->scene,this->deltaTime);
 
+		//shutdown key check (esc)----------------------------
+		if(this->WindowManager->checkKey(256))
+		{
+			this->state = shutdown;
+		}
+		//----------------------------------------------------
+		this->WindowManager->pollWindowEvents();
 	}
 
 	if (this->state != running && this->state != pause) //if the game is not running or paused shutdown
 	{
-		this->renderer->shutDown();
-	}
-
-}
-
-void SimulationManager::checkKeys() //temporary keyboard mechanism, need to manually reset keys after checked
-{
-	int state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_W);
-	if(state == GLFW_PRESS)
-	{
-		this->keys[GLFW_KEY_W] = true;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_A);
-	if (state == GLFW_PRESS)
-	{
-		this->keys[GLFW_KEY_A] = true;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_S);
-	if (state == GLFW_PRESS)
-	{
-		this->keys[GLFW_KEY_S] = true;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_D);
-	if (state == GLFW_PRESS)
-	{
-		this->keys[GLFW_KEY_D] = true;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_SPACE);
-	if(state == GLFW_PRESS)
-	{
-		this->keys[GLFW_KEY_SPACE] = true;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_LEFT_SHIFT);
-	if (state == GLFW_PRESS)
-	{
-		this->keys[GLFW_KEY_LEFT_SHIFT] = true;
-	}
-
-	state = glfwGetKey(this->renderer->getWindow(), GLFW_KEY_ESCAPE);
-	if(state == GLFW_PRESS)
-	{
+		//this->renderer->shutDown();
 		this->state = shutdown;
 	}
 
@@ -298,7 +257,7 @@ void SimulationManager::checkMouse()
 {
 	
 	double mouseX, mouseY;
-	glfwGetCursorPos(this->renderer->getWindow(), &mouseX, &mouseY); //poll the window for the current mouse position
+	glfwGetCursorPos(this->WindowManager->getCurrentWindow(), &mouseX, &mouseY); //poll the window for the current mouse position
 
 	if (firstMouse == true)
 	{
@@ -323,14 +282,14 @@ void SimulationManager::checkMouse()
 
 	this->cameraPitch += yoffset * 0.01;
 
-	if (!glfwGetMouseButton(this->renderer->getWindow(), GLFW_MOUSE_BUTTON_RIGHT))
+	if (!glfwGetMouseButton(this->WindowManager->getCurrentWindow(), GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		this->playerRotation += xoffset * 0.01;
 	}
 
 	//std::cout << "player rotation " << playerRotation << std::endl;
 
-	if (glfwGetMouseButton(this->renderer->getWindow(), GLFW_MOUSE_BUTTON_RIGHT))
+	if (glfwGetMouseButton(this->WindowManager->getCurrentWindow(), GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		this->cameraFreeRotationAngle += xoffset * 0.01;
 	}
@@ -364,10 +323,7 @@ void SimulationManager::setDeltaTime()
 	
 }
 
-void SimulationManager::shutDown() 
-{
 
-}
 
 //script testing function idea
 //

@@ -31,6 +31,9 @@
     <Filter Include="Source Files\GameObjectBody">
       <UniqueIdentifier>{546b42a3-ffae-4239-a7bd-d3af9260703d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\definitionHeaders">
+      <UniqueIdentifier>{4e8a130b-7962-4d08-8ca7-ba3de9d396b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -103,6 +106,15 @@
       <Filter>Source Files\PhysicsandDynamicsBody</Filter>
     </ClCompile>
     <ClCompile Include="Level.cpp">
+      <Filter>Source Files\GameObjectBody</Filter>
+    </ClCompile>
+    <ClCompile Include="windowManager.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdPersonCamera.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="playerEntity.cpp">
       <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
   </ItemGroup>
@@ -180,6 +192,24 @@
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
+      <Filter>Header Files\GameObjectHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="windowManager.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdPersonCamera.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="playerActionDefinitions.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="keyDefinitions.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="renderingInfoDefinitions.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="playerEntity.h">
       <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
   </ItemGroup>

@@ -29,16 +29,12 @@ public:
 	~Renderer();
 
 	//create gl context and window
-	void init();
+	void init(GLFWwindow* newWindow);
 
 	//draw all objects currently in scene
 	void drawWindow(Scene* scene,float dt);
 
-	void shutDown();
-
-	bool checkWindowCloseState();
-
-	GLFWwindow* getWindow();
+	//GLFWwindow* getWindow();
 
 	
 

@@ -1,42 +1,43 @@
 #include "Renderer.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+//
+//void errorCallback(int error, const char *msg);
 
-void errorCallback(int error, const char *msg);
-
-void Renderer::init() 
+void Renderer::init(GLFWwindow* newWindow)
 {
 	//init opengl and set opengl version
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwInit();
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	//create window object
-	this->window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "openWorld", NULL, NULL);
-	if(window == NULL)
-	{
-		std::cout << "Failed to create GLFW window!" << std::endl;
-		glfwTerminate();
-	}
-	glfwMakeContextCurrent(window);
-	
-	//init glad
-	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD!" << std::endl;
-	}
+	////create window object
+	//this->window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "openWorld", NULL, NULL);
+	//if(window == NULL)
+	//{
+	//	std::cout << "Failed to create GLFW window!" << std::endl;
+	//	glfwTerminate();
+	//}
+	//glfwMakeContextCurrent(window);
+	//
+	////init glad
+	//if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	//{
+	//	std::cout << "Failed to initialize GLAD!" << std::endl;
+	//}
 
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetErrorCallback(errorCallback);
+	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	//glfwSetErrorCallback(errorCallback);
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
+	this->window = newWindow;
 	this->animator = new Animator;
 
 }
@@ -201,33 +202,16 @@ void Renderer::drawWindow(Scene* scene, float dt)
 		//}
 
 
-		glfwSwapBuffers(this->window);
-		glfwPollEvents();
+		/*glfwSwapBuffers(this->window);
+		glfwPollEvents();*/
 		
 }
 
-GLFWwindow* Renderer::getWindow() 
-{
-	return this->window;
-}
+//GLFWwindow* Renderer::getWindow() 
+//{
+//	return this->window;
+//}
 
-void Renderer::shutDown() 
-{
-	glfwTerminate();
-}
-
-bool Renderer::checkWindowCloseState() 
-{
-	if(glfwWindowShouldClose(this->window)) //if the window should close return true
-	{
-		return true;
-	}
-
-	if (!glfwWindowShouldClose(this->window)) //if the window should remain open return false
-	{
-		return false;
-	}
-}
 
 void Renderer::setTransforms(ID transformID, Scene& currentScene,Shader& shader)
 {
@@ -304,15 +288,15 @@ void Renderer::drawSkyBox(Scene* scene)
 }
 
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
-void errorCallback(int error, const char* msg) 
-{
-	std::string s;
-	s = " [" + std::to_string(error) + "] " + msg + '\n';
-	std::cerr << s << std::endl;
-}
+//void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+//{
+//	glViewport(0, 0, width, height);
+//}
+//
+//void errorCallback(int error, const char* msg) 
+//{
+//	std::string s;
+//	s = " [" + std::to_string(error) + "] " + msg + '\n';
+//	std::cerr << s << std::endl;
+//}
 
