@@ -1,242 +1,116 @@
 #pragma once
 
-#include <glad/glad.h>
-#include "GLFW/glfw3.h"
-
-#include <iostream>
-#include <vector>
-#include <map>
+#include "renderingInfoDefinitions.h"
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
-#include "lookup_table.h"
-#include "ResourceManager.h"
 #include "Shader.h"
-#include "Camera.h"
+#include "camera.h"
 
-struct RenderMesh 
-{
-	GLuint MeshVAO;
-	GLuint MeshVBO;
-	GLuint MeshEBO;
-
-	GLuint IndexCount;
-	GLuint VertexCount;
-
-	bool hasDiffuseTextures;
-	bool hasSpecularTextures;
-
-	int numDiffuseTextures;
-	int numSpecularTextures;
-
-	std::vector <Texture*> meshDiffuseTextures;
-	std::vector <Texture*> meshSpecularTextures;
-};
-
-struct RenderModel
-{
-	std::vector <ID> renderMeshIDs;
-
-	Shader* Modelshader;
-
-	bool hasActiveAnimation;
-	ID animationID;
-
-	std::map<std::string, BoneData> boneMap;
-};
-
-struct Transform 
-{
-	glm::vec3 Scale;
-	glm::vec3 Translation;
-	glm::quat rotationQuat;
-};
-
-struct Instance 
-{
-	ID ModelID;
-	ID TransformID;
-};
-
-struct DirectionalLight
-{
-	glm::vec3 direction;
-	glm::vec3 ambient;
-	glm::vec3 diffuse;
-	glm::vec3 specular;
-};
-
-struct Pointlight
-{
-	glm::vec3 position;
-
-	glm::vec3 ambient;
-	glm::vec3 diffuse;
-	glm::vec3 specular;
-
-	float constant;
-	float linear;
-	float quadratic;
-};
-
-struct SpotLight
-{
-	glm::vec3 position;
-	glm::vec3 direction;
-
-	glm::vec3 ambient;
-	glm::vec3 diffuse;
-	glm::vec3 specular;
-
-	float constant;
-	float linear;
-	float quadratic;
-	float cutoff;
-	float outerCutoff;
-};
-
-struct RenderAnimation
-{
-	AnimationData animationData;
-	std::string name;
-	float currentPoint;
-};
-
-struct RenderTriangleVertex
-{
-	glm::vec3 vertexPosition;
-	glm::vec3 color;
-	int vertexId;
-};
-
-struct triangleTransforms
-{
-	glm::vec3 a;
-	glm::vec3 b;
-	glm::vec3 c;
-};
+#include <unordered_map>
+#include <vector>
 
 #define MAX_NR_SPOT_LIGHTS 6;
 
+#ifndef SCENE_H
+#define SCENE_H
+
+struct renderInfo
+{
+	Model* model;
+	transform* transf;
+	Shader* shader;
+	std::string id;
+};
+
+struct renderInfo2D
+{
+	shape2D* screenShape;
+	glm::vec2 screenPos;//these will be in a range between -500 - +500 both in the x and y directions instead of the normal -1 - 1 of opengl
+};
 
 //scene is a database of all objects that need to be drawn. Each object is placed in a table. 
 // All parts of each object are contained within tables as well.
 //VAOS are stored in the Scene class, basic data such as Vertices, indices, and textures/materials are stored in ResourceManager
-class Scene
+class scene
 {
 public:
 
-	Scene();
+	scene();
 
-	void Init();
-	
-	//returns an instance ID
-	ID AddInstance(ID& ModelID,ID& TransformID);
+	~scene();
 
-	ID AddInstance(RenderModel& Model, Transform& transform);
+	//add object to scene for rendering
+	std::string addObjectToScene(Model* model, transform transf, Shader* shader);
 
-	ID createModel(ModelData model, Shader& shader);
+	//remove object from scene when done using it
+	void removeObjectFromScene(std::string id);
 
-	ID createModel(ModelData model, Shader& shader, AnimationData* animation);
+	//update object transform given its id
+	void updateTransform(std::string id, transform transform);
 
-	void removeModelFromScene(ID modelID);
+	//dumps all rendering info into a vector to be sent to the renderer
+	std::vector <renderInfo*> getRenderingInfo();
 
-	void UpdateAnimation(ID modelID, ID animationID);
+	void generateModelRenderData(Mesh* mesh);
 
-	void UpdateShader(ID modelID, Shader& shader);
+	std::vector <unsigned int> getModelVAOs(std::string modelID);
 
-	//test function for transforms
-	ID createTransform(glm::vec3 position, glm::quat rotation, glm::vec3 scale);
+	Camera* getCurrentCamera();
 
-	void updateTransform(ID transformID, glm::vec3 position, glm::quat rotation, glm::vec3 scale);
-	//animations
+	void setCamera(Camera* camera);
 
-	ID createAnimation(AnimationData* animation);
+	void addPointLight(glm::vec3 pos, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, int index);
 
-	ID createAnimation(AnimationData* animation, std::string name);
-	
-	void DebugFunction();
+	void addSpotLight(glm::vec3 pos, glm::vec3 dir, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, int index);
 
-	void MoveCamera(Camera_Movement direction, float deltaTime);
+	void setDirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
 
-	void MouseAimCamera(float xoffset, float yoffset);
+	std::vector <pointLight*> getPointLights();
 
-	void setCameraPosition(glm::vec3 target, glm::vec3 position, float pitch, float yaw);
+	std::vector <spotLight*> getSpotLights();
 
-	ID createLight(DirectionalLight directionalLight);
-	
-	ID createLight(Pointlight pointLight);
+	directionalLight* getDirectionalLight();
 
-	ID createLight(SpotLight spotLights);
+	void setDepthShader(Shader* depthShader);
 
-	ID createPointLight(glm::vec3 position,glm::vec3 ambient, glm::vec3 diffuse,glm::vec3 specular, float constant, float linear, float quadratic);
+	Shader* getDepthShader();
 
-	ID createDirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
+	void setDepthCubeShader(Shader* depthShader);
 
-	ID createSpotLight(glm::vec3 position,glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float innerCutoff, float outerCutoff);
-
-	void MovePointLight(ID pointLightID, glm::vec3 translation);
-	
-	void createCubeMap(std::vector <std::string> cubeMapTexturePaths, Shader* cubeMapshader);
-
-	void setDebugTriangleRenderStatus(bool set);
-
-	void debugTriangleInfo(std::vector< triangleTransforms> triangles,Shader* triangleShader);
+	Shader* getDepthCubeShader();
 
 private:
 
-	void createCubeMapVAO();
+	std::string createUniqueID();
 
-	void createTriangleVAO();
+	//map of active models in this scene
+	std::unordered_map <std::string, renderInfo> activeModels;
 
-	unsigned int loadCubeMapTextures(std::vector <std::string> texturePaths);
+	std::unordered_map <std::string, transform> sceneTransforms;
 
-	lookup_table<Instance> Instances;
-	lookup_table<RenderMesh> Meshes;
-	lookup_table<Transform> Transforms;
-	lookup_table<RenderModel> Models;
+	std::vector <std::string> modelIds;
 
-	lookup_table<RenderAnimation> animations;
+	unsigned int idCounter = 0; //counter for scene objects allows all objects to be referenced for rendering
 
-	//lights in the scene
-	lookup_table <Pointlight> pointLights;
-	lookup_table <DirectionalLight> directionalLights;
-	lookup_table <SpotLight> spotLights;
+	//scene settings
+	int maxLights = 5; //max number of point/spot lights allowed per scene
+	//only one directional light per scene as of right now
 
+	std::unordered_map<int, pointLight> pointLights;
+	std::unordered_map<int, spotLight> spotLights;
+	directionalLight mainLight;
 
-	std::vector <ID> InstanceIDs;
-	std::vector <ID> pointLightIDs;
+	Camera* sceneCamera;
+	Shader* depthShader;
+	Shader* depthCubeShader;
 
-	ID spotLightID;
-	ID directionLightID;
-
-	Camera* MainCamera;
-
-	float cubeMapLoaded = false; //used in the renderer to check status of a cubemap
-	Shader* cubeMapShader; //created when a cube map is created
-	unsigned int cubeMapVAO;
-	unsigned int cubeMapVBO;
-
-	unsigned int cubeMaptextureID;
-
-	std::vector <RenderTriangleVertex> triangleVertices; //vertices used to render a simple triangle and change it's position
-	std::vector <triangleTransforms> triangleVertexPositions;
-	Shader* triangleShader;
-
-	unsigned int triangleVAO;
-	unsigned int triangleVBO;
-
-	bool renderDebugTriangles = false;
-
-	unsigned int InstanceCount = 0;
-	unsigned int numPointLights = 0;
-
-	ID createMesh(MeshData mesh);
-
-	friend class Renderer;
+	int maxBones = 100;
 
 };
+
+#endif
 
 //things to add:
 // light objects

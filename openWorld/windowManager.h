@@ -41,12 +41,14 @@ public:
 	bool getCursorStatus();
 
 	void getMousePosition(double* x, double* y);
+
+	void setScreenSize(int width, int height);
 private:
 
 	GLFWwindow* currentWindow;
 	//default values
-	int screenWidth = 1200;
-	int screenHeight = 900;
+	int screenWidth = 1600;
+	int screenHeight = 800;
 
 	//a bool array of keys each index is the key name/number as defined by GLFW
 	bool keys[348];

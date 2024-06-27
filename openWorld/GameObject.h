@@ -27,15 +27,15 @@ public:
 
 	void LoadObjectFromFile(std::string filepath,std::string objectName); //load gameObject using resource manager
 
-	void addObjectToScene(Shader& shader, Scene* scene, PhysicsWorld* world);
+	void addObjectToScene(Shader& shader, scene* scene, PhysicsWorld* world);
 
-	void removeObjectFromScene(Scene* scene);
+	void removeObjectFromScene(scene* scene);
 
 	void addObjectToPhysicsWorld(PhysicsWorld* world);
 
 	void addForce(glm::vec3 force, PhysicsWorld* world);
 
-	void updateTransforms(Scene* scene, PhysicsWorld* world);
+	void updateTransforms(scene* scene, PhysicsWorld* world);
 
 	void setPosition(glm::vec3 newPosition);
 
@@ -47,7 +47,7 @@ public:
 private:
 
 	//rendering info
-	ModelData* modelingData; //data from resource manager about rendering, skeleton info, ect
+	Model* modelingData; //data from resource manager about rendering, skeleton info, ect
 
 	ID sceneObjectID;
 	ID sceneModelID;

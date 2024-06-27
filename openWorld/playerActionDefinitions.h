@@ -12,7 +12,7 @@ enum playerActions
 	walkingPistolLowered,
 	walkingPistolRaised,
 	walkingRifleLowered,
-	walkingRifleRaise,
+	walkingRifleRaised,
 
 	leftTurn,
 	rightTurn,
@@ -32,6 +32,9 @@ enum playerActions
 	rightRunningTurn,
 
 	crouching,
+	crouchingPistol,
+	crouchingRile,
+
 	crouchWalking,
 	crouchWalkingPistolLowered,
 	crouchWalkingPistolRaised,

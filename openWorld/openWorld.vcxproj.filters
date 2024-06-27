@@ -34,6 +34,12 @@
     <Filter Include="Header Files\definitionHeaders">
       <UniqueIdentifier>{4e8a130b-7962-4d08-8ca7-ba3de9d396b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\loadingUtilities">
+      <UniqueIdentifier>{d037c64b-58c6-44ac-bbff-cb2be41c20a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\loadingUtilites">
+      <UniqueIdentifier>{1fda62d8-48ec-4b5f-88c2-b2370f4b9927}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -51,22 +57,10 @@
     <ClCompile Include="Animator.cpp">
       <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
-    <ClCompile Include="AssimpMesh.cpp">
-      <Filter>Source Files\RenderingandSceneBody</Filter>
-    </ClCompile>
-    <ClCompile Include="AssimpModel.cpp">
-      <Filter>Source Files\RenderingandSceneBody</Filter>
-    </ClCompile>
-    <ClCompile Include="AssimpSkeletalAnimation.cpp">
-      <Filter>Source Files\RenderingandSceneBody</Filter>
-    </ClCompile>
-    <ClCompile Include="Bone.cpp">
-      <Filter>Source Files\RenderingandSceneBody</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
+    <ClCompile Include="renderer.cpp">
       <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
@@ -117,6 +111,12 @@
     <ClCompile Include="playerEntity.cpp">
       <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
+    <ClCompile Include="assimpAnimationLoader.cpp">
+      <Filter>Source Files\loadingUtilites</Filter>
+    </ClCompile>
+    <ClCompile Include="assimpModelLoader.cpp">
+      <Filter>Source Files\loadingUtilites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -131,7 +131,7 @@
     <ClInclude Include="PhysicsWorld.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
+    <ClInclude Include="renderer.h">
       <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
@@ -154,21 +154,6 @@
     </ClInclude>
     <ClInclude Include="Animator.h">
       <Filter>Header Files\RenderingandSceneHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="assimp_glm_helpers.h">
-      <Filter>Header Files\RenderingandSceneHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="AssimpMesh.h">
-      <Filter>Header Files\RenderingandSceneHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="AssimpModel.h">
-      <Filter>Header Files\RenderingandSceneHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="AssimpSkeletalAnimation.h">
-      <Filter>Header Files\RenderingandSceneHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="testingBoxMeshFunctions.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
@@ -211,6 +196,21 @@
     </ClInclude>
     <ClInclude Include="playerEntity.h">
       <Filter>Header Files\GameObjectHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="animationDataDefinitions.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="assimpModelLoader.h">
+      <Filter>Header Files\loadingUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="assimpGLMConverter.h">
+      <Filter>Header Files\loadingUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="assimpAnimationLoader.h">
+      <Filter>Header Files\loadingUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="testingBoxMeshFunctions.h">
+      <Filter>Header Files\loadingUtilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

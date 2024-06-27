@@ -1,9 +1,6 @@
 #include "Texture.h"
 
-#include <iostream>
-
-
-Texture::Texture() : width(0),height(0),internalFormat(GL_RGBA),imageFormat(GL_RGBA),wrapS(GL_REPEAT),wrapT(GL_REPEAT),filterMin(GL_LINEAR),filterMax(GL_LINEAR)
+Texture::Texture() : width(0), height(0), internalFormat(GL_RGB), imageFormat(GL_RGB), wrapS(GL_REPEAT), wrapT(GL_REPEAT), filterMin(GL_LINEAR), filterMax(GL_LINEAR)
 {
 	this->width = width;
 	this->height = height;
@@ -16,7 +13,7 @@ Texture::Texture() : width(0),height(0),internalFormat(GL_RGBA),imageFormat(GL_R
 	glGenTextures(1, &this->id);
 }
 
-Texture::~Texture() 
+Texture::~Texture()
 {
 
 }
@@ -26,11 +23,8 @@ void Texture::generate(unsigned int width, unsigned int height, unsigned char* d
 	this->width = width;
 	this->height = height;
 
-	std::cout << "image format type: " << this->imageFormat << std::endl;
-	std::cout << "texture ID: " << this->id << std::endl;
-
 	glBindTexture(GL_TEXTURE_2D, this->id);
-	glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, width, height, 0, this->imageFormat, GL_UNSIGNED_BYTE, data);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrapS);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrapT);
@@ -43,5 +37,4 @@ void Texture::generate(unsigned int width, unsigned int height, unsigned char* d
 void Texture::bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, this->id);
-	
 }

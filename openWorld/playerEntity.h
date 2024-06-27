@@ -7,8 +7,12 @@
 
 #include "scene.h"
 #include "renderingInfoDefinitions.h"
+#include "animationDataDefinitions.h"
 
 #include "playerActionDefinitions.h"
+
+#include "ResourceManager.h"
+#include "Animator.h"
 
 #ifndef PLAYERENTITY_H
 #define PLAYERENTITY_H
@@ -22,16 +26,18 @@ class playerEntity
 {
 public:
 	
-	 playerEntity(const char* playerFilePath);
+	 playerEntity(std::string playerFilePath);
 
 	~playerEntity();
+
+	void addPLayerToScene(scene* currentScene,Shader* shader);
 
 	void savePlayerFile();//this will save players data to a .player file that can be used the next time a playerEntity is created
 
 	void setPlayerAction(playerActions action);
 
 	//change player looks/resistances
-	void setPlayerMeshes(playerParts part, mesh* newMesh); //allows on the fly update to a player mesh for each body part
+	void setPlayerMeshes(playerParts part, Mesh* newMesh); //allows on the fly update to a player mesh for each body part
 
 	void setPlayerResistance(playerParts part, int newResistance);
 
@@ -52,9 +58,9 @@ public:
 
 	//player movement
 
-	void setPlayerTransform(Transform newTransform);
+	void setPlayerTransform(transform newTransform);
 
-	Transform* getPlayersTransform();
+	transform* getPlayersTransform();
 
 	relTransform* getPlayerRelativeTransform(); //this cannot be set manually and is only updated by the class based on render transform parameters
 
@@ -62,10 +68,18 @@ public:
 
 	int getPlayerMoveSpeed();
 
+	void updateEntity(scene* currentScene); //this should get called any time something about the player changes to update its data
+
+	//calling this will step through all loaded animations one by one to check if they work
+	void debugAnimations(); 
+
 private:
 
-	void updateEntity(); //this should get called any time something about the player changes to update its data
+	void updateEntity();
 
+	void loadPlayerAnimations(std::string playerFilePath); //directory for player animations will be under the players file path in a file named animations
+
+	void updateActions();
 	//data:
 	playerActions currentAction;
 	
@@ -74,13 +88,14 @@ private:
 	//animation names should exactly match player action name as well key word is should it is me making this thing
 	//also animations is only handled by the class you cannot manually change the animations only player actions
 	std::unordered_map<std::string, animation*> animations;
+	animation* currentAnimation; //current animation being used by the player
 
 	//transforms and movement
-	Transform currentTransform; //this is position, orientation, and scaling for renderer
+	transform currentTransform; //this is position, orientation, and scaling for renderer
 	relTransform relativeTransf; //this is front, up, and right
 
 	//players mesh (changing clothing/gear and such), actual data is stored in resource manager
-	std::unordered_map<playerParts, mesh*> playersParts;
+	std::unordered_map<playerParts, Mesh*> playersParts;
 
 	//injuries and health concerns
 	std::unordered_map<playerParts, injuryStatus> playerInjuries;
@@ -96,11 +111,16 @@ private:
 	Model* playerModel; //this is just a little thing to make rendering easier for myself
 
 	std::string playerName; //this one should be pretty self explanatory
+	std::string sceneID;
 
 	//helper bools for updating the player on the fly
 	bool meshChange = false;
 	bool animationChange = false;
 	bool actionChange = false;
+
+	//debug data delete later
+	int stepper = 0;
+	std::vector <playerActions> actionDebugger;
 };
 
 #endif

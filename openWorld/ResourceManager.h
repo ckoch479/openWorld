@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
 #include <vector>
 #include <map>
 #include <unordered_map>
@@ -16,81 +17,28 @@
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
-#include "lookup_table.h"
-#include "Texture.h"
 
-#include "AssimpModel.h"
-#include "AssimpMesh.h"
-#include "Bone.h"
-#include "AssimpSkeletalAnimation.h"
+#include "lookup_table.h"
+
+#include "Texture.h"
+#include "Shader.h"
+
+#include "renderingInfoDefinitions.h"
+#include "animationDataDefinitions.h"
+
+#include "assimpModelLoader.h"
+#include "assimpAnimationLoader.h"
 
 
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
-//basic mesh data i.e. vertices,texcoords,normals,indices,ect
-struct Vertex
+
+enum textureType
 {
-	glm::vec3 vertexPosition;
-	glm::vec2 texCoords;
-	glm::vec3 Normal;
-
-	int BoneIds[MAX_BONE_INFLUENCE];
-
-	float boneWeights[MAX_BONE_INFLUENCE];
+	diffuse,
+	specular,
+	normal,
 };
-
-struct BoneData
-{
-	int BoneId;
-	std::string boneName;
-	glm::mat4 boneMatrix;
-};
-
-//this animation bone data is to determine the heirarchy of bones for the animation Bone data itself is for which bones are attached to the mesh itself
-struct AnimationBoneData
-{
-	glm::mat4 localTransformation;
-	std::string name;
-	int childrenCount;
-	std::vector<AnimationBoneData> children;
-
-	std::vector <KeyPosition> Positions;
-	std::vector <KeyRotation> Rotations;
-	std::vector <KeyScale> Scalings;
-
-	int numPositions;
-	int numRotations;
-	int numScalings;
-
-	//placed here incase this is just a transform node and not an actual bone
-	bool boneNode;
-};
-
-struct MeshData
-{
-	std::vector <Vertex> vertices;
-	std::vector <Texture*> diffuseTextures;
-	std::vector <Texture*> specularTextures;
-	std::vector <unsigned> indices;
-
-	std::vector <BoneData> skeleton;
-};
-
-struct AnimationData
-{
-	float duration;
-	int ticksPerSecond;
-	AnimationBoneData rootBone;
-};
-
-struct ModelData
-{
-	std::vector <MeshData> meshes;//meshes
-	std::vector <BoneData> skeleton;//skeleton
-	//AABB
-
-};
-
 
 //resource manager stores data of meshes, textures, ect
 //loads data from files and stores in memory
@@ -99,38 +47,47 @@ class ResourceManager
 
 public:
 	//load a mesh object into memory. This function will return a meshData ptr.
-	static MeshData* loadMesh(const std::string filepath, std::string name);
+	static Mesh* loadMesh(std::string filePath, std::string name);
 
-	static MeshData* getMesh(std::string name);
+	static Mesh* getMesh(std::string name);
 
-	static ModelData* loadModel(const std::string filepath, std::string name);
+	static Model* loadModel(std::string filePath, std::string name);
 
-	static ModelData* getModel(std::string name);
+	static Model* getModel(std::string name);
 
-	static Texture* loadTexture(const std::string filepath, std::string name);
-	
+	static Texture* loadTexture(const char* file, bool sRGB, std::string name);
+
 	static Texture* getTexture(std::string name);
 
-	static AnimationData* loadAnimation(const std::string filepath, std::string name);
+	static Shader* loadShader(const char* vertexFilepath, const char* fragmentFilePath, const char* geometryFilePath, std::string name);
 
-	static AnimationData* getAnimation(std::string name);
+	static Shader* getShader(std::string name);
+
+	static animation* loadAnimation(std::string filePath, std::string name, std::string modelName);
+
+	static animation* getAnimation(std::string name);
+
+	static void clear();
 
 private:
-	static std::unordered_map <std::string, MeshData> meshes;
+	ResourceManager() {};
+
+	static std::unordered_map <std::string, Mesh> meshes;
+	static std::unordered_map <std::string, Model> models;
 	static std::unordered_map <std::string, Texture> textures;
-	static std::unordered_map <std::string, AnimationData> animations;
-	static std::unordered_map <std::string, ModelData> models;
+	static std::unordered_map <std::string, Shader> shaders;
+	static std::unordered_map <std::string, animation> animations;
+	//animations
 
-	//loads mesh data from a file
-	static MeshData loadMeshDataFromFile(const std::string filepath);
+	static std::vector <std::string> loadedTextures;
+	static std::vector <std::string> loadedModels;
+	static std::vector <std::string> loadedAnimations;
 
-	static ModelData loadModelDataFromFile(const std::string filepath);
-	//loads texture from a file
-	static Texture loadTextureFromFile(std::string filepath);
-
-	static AnimationData loadAnimationFromFile(std::string filepath);
-
-	static void getBoneData(AnimationBoneData& newBone, AssimpNodeData& boneNode, AssimpSkeletalAnimation& animation);
+	static Shader	loadShaderFromFile(const char* vertexFilePath, const char* fragmentFilePath, const char* geometryFilePath);
+	static Texture	loadTextureFromFile(const char* file, bool sRGB);
+	static Model	loadModelFromFile(std::string filePath);
+	static Mesh		loadMeshFromFile(std::string filePath);
+	static animation loadAnimationFromFile(std::string filePath, Model* model);
 
 
 

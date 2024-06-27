@@ -19,7 +19,7 @@ void GameObject::LoadObjectFromFile(std::string filepath, std::string objectName
 	
 	for(unsigned int i = 0; i < modelingData->meshes.size();i++)
 	{
-		MeshData tempMesh = modelingData->meshes[i];
+		Mesh tempMesh = modelingData->meshes[i];
 
 			for(unsigned int j = 0; j < tempMesh.vertices.size(); j++)
 			{
@@ -33,17 +33,17 @@ void GameObject::LoadObjectFromFile(std::string filepath, std::string objectName
 }
 
 //rendering---------------------------------------------------------------------------------
-void GameObject::addObjectToScene(Shader& shader, Scene* scene, PhysicsWorld* world)
+void GameObject::addObjectToScene(Shader& shader, scene* scene, PhysicsWorld* world)
 {
-	this->sceneModelID = scene->createModel(*modelingData, shader);
-	this->sceneTransformID = scene->createTransform(this->Position, rotation, objectScale);
+	//this->sceneModelID = scene->createModel(*modelingData, shader);
+	//this->sceneTransformID = scene->createTransform(this->Position, rotation, objectScale);
 
-	this->sceneObjectID = scene->AddInstance(this->sceneModelID, this->sceneTransformID);
+	//this->sceneObjectID = scene->AddInstance(this->sceneModelID, this->sceneTransformID);
 }
 
-void GameObject::removeObjectFromScene(Scene* scene)
+void GameObject::removeObjectFromScene(scene* scene)
 {
-	scene->removeModelFromScene(this->sceneModelID);
+	//scene->removeModelFromScene(this->sceneModelID);
 }
 
 //physics handling----------------------------------------------------------------------
@@ -59,14 +59,14 @@ void GameObject::addForce(glm::vec3 force, PhysicsWorld* world)
 	//world->applyForce(this->physicsWorldObjectID, force);
 }
 
-void GameObject::updateTransforms(Scene* scene, PhysicsWorld* world)
+void GameObject::updateTransforms(scene* scene, PhysicsWorld* world)
 {
 	//this->Position = world->getBodyPosition(this->physicsWorldObjectID);
 	//this->rotation = world->getBodyOrientation(this->physicsWorldObjectID);
 
 	//std::cout << Position.x << " " << Position.y << " " << Position.z << std::endl;
 	
-	scene->updateTransform(this->sceneTransformID, this->Position, this->rotation, this->objectScale);
+	//scene->updateTransform(this->sceneTransformID, this->Position, this->rotation, this->objectScale);
 }
 
 void GameObject::setPosition(glm::vec3 newPosition)
