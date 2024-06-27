@@ -1,656 +1,262 @@
 #include "Scene.h"
 
-Scene::Scene() 
+scene::scene()
 {
+	//generate 10 placeholder point lights and spot lights;
+	//generate 1 placeholder directional light;
 
-};
-
-ID Scene::AddInstance(ID& MeshID, ID& TransformID)
-{
-	Instance newInstance;
-	newInstance.ModelID = MeshID;
-	newInstance.TransformID = TransformID;
-	ID instanceID;
-	instanceID = this->Instances.add(newInstance);
-	this->InstanceIDs.push_back(instanceID);
-
-	RenderMesh newMesh;
-	newMesh = this->Meshes.lookup(MeshID);
-
-	this->InstanceCount++;
-
-	return instanceID;
-}
-
-ID Scene::AddInstance(RenderModel& Model, Transform& transform)
-{
-	ID newModelID = this->Models.add(Model);
-	ID newTransformID = this->Transforms.add(transform);
-
-	Instance newInstance;
-	newInstance.ModelID = newModelID;
-	newInstance.TransformID = newTransformID;
-	
-	ID newInstanceID = this->Instances.add(newInstance);
-	this->InstanceCount++;
-
-	this->InstanceIDs.push_back(newInstanceID);
-
-	return newInstanceID;
-}
-
-ID Scene::createModel(ModelData model, Shader& shader)
-{
-	RenderModel newModel;
-
-	//create mesh IDs for rendering and push them back
-	for(int i = 0; i < model.meshes.size(); i++)
+	for (unsigned int i = 0; i < 5; i++)
 	{
-		ID newID;
+		glm::vec3 pos(0.0, 10.0, 0.0);
+		glm::vec3 direction(0, -1, 0);
+		glm::vec3 color(0.0f);
 
-		newID = createMesh(model.meshes[i]);
-		newModel.renderMeshIDs.push_back(newID);
+		addPointLight(pos, color, color, color, i);
+		addSpotLight(pos, direction, color, color, color, i);
+	}
+	setDirectionalLight(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
+}
+
+scene::~scene()
+{
+
+}
+
+
+std::string scene::addObjectToScene(Model* model, transform transf, Shader* shader)
+{
+	std::string Modelid = createUniqueID();
+
+	modelIds.push_back(Modelid);
+
+	transform newTransform;
+	newTransform = transf;
+
+	sceneTransforms[Modelid] = newTransform;
+
+	renderInfo newInfo;
+	newInfo.model = model;
+	newInfo.transf = &sceneTransforms[Modelid];
+	newInfo.shader = shader;
+	newInfo.id = Modelid;
+
+	activeModels[Modelid] = newInfo;
+
+	for (unsigned int i = 0; i < activeModels[Modelid].model->meshes.size(); i++)
+	{
+		generateModelRenderData(&activeModels[Modelid].model->meshes[i]); //this function generates a VAO and VBO for each mesh in the model
 	}
 
-	//create a bone map for animation for this model
-	for (unsigned int i = 0; i < model.skeleton.size(); i++)
-	{
-		BoneData newbone;
-		newbone.BoneId = model.skeleton[i].BoneId;
-		newbone.boneMatrix = model.skeleton[i].boneMatrix;
-		newbone.boneName = model.skeleton[i].boneName;
 
-		newModel.boneMap[model.skeleton[i].boneName] = newbone;
+
+	return Modelid;
+}
+
+void scene::removeObjectFromScene(std::string id)
+{
+
+}
+
+void scene::updateTransform(std::string id, transform transform)
+{
+	sceneTransforms[id] = transform;
+}
+
+std::vector <renderInfo*> scene::getRenderingInfo()
+{
+	std::vector <renderInfo*> renderDump;
+
+	for (unsigned int i = 0; i < modelIds.size(); i++)
+	{
+		renderDump.push_back(&activeModels[modelIds[i]]);
 	}
 
-	/*if(model.skeleton.size() > 1)
-	{
-		for(unsigned int i = 0; i < 100; i++)
-		{
-			BoneData newbone;
-			newbone.BoneId = i;
-			newbone.boneMatrix = glm::mat4(1.0f);
-			newbone.boneName = "noBone" + i;
-			newModel.boneMap[newbone.boneName] = newbone;
-		}
-	}*/
-
-	//set the shader used for this model and meshes
-	newModel.Modelshader = &shader;
-
-	//no animation was added with this mode so animation ID remains null 
-	//newModel.animationID;
-	
-	//no animations were loaded with this model so this is set to false
-	newModel.hasActiveAnimation = false;
-
-	ID newModelID;
-	newModelID = Models.add(newModel);
-
-	return newModelID;
+	return renderDump;
 }
 
-ID Scene::createModel(ModelData model, Shader& shader, AnimationData* animation)
+void scene::generateModelRenderData(Mesh* mesh)
 {
-	RenderModel newModel;
+	unsigned int* VAO = &mesh->VAO;
+	unsigned int* VBO = &mesh->VBO;
+	unsigned int* EBO = &mesh->EBO;
+	glGenVertexArrays(1, VAO);
+	glGenBuffers(1, VBO);
+	glGenBuffers(1, EBO);
 
-	//create mesh IDs for rendering and push them back
-	for (int i = 0; i < model.meshes.size(); i++)
-	{
-		ID newID;
+	glBindVertexArray(*VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+	glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(Vertex), &mesh->vertices[0], GL_STATIC_DRAW);
 
-		newID = createMesh(model.meshes[i]);
-		newModel.renderMeshIDs.push_back(newID);
-	}
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->indices.size() * sizeof(unsigned int), &mesh->indices[0], GL_STATIC_DRAW);
 
-	//create a bone map for animation for this model
-	for (unsigned int i = 0; i < model.skeleton.size(); i++)
-	{
-		BoneData newbone;
-		newbone.BoneId = model.skeleton[i].BoneId;
-		newbone.boneMatrix = model.skeleton[i].boneMatrix;
-		newbone.boneName = model.skeleton[i].boneName;
-
-		newModel.boneMap[model.skeleton[i].boneName] = newbone;
-	}
-
-	//set the shader used for this model and meshes
-	newModel.Modelshader = &shader;
-
-	//add active animation ID to the model
-	newModel.animationID = createAnimation(animation);
-
-	//animations were loaded with this model so this is set to true
-	newModel.hasActiveAnimation = true;
-
-	ID newModelID;
-	newModelID = Models.add(newModel);
-
-	return newModelID;
-}
-
-void Scene::removeModelFromScene(ID modelID)
-{
-	RenderModel* tempModel;
-	tempModel = &this->Models.lookup(modelID);
-
-	for(int i = 0; i < tempModel->renderMeshIDs.size(); i++) //free the memory of the meshes linked to this model first
-	{
-		this->Meshes.remove(tempModel->renderMeshIDs[i]);
-	}
-	
-	this->Models.remove(modelID); //free the memory of the model
-}
-
-void Scene::UpdateAnimation(ID modelID, ID animationID)
-{
-	RenderModel* tempModel;
-	
-	tempModel = &Models.lookup(modelID);
-
-	tempModel->animationID = animationID;
-
-	tempModel->hasActiveAnimation = true;
-}
-
-void Scene::UpdateShader(ID modelID, Shader& shader)
-{
-	RenderModel* tempModel;
-	tempModel = &this->Models.lookup(modelID);
-	tempModel->Modelshader = &shader;
-}
-
-
-ID Scene::createMesh(MeshData mesh) 
-{
-	RenderMesh newMesh;
-
-	glGenVertexArrays(1, &newMesh.MeshVAO);
-	glGenBuffers(1, &newMesh.MeshVBO);
-	glGenBuffers(1, &newMesh.MeshEBO);
-
-	glBindVertexArray(newMesh.MeshVAO);
-
-	
-	glBindBuffer(GL_ARRAY_BUFFER, newMesh.MeshVBO);
-
-	glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex), &mesh.vertices[0], GL_STATIC_DRAW); //this is how the vector should be done
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newMesh.MeshEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(unsigned int), &mesh.indices[0], GL_STATIC_DRAW);
-
-	//store position vertices
+	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-	glEnableVertexAttribArray(0);
-	//store normals
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+	// vertex normals
 	glEnableVertexAttribArray(1);
-	//store texcoords
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+	// vertex texture coords
 	glEnableVertexAttribArray(2);
-	//store BoneIds;
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, textureCoordinates));
+	// vertex tangent
 	glEnableVertexAttribArray(3);
-	glVertexAttribIPointer(3, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, BoneIds));
-	//store Bone weights;
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
+	// vertex bit tangent
 	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeights));
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitTangent));
+	// vertex boneids
+	glEnableVertexAttribArray(5);
+	glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, boneIDs));
+	// vertex boneWeights
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeights));
+}
 
-	//Add textures to the render mesh object
-	newMesh.hasDiffuseTextures = (mesh.diffuseTextures.size() >= 1);
-	newMesh.numDiffuseTextures = mesh.diffuseTextures.size();
+std::vector <unsigned int> scene::getModelVAOs(std::string modelID)
+{
+	std::vector <unsigned int> VAOs;
 
-	if (newMesh.hasDiffuseTextures == true)
+	Model* model = activeModels[modelID].model;
+	for (unsigned int i = 0; i < model->meshes.size(); i++)
 	{
-		newMesh.meshDiffuseTextures = mesh.diffuseTextures;
+		VAOs.push_back(model->meshes[i].VAO);
 	}
 
-	newMesh.hasSpecularTextures = (mesh.specularTextures.size() >= 1);
-	newMesh.numSpecularTextures = mesh.specularTextures.size();
+	return VAOs;
+}
 
-	if (newMesh.hasSpecularTextures == true)
+std::string scene::createUniqueID()
+{
+	std::string newId;
+
+	newId = "Model:" + std::to_string(idCounter);
+	idCounter++;
+
+	return newId;
+}
+
+Camera* scene::getCurrentCamera()
+{
+	return this->sceneCamera;
+}
+
+void scene::setCamera(Camera* camera)
+{
+	this->sceneCamera = camera;
+}
+
+std::vector <pointLight*> scene::getPointLights()
+{
+	std::vector <pointLight*> lights;
+	for (unsigned int i = 0; i < 5; i++)
 	{
-		newMesh.meshSpecularTextures = mesh.specularTextures;
+		lights.push_back(&this->pointLights[i]);
 	}
 
-	newMesh.IndexCount = mesh.indices.size();
-
-	ID newMeshID;
-	newMeshID = this->Meshes.add(newMesh);
-	glBindVertexArray(0);
-
-	return newMeshID;
+	return lights;
 }
 
-//test function for transforms
-ID Scene::createTransform(glm::vec3 position, glm::quat rotation, glm::vec3 scale) 
+std::vector <spotLight*> scene::getSpotLights()
 {
-	Transform newTransform;
-	newTransform.Translation = position;
-	//newTransform.RotationOrigin = rotationOrigin;
-	//newTransform.rotation = rotation;
-	newTransform.Scale = scale;
-	newTransform.rotationQuat = rotation;
-
-	ID newTransformID;
-
-	newTransformID = this->Transforms.add(newTransform);
-	return newTransformID;
-}
-
-void Scene::updateTransform(ID transformID, glm::vec3 position, glm::quat rotation, glm::vec3 scale)
-{
-	Transform* tempTransform;
-	tempTransform = &this->Transforms.lookup(transformID);
-	tempTransform->Translation = position;
-	//tempTransform->RotationOrigin = rotationOrigin;
-	//tempTransform->rotation = rotation;
-	tempTransform->rotationQuat = rotation;
-	tempTransform->Scale = scale;
-
-	if(!tempTransform)
+	std::vector <spotLight*> lights;
+	for (unsigned int i = 0; i < 5; i++)
 	{
-		std::cout << "transform ID not valid!\n";
+		lights.push_back(&this->spotLights[i]);
 	}
 
+	return lights;
 }
 
-void Scene::DebugFunction() 
+directionalLight* scene::getDirectionalLight()
 {
-	std::cout << "instance count:" << this->InstanceCount << std::endl;
-	std::cout << "instances size: " << this->Instances.size() << std::endl;
-	std::cout << "instance ids size:" << this->InstanceIDs.size() << std::endl;
+	return &this->mainLight;
 }
 
-void Scene::Init() 
+void scene::addPointLight(glm::vec3 pos, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, int index)
 {
-	this->MainCamera = new Camera;
-}
-
-void Scene::MoveCamera(Camera_Movement direction, float deltaTime) 
-{
-	this->MainCamera->ProcessKeyboard(direction, deltaTime);
-}
-
-void Scene::MouseAimCamera(float xoffset, float yoffset) 
-{
-	this->MainCamera->ProcessMouseMovement(xoffset, yoffset);
-}
-
-void Scene::setCameraPosition(glm::vec3 target, glm::vec3 position, float pitch, float yaw)
-{
-	this->MainCamera->updateCamera(target,position, pitch, yaw);
-}
-
-ID Scene::createAnimation(AnimationData* animation)
-{
-	RenderAnimation newAnimation;
-
-	newAnimation.animationData = *animation;
-	newAnimation.name = "noName!";
-	newAnimation.currentPoint = 0.0f;
-
-	ID animationID;
-	animationID = animations.add(newAnimation);
-
-	return animationID;
-}
-
-ID Scene::createAnimation(AnimationData* animation, std::string name)
-{
-	RenderAnimation newAnimation;
-
-	newAnimation.animationData = *animation;
-	newAnimation.name = name;
-	newAnimation.currentPoint = 0.0f;
-
-	ID animationID;
-	animationID = animations.add(newAnimation);
-
-	return animationID;
-}
-
-void Scene::createCubeMap(std::vector <std::string> cubeMapTexturePaths, Shader* cubeMapshader)
-{
-	//create shader
-	
-	this->cubeMapShader = cubeMapshader;
-
-	//load and create textures
-	this->cubeMaptextureID = loadCubeMapTextures(cubeMapTexturePaths);
-
-	//create VAO/VBO
-	createCubeMapVAO();
-
-	//set skybox to true
-	this->cubeMapLoaded = true;
-}
-
-void Scene::setDebugTriangleRenderStatus(bool set)
-{
-	this->renderDebugTriangles = set;
-	createTriangleVAO();
-	std::cout << "render triangles set to true!\n";
-}
-
-void Scene::debugTriangleInfo(std::vector< triangleTransforms> triangles, Shader* triangleShader)
-{
-	this->triangleVertexPositions = triangles;
-	this->triangleShader = triangleShader;
-}
-
-void Scene::createTriangleVAO() 
-{
-	glm::vec3 defaultColor(0.0f,0.0f,0.0f);
-
-	RenderTriangleVertex point1;
-	point1.vertexPosition = glm::vec3(-0.5f, -0.5f, 0.0f);
-	point1.color = defaultColor;
-	point1.vertexId = 0;
-
-	RenderTriangleVertex point2;
-	point2.vertexPosition = glm::vec3(0.5f, -0.5f, 0.0f);
-	point2.color = defaultColor;
-	point1.vertexId = 1;
-
-	RenderTriangleVertex point3;
-	point3.vertexPosition = glm::vec3(0.0f, 0.5f, 0.0f);
-	point3.color = defaultColor;
-	point1.vertexId = 2;
-
-	this->triangleVertices.push_back(point1);
-	this->triangleVertices.push_back(point2);
-	this->triangleVertices.push_back(point3);
-	//create VAO
-	glGenVertexArrays(1, &triangleVAO);
-	glGenBuffers(1, &triangleVBO);
-
-	glBindVertexArray(triangleVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices), &triangleVertices[0], GL_STATIC_DRAW);
-
-	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(RenderTriangleVertex), (void*)offsetof(RenderTriangleVertex, vertexPosition));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(RenderTriangleVertex), (void*)offsetof(RenderTriangleVertex,color));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 1, GL_INT, GL_FALSE, sizeof(RenderTriangleVertex), (void*)offsetof(RenderTriangleVertex, vertexId));
-	glEnableVertexAttribArray(2);
-
-	std::cout << "triangle VAO created!\n";
-}
-
-unsigned int Scene::loadCubeMapTextures(std::vector <std::string> texturePaths)
-{
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-	int width, height, nrComponents;
-	for (unsigned int i = 0; i < texturePaths.size(); i++)
+	if (index > 5)
 	{
-		unsigned char* data = stbi_load(texturePaths[i].c_str(), &width, &height, &nrComponents, 0);
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			stbi_image_free(data);
-		}
-		else
-		{
-			std::cout << "Cubemap texture failed to load at path: " << texturePaths[i] << std::endl;
-			stbi_image_free(data);
-		}
+		std::cout << "ERROR::SCENE pointlight index out of range\n";
 	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	if (index < 5)
+	{
+		pointLight newLight;
+		newLight.ambient = ambient;
+		newLight.diffuse = diffuse;
+		newLight.specular = specular;
+		newLight.position = pos;
+		newLight.constant = 1.0f;
+		newLight.linear = 0.009;
+		newLight.quadratic = 0.0032f;
 
-	return textureID;
+		pointLights[index] = newLight;
+	}
 }
 
-
-void Scene::createCubeMapVAO()
+void scene::addSpotLight(glm::vec3 pos, glm::vec3 dir, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, int index)
 {
-	float skyboxVertices[] = {
-		// positions          
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
+	if (index > 5)
+	{
+		std::cout << "ERROR::SCENE spotLight index out of range\n";
+	}
+	if (index < 5)
+	{
+		spotLight newLight;
+		newLight.ambient = ambient;
+		newLight.diffuse = diffuse;
+		newLight.specular = specular;
+		newLight.position = pos;
+		newLight.direction = dir;
+		newLight.constant = 1.0f;
+		newLight.linear = 0.09f;
+		newLight.quadratic = 0.032f;
+		newLight.cutoff;
+		newLight.outerCutoff;
 
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		-1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f
-	};
-
-	glGenVertexArrays(1, &cubeMapVAO);
-	glGenBuffers(1, &cubeMapVBO);
-	glBindVertexArray(cubeMapVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, cubeMapVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		spotLights[index] = newLight;
+	}
 }
 
-//ID Scene::createMesh(MeshData mesh, Shader& shader, AnimationData* animation)
+void scene::setDirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
+{
+	this->mainLight.direction = direction;
+	this->mainLight.ambient = ambient;
+	this->mainLight.diffuse = diffuse;
+	this->mainLight.specular = specular;
+}
+
+void scene::setDepthShader(Shader* depthShader)
+{
+	this->depthShader = depthShader;
+}
+
+Shader* scene::getDepthShader()
+{
+	return this->depthShader;
+}
+
+void scene::setDepthCubeShader(Shader* depthShader)
+{
+	this->depthCubeShader = depthShader;
+}
+
+Shader* scene::getDepthCubeShader()
+{
+	return this->depthCubeShader;
+}
+
+
+//void Scene::MoveCamera(Camera_Movement direction, float deltaTime) 
 //{
-//	RenderMesh newMesh;
-//
-//	glGenVertexArrays(1, &newMesh.MeshVAO);
-//	glGenBuffers(1, &newMesh.MeshVBO);
-//	glGenBuffers(1, &newMesh.MeshEBO);
-//
-//	glBindVertexArray(newMesh.MeshVAO);
-//
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, newMesh.MeshVBO);
-//
-//	glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex), &mesh.vertices[0], GL_STATIC_DRAW); //this is how the vector should be done
-//
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newMesh.MeshEBO);
-//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(unsigned int), &mesh.indices[0], GL_STATIC_DRAW);
-//
-//	//store position vertices
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-//	glEnableVertexAttribArray(0);
-//	//store normals
-//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Normal));
-//	glEnableVertexAttribArray(1);
-//	//store texcoords
-//	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
-//	glEnableVertexAttribArray(2);
-//	//store BoneIds;
-//	glEnableVertexAttribArray(3);
-//	glVertexAttribIPointer(3, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, BoneIds));
-//	//store Bone weights;
-//	glEnableVertexAttribArray(4);
-//	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeights));
-//
-//	//Add textures to the render mesh object
-//	newMesh.hasDiffuseTextures = (mesh.diffuseTextures.size() >= 1);
-//	newMesh.numDiffuseTextures = mesh.diffuseTextures.size();
-//
-//	if (newMesh.hasDiffuseTextures == true)
-//	{
-//		newMesh.meshDiffuseTextures = mesh.diffuseTextures;
-//	}
-//
-//	newMesh.hasSpecularTextures = (mesh.specularTextures.size() >= 1);
-//	newMesh.numSpecularTextures = mesh.specularTextures.size();
-//
-//	if (newMesh.hasSpecularTextures == true)
-//	{
-//		newMesh.meshSpecularTextures = mesh.specularTextures;
-//	}
-//
-//	//newMesh.MeshVAO = VAO;
-//	newMesh.Meshshader = &shader;
-//
-//	newMesh.IndexCount = mesh.indices.size();
-//
-//	newMesh.hasActiveAnimation = true;
-//
-//	newMesh.animationID = createAnimation(animation);
-//
-//	for (unsigned int i = 0; i < mesh.skeleton.size(); i++)
-//	{
-//		BoneData newbone;
-//		newbone.BoneId = mesh.skeleton[i].BoneId;
-//		newbone.boneMatrix = mesh.skeleton[i].boneMatrix;
-//		newbone.boneName = mesh.skeleton[i].boneName;
-//
-//		newMesh.boneMap[mesh.skeleton[i].boneName] = newbone;
-//	}
-//
-//	ID newMeshID;
-//	newMeshID = this->Meshes.add(newMesh);
-//	glBindVertexArray(0);
-//
-//	return newMeshID;
+//	this->MainCamera->ProcessKeyboard(direction, deltaTime);
 //}
-
-ID Scene::createLight(DirectionalLight directionalLight)
-{
-	DirectionalLight newLight;
-
-	newLight.ambient = directionalLight.ambient;
-	newLight.diffuse = directionalLight.diffuse;
-	newLight.direction = directionalLight.direction;
-	newLight.specular = directionalLight.specular;
-
-	ID newLightID;
-	newLightID = directionalLights.add(newLight);
-	this->directionLightID = newLightID;
-	return newLightID;
-}
-
-ID Scene::createLight(Pointlight pointLight)
-{
-	Pointlight newLight;
-	newLight.ambient = pointLight.ambient;
-	newLight.constant = pointLight.constant;
-	newLight.diffuse = pointLight.diffuse;
-	newLight.linear = pointLight.linear;
-	newLight.position = pointLight.position;
-	newLight.quadratic = pointLight.quadratic;
-	newLight.specular = pointLight.specular;
-
-	ID newLightID;
-	newLightID = pointLights.add(newLight);
-	this->numPointLights++;
-	this->pointLightIDs.push_back(newLightID);
-
-	return newLightID;
-}
-
-ID Scene::createLight(SpotLight spotLight)
-{
-	SpotLight newLight;
-
-	newLight.ambient = spotLight.ambient;
-	newLight.constant = spotLight.constant;
-	newLight.cutoff = spotLight.cutoff;
-	newLight.diffuse = spotLight.diffuse;
-	newLight.direction = spotLight.direction;
-	newLight.linear = spotLight.linear;
-	newLight.outerCutoff = spotLight.outerCutoff;
-	newLight.position = spotLight.position;
-	newLight.quadratic = spotLight.quadratic;
-	newLight.specular = spotLight.specular;
-
-	ID newLightID;
-	newLightID = spotLights.add(newLight);
-	this->spotLightID = newLightID;
-	return newLightID;
-}
-
-ID Scene::createPointLight(glm::vec3 position, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic)
-{
-	Pointlight newLight;
-	newLight.ambient = ambient;
-	newLight.constant = constant;
-	newLight.diffuse = diffuse;
-	newLight.linear = linear;
-	newLight.position = position;
-	newLight.quadratic = quadratic;
-	newLight.specular = specular;
-
-	ID newLightID;
-	newLightID = createLight(newLight);
-	
-	return newLightID;
-}
-
-ID Scene::createDirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
-{
-	DirectionalLight newLight;
-
-	newLight.ambient = ambient;
-	newLight.diffuse = diffuse;
-	newLight.direction = direction;
-	newLight.specular = specular;
-
-	ID newLightID;
-	newLightID = createLight(newLight);
-	return newLightID;
-}
-
-ID Scene::createSpotLight(glm::vec3 position, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float innerCutoff, float outerCutoff)
-{
-	SpotLight newLight;
-
-	newLight.ambient = ambient;
-	newLight.constant = constant;
-	newLight.cutoff = innerCutoff;
-	newLight.diffuse = diffuse;
-	newLight.direction = direction;
-	newLight.linear = linear;
-	newLight.outerCutoff = outerCutoff;
-	newLight.position = position;
-	newLight.quadratic = quadratic;
-	newLight.specular = specular;
-
-	ID newLightID;
-	newLightID = createLight(newLight);
-	return newLightID;
-}
-
-void Scene::MovePointLight(ID pointLightID, glm::vec3 translation)
-{
-	pointLights.lookup(pointLightID).position = translation;
-}
+//
+//void Scene::MouseAimCamera(float xoffset, float yoffset) 
+//{
+//	this->MainCamera->ProcessMouseMovement(xoffset, yoffset);
+//}
+//
+//void Scene::setCameraPosition(glm::vec3 target, glm::vec3 position, float pitch, float yaw)
+//{
+//	this->MainCamera->updateCamera(target,position, pitch, yaw);
+//}

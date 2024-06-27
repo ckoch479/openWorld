@@ -37,9 +37,9 @@ public:
 
 	float GetRotationAngle();
 
-	void LoadPlayerModel(const std::string filepath, std::string playername, Scene* scene, PhysicsWorld* world, Shader& shader);
+	void LoadPlayerModel(const std::string filepath, std::string playername, scene* scene, PhysicsWorld* world, Shader& shader);
 
-	void AddAnimationtoPlayer(AnimationData* animation, std::string name);
+	void AddAnimationtoPlayer(animation* animation, std::string name);
 
 	void AddAnimationtoPlayer(std::string filepath, std::string name); 
 
@@ -59,7 +59,7 @@ public:
 
 	void setPlayerYaw(float yaw);
 
-	void renderPlayer(float dt, Scene* scene, PhysicsWorld* world);
+	void renderPlayer(float dt, scene* scene, PhysicsWorld* world);
 
 	glm::vec3 getPlayerFront();
 	
@@ -89,15 +89,15 @@ private:
 	
 
 	std::vector <std::string> SavedAnimations;
-	std::vector <AnimationData*> Animations;
+	std::vector <animation*> Animations;
 	std::string playerName;
 
-	ModelData* playerModel;
+	Model* playerModel;
 
-	AnimationData* currentAnimation;
+	animation* currentAnimation;
 	std::string currentAnimationName;
 
-	std::map <std::string, AnimationData*> animationMap;
+	std::map <std::string, animation*> animationMap;
 
 	ID sceneModelID;
 	ID sceneTransformID;
@@ -110,7 +110,7 @@ private:
 
 
 	//utility
-	Scene* scenePtr;
+	scene* scenePtr;
 	Shader* shaderPtr;
 	PhysicsWorld* worldPtr;
 

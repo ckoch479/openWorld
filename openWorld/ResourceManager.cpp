@@ -1,220 +1,70 @@
 #include "ResourceManager.h"
 
-std::unordered_map <std::string, Texture>       ResourceManager::textures;  //container for textures
-std::unordered_map <std::string, MeshData>      ResourceManager::meshes;    //container for mesh data
-std::unordered_map <std::string, AnimationData> ResourceManager::animations;//container for animation data
-std::unordered_map <std::string, ModelData>		ResourceManager::models;    //container for model data
+std::unordered_map<std::string, Texture>      ResourceManager::textures;
+std::unordered_map<std::string, Shader>       ResourceManager::shaders;
+std::unordered_map<std::string, Mesh>		  ResourceManager::meshes;
+std::unordered_map<std::string, Model>        ResourceManager::models;
+std::unordered_map <std::string, animation>   ResourceManager::animations;
 
-MeshData* ResourceManager::loadMesh(std::string filepath, std::string name)
+std::vector <std::string>                     ResourceManager::loadedTextures; //makes sure we do not load textures multiple times into memory
+std::vector <std::string>					  ResourceManager::loadedModels;
+std::vector <std::string>					  ResourceManager::loadedAnimations;
+
+Mesh* ResourceManager::loadMesh(std::string filePath, std::string name)
 {
-	meshes[name] = loadMeshDataFromFile(filepath);
-	
+	meshes[name] = loadMeshFromFile(filePath);
 	return &meshes[name];
 }
 
-MeshData* ResourceManager::getMesh(std::string name)
+Mesh* ResourceManager::getMesh(std::string name)
 {
 	return &meshes[name];
 }
 
-MeshData ResourceManager::loadMeshDataFromFile(std::string filepath)
+Model* ResourceManager::loadModel(std::string filePath, std::string name)
 {
-	std::cout << "Mesh Loaded!\n";
-
-	MeshData newMesh;
-
-	//get data from assimpMesh class
-	AssimpModel newModel(filepath);
-	std::vector <AssimpMesh> meshes = newModel.getMeshes();
-
-	std::vector <Vertex> Vertices;
-	std::vector <unsigned int> indices;
-	std::vector <Texture*> DiffuseTextures;
-	std::vector <Texture*> SpecularTextures;
-
-	for (unsigned int i = 0; i < meshes.size(); i++)
+	bool hasBeenLoaded = false;
+	for (unsigned int i = 0; i < loadedModels.size(); i++)
 	{
-		std::vector <AssimpVertex> assimpVertices = meshes[i].getVertexData();
-
-		for(unsigned int vertexCounter = 0; vertexCounter < assimpVertices.size(); vertexCounter++)
+		if (loadedModels[i] == name)
 		{
-			Vertex tempVertex;
-
-			tempVertex.vertexPosition = assimpVertices[vertexCounter].Position;
-			tempVertex.Normal =         assimpVertices[vertexCounter].Normal;
-			tempVertex.texCoords =      assimpVertices[vertexCounter].TexCoords;
-			//only a bone influence of 4 is allowed as of now
-			tempVertex.BoneIds[0] = assimpVertices[vertexCounter].BoneIDs[0]; //std::cout << tempVertex.BoneIds[0] << "bone" << assimpVertices[vertexCounter].BoneIDs[0] << std::endl;
-			tempVertex.BoneIds[1] = assimpVertices[vertexCounter].BoneIDs[1];
-			tempVertex.BoneIds[2] = assimpVertices[vertexCounter].BoneIDs[2];
-			tempVertex.BoneIds[3] = assimpVertices[vertexCounter].BoneIDs[3];
-			//bone weights
-			tempVertex.boneWeights[0] = assimpVertices[vertexCounter].weights[0];
-			tempVertex.boneWeights[1] = assimpVertices[vertexCounter].weights[1];
-			tempVertex.boneWeights[2] = assimpVertices[vertexCounter].weights[2];
-			tempVertex.boneWeights[3] = assimpVertices[vertexCounter].weights[3];
-
-			Vertices.push_back(tempVertex);
+			hasBeenLoaded = true;
 		}
-		indices = meshes[i].getIndices();
-
 	}
 
-	//load diffuse textures
-	std::vector <std::string> diffuseTexturePaths = newModel.getDiffuseTexturePaths();
-	for(unsigned int i = 0; i < diffuseTexturePaths.size(); i++)
+	if (!hasBeenLoaded)
 	{
-		
-		Texture* newTexture = loadTexture(diffuseTexturePaths[i], filepath + "diffuse_Texture" + std::to_string(i));
-		DiffuseTextures.push_back(newTexture);
+		std::cout << "loading model: " << filePath << std::endl;
+		models[name] = loadModelFromFile(filePath);
+		loadedModels.push_back(filePath);
 	}
 
-	//load specular textures
-	std::vector <std::string> specularTexturePaths = newModel.getSpecularTexturePaths();
-	for (unsigned int i = 0; i < specularTexturePaths.size(); i++)
-	{
-		
-		Texture* newTexture = loadTexture(specularTexturePaths[i], filepath + "specular_Texture" + std::to_string(i));
-		SpecularTextures.push_back(newTexture);
-	}
-
-	newMesh.vertices = Vertices;
-	newMesh.indices = indices;
-	newMesh.diffuseTextures = DiffuseTextures;
-	newMesh.specularTextures = SpecularTextures;
-	newMesh.skeleton;
-
-	//get bones from the model
-
-	for (unsigned int j = 0; j < newModel.getBoneCount(); j++)
-	{
-		BoneData newbone;
-		newbone.boneName = newModel.getBoneNames()[j];
-		newbone.BoneId = newModel.getBoneInfoMap()[newbone.boneName].id;
-		newbone.boneMatrix = newModel.getBoneInfoMap()[newbone.boneName].offset;
-
-		std::cout << "BoneNames resourceManager: " << newbone.boneName << std::endl;
-
-		newMesh.skeleton.push_back(newbone);
-	}
-
-	return newMesh;
-}
-
-ModelData* ResourceManager::loadModel(const std::string filepath, std::string name)
-{
-	std::cout << "Attempting to load Model From file!\n";
-	models[name] = loadModelDataFromFile(filepath);
-	
 	return &models[name];
 }
 
-ModelData* ResourceManager::getModel(std::string name)
+Model* ResourceManager::getModel(std::string name)
 {
 	return &models[name];
 }
 
-ModelData ResourceManager::loadModelDataFromFile(const std::string filepath)
+Texture* ResourceManager::loadTexture(const char* file, bool sRGB, std::string name)
 {
-	std::cout << "loading Model!\n";
-	ModelData newModel;
-
-	AssimpModel model(filepath);
-
-	std::vector <AssimpMesh> modelMeshes = model.getMeshes();
-	if(modelMeshes.size() <= 0)
+	bool hasBeenLoaded = false;
+	for (unsigned int i = 0; i < loadedTextures.size(); i++)
 	{
-		std::cout << "error occured in modelMeshes!\n";
+		if (loadedTextures[i] == name)
+		{
+			hasBeenLoaded = true;
+		}
 	}
 
-	std::map <std::string, bool> loadedtextures;
-
-	for(int i = 0; i < modelMeshes.size(); i++)
+	if (!hasBeenLoaded)
 	{
-		AssimpMesh* tempMesh = &modelMeshes[i];
-		MeshData newMesh;
-		
-		std::vector <AssimpVertex> AssimpVertices = tempMesh->getVertexData();
-		for (int j = 0; j < AssimpVertices.size(); j++)
-		{
-			Vertex newVertex;
-
-			newVertex.vertexPosition = AssimpVertices[j].Position;
-			newVertex.Normal = AssimpVertices[j].Normal;
-			newVertex.texCoords = AssimpVertices[j].TexCoords;
-
-			newVertex.BoneIds[0] = AssimpVertices[j].BoneIDs[0];
-			newVertex.BoneIds[1] = AssimpVertices[j].BoneIDs[1];
-			newVertex.BoneIds[2] = AssimpVertices[j].BoneIDs[2];
-			newVertex.BoneIds[3] = AssimpVertices[j].BoneIDs[3];
-
-			newVertex.boneWeights[0] = AssimpVertices[j].weights[0];
-			newVertex.boneWeights[1] = AssimpVertices[j].weights[1];
-			newVertex.boneWeights[2] = AssimpVertices[j].weights[2];
-			newVertex.boneWeights[3] = AssimpVertices[j].weights[3];
-
-			newMesh.vertices.push_back(newVertex);
-		}
-
-		newMesh.indices = tempMesh->getIndices();
-
-		std::vector <std::string> diffuseTexturePaths = tempMesh->getDiffuseTexturePaths();
-		std::vector <std::string> specularTexturePaths = tempMesh->getSpecularTexturePaths();
-
-		//extract diffuse textures and load them with the resource manager
-		for (int DiffuseCounter = 0; DiffuseCounter < diffuseTexturePaths.size(); DiffuseCounter++) 
-		{
-
-			if (loadedtextures[diffuseTexturePaths[DiffuseCounter]] != true) 
-			{
-				std::cout << "diffuse texture paths: " << diffuseTexturePaths[DiffuseCounter] << "number of times loaded: " << DiffuseCounter << std::endl;
-				newMesh.diffuseTextures.push_back(ResourceManager::loadTexture(diffuseTexturePaths[DiffuseCounter], "diffuse_texture" + std::to_string(DiffuseCounter)));
-				loadedtextures[diffuseTexturePaths[DiffuseCounter]] = true;
-			}
-			
-			else 
-			{
-				std::cout << "texture already loaded!\n";
-			}
-		}
-		
-		//extract specular textures and load them with the resource manager
-		for (int SpecularCounter = 0; SpecularCounter < specularTexturePaths.size(); SpecularCounter++)
-		{
-
-			if (loadedtextures[specularTexturePaths[SpecularCounter]] != true)
-			{
-				newMesh.specularTextures.push_back(ResourceManager::loadTexture(diffuseTexturePaths[SpecularCounter], "specular_texture" + std::to_string(SpecularCounter)));
-				loadedtextures[specularTexturePaths[SpecularCounter]] = true;
-			
-			}
-		
-
-		}
-
-
-		newModel.meshes.push_back(newMesh);
+		textures[name] = loadTextureFromFile(file, sRGB);
+		std::cout << file << "\n";
+		loadedTextures.push_back(name);
 	}
 
-	//get skeleton info for the new model from the assimp model
-	for (unsigned int j = 0; j < model.getBoneCount(); j++)
-	{
-		BoneData newbone;
-		newbone.boneName = model.getBoneNames()[j];
-		newbone.BoneId = model.getBoneInfoMap()[newbone.boneName].id;
-		newbone.boneMatrix = model.getBoneInfoMap()[newbone.boneName].offset;
-
-		newModel.skeleton.push_back(newbone);
-	}
-
-	
-	return newModel;
-}
-
-Texture* ResourceManager::loadTexture(const std::string filepath, std::string name)
-{
-	textures[name] = loadTextureFromFile(filepath);
-	std::cout << "texture Loaded!\n";
 	return &textures[name];
 }
 
@@ -223,95 +73,252 @@ Texture* ResourceManager::getTexture(std::string name)
 	return &textures[name];
 }
 
-Texture ResourceManager::loadTextureFromFile(std::string filepath)
+Shader* ResourceManager::loadShader(const char* vertexFilepath, const char* fragmentFilePath, const char* geometryFilePath, std::string name)
 {
-	int width;
-	int height;
-	int nrChannels;
+	shaders[name] = loadShaderFromFile(vertexFilepath, fragmentFilePath, geometryFilePath);
+	return &shaders[name];
+}
 
-	unsigned char* data = stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0);
+Shader* ResourceManager::getShader(std::string name)
+{
+	return &shaders[name];
+}
 
+animation* ResourceManager::loadAnimation(std::string filePath, std::string name, std::string modelName)
+{
+	bool hasBeenLoaded = false;
+	for (unsigned int i = 0; i < loadedAnimations.size(); i++)
+	{
+		if (loadedAnimations[i] == name)
+		{
+			hasBeenLoaded = true;
+		}
+	}
+
+	if (!hasBeenLoaded)
+	{
+		Model* model = getModel(modelName);
+		animations[name] = loadAnimationFromFile(filePath, model);
+		std::cout << filePath << "\n";
+		loadedAnimations.push_back(name);
+	}
+
+	return &animations[name];
+}
+
+animation* ResourceManager::getAnimation(std::string name)
+{
+	return &animations[name];
+}
+
+void ResourceManager::clear()
+{
+	//delete all shaders	
+	for (auto iter : shaders)
+		glDeleteProgram(iter.second.ID);
+
+	//delete all textures
+	for (auto iter : textures)
+		glDeleteTextures(1, &iter.second.id);
+
+}
+
+Shader	ResourceManager::loadShaderFromFile(const char* vertexFilePath, const char* fragmentFilePath, const char* geometryFilePath)
+{
+	std::string vertexCode;
+	std::string fragmentCode;
+	std::string geometryCode;
+	try
+	{
+		std::ifstream vertexShaderFile(vertexFilePath);
+		std::ifstream fragmentShaderFile(fragmentFilePath);
+		std::stringstream vShaderStream, fShaderStream;
+
+		vShaderStream << vertexShaderFile.rdbuf();
+		fShaderStream << fragmentShaderFile.rdbuf();
+
+		vertexShaderFile.close();
+		fragmentShaderFile.close();
+
+		vertexCode = vShaderStream.str();
+		fragmentCode = fShaderStream.str();
+
+		if (geometryFilePath != nullptr)
+		{
+			std::ifstream geometryShaderFile(geometryFilePath);
+			std::stringstream gShaderStream;
+			gShaderStream << geometryShaderFile.rdbuf();
+			geometryShaderFile.close();
+			geometryCode = gShaderStream.str();
+		}
+	}
+	catch (std::exception e)
+	{
+		std::cout << "ERROR::SHADER: Failed to read shader files \n";
+	}
+	const char* vShaderCode = vertexCode.c_str();
+	const char* fShaderCode = fragmentCode.c_str();
+	const char* gShaderCode = geometryCode.c_str();
+
+	Shader shader;
+	shader.Compile(vShaderCode, fShaderCode, geometryFilePath != nullptr ? gShaderCode : nullptr);
+	return shader;
+}
+
+Texture ResourceManager::loadTextureFromFile(const char* file, bool sRGB)
+{
+	// stbi_set_flip_vertically_on_load(true);
 	Texture newTexture;
-	
 
-	if(data)
+	int width, height, nrChannels;
+
+	unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
+
+	if (data)
 	{
-		std::cout << width << " " << height << " " << (int)data << " filepath:" << filepath << std::endl;
-		std::cout << newTexture.id << "ID " << std::endl;
-		newTexture.generate(width, height, data);
+
+		if (nrChannels == 1)
+		{
+			newTexture.internalFormat = GL_RED;
+		}
+		else if (nrChannels == 3)
+		{
+			if (sRGB == false)
+			{
+				newTexture.internalFormat = GL_RGB;
+				newTexture.imageFormat = GL_RGB;
+			}
+			if (sRGB == true)
+			{
+				newTexture.internalFormat = GL_SRGB;
+				newTexture.imageFormat = GL_RGB;
+			}
+
+		}
+		else if (nrChannels == 4)
+		{
+			if (sRGB == false)
+			{
+				newTexture.internalFormat = GL_RGBA;
+				newTexture.imageFormat = GL_RGBA;
+			}
+			if (sRGB == true)
+			{
+				newTexture.internalFormat = GL_SRGB_ALPHA;
+				newTexture.imageFormat = GL_RGBA;
+			}
+
+		}
+
 	}
 
-	if(!data)
-	{
-		std::cout << "ERROR::TEXTURE::NOT::FOUND::AT::" << filepath << std::endl;
-	}
+	newTexture.generate(width, height, data);
 
-
+	stbi_image_free(data);
 	return newTexture;
 }
 
-AnimationData* ResourceManager::loadAnimation(const std::string filepath, std::string name)
+animation ResourceManager::loadAnimationFromFile(std::string filePath, Model* model)
 {
-	animations[name] = loadAnimationFromFile(filepath);
-	return &animations[name];
-}
+	animation newAnimation;
 
-AnimationData* ResourceManager::getAnimation(std::string name)
-{
-	return &animations[name];
-}
+	assimpAnimationLoader newLoader(filePath, model);
+	newAnimation = newLoader.getAnimation();
 
-void ResourceManager::getBoneData(AnimationBoneData &newBone, AssimpNodeData &boneNode, AssimpSkeletalAnimation& animation)
-{
-
-	assert(&newBone);
-
-	newBone.name = boneNode.name;
-	newBone.localTransformation = boneNode.transformation;
-	newBone.childrenCount = boneNode.childrenCount;
-
-	Bone* tempBone = animation.FindBone(newBone.name);
-
-	if(tempBone != nullptr)
+	for (unsigned int i = 0; i < newAnimation.bones.size(); i++)
 	{
-		newBone.numPositions = animation.FindBone(newBone.name)->getNumPositions();
-		newBone.numRotations = animation.FindBone(newBone.name)->getNumRotations();
-		newBone.numScalings = animation.FindBone(newBone.name)->getNumScalings();
-
-		newBone.Positions = animation.FindBone(newBone.name)->getPositions();
-		newBone.Rotations = animation.FindBone(newBone.name)->getRotations();
-		newBone.Scalings = animation.FindBone(newBone.name)->getScalings();
-		newBone.boneNode = true;
+		newAnimation.animBones[newAnimation.bones[i].name] = &newAnimation.bones[i]; //again makes it easier for me to find the data i need 
 	}
-
-	if(tempBone == nullptr)
-	{
-		newBone.boneNode = false;
-	}
-
-	for(unsigned int i = 0; i < newBone.childrenCount; ++i)
-	{
-		AnimationBoneData childBone;
-		getBoneData(childBone, boneNode.children[i], animation);
-
-		newBone.children.push_back(childBone);
-	}
-}
-
-AnimationData ResourceManager::loadAnimationFromFile(std::string filepath)
-{
-	AnimationData newAnimation;
-	
-	AssimpSkeletalAnimation animation(filepath);
-
-	newAnimation.duration = animation.GetDuration();
-	newAnimation.ticksPerSecond = animation.GetTicksPerSecond();
-
-	getBoneData(newAnimation.rootBone, animation.GetRootNode() , animation);
-
-	
 
 	return newAnimation;
 }
 
 
+Model ResourceManager::loadModelFromFile(std::string filePath)
+{
+	Model newModel;
+
+	assimpModelLoader loader(filePath); //load model using the assimp model loading class
+	newModel = loader.getModel();
+	//textures still need to be added to the resource manager
+	//iterate through each mesh and load in their textures
+	for (unsigned int i = 0; i < newModel.meshes.size(); i++)
+	{
+		Mesh* mesh = &newModel.meshes[i];
+
+		mesh->material.diffuse0 = ResourceManager::loadTexture(mesh->material.diffuseData.filePath.c_str(), true, mesh->material.diffuseData.uniqueName.c_str());
+
+		if (loader.hasSpecular())
+		{
+			mesh->material.specular0 = ResourceManager::loadTexture(mesh->material.specularData.filePath.c_str(), false, mesh->material.specularData.uniqueName.c_str());
+
+		}
+		if (!loader.hasSpecular())
+		{
+			mesh->material.specular0 = nullptr;
+		}
+
+		if (loader.hasNormal())
+		{
+			mesh->material.normalMap0 = ResourceManager::loadTexture(mesh->material.normalData.filePath.c_str(), false, mesh->material.normalData.uniqueName.c_str());
+
+		}
+		if (!loader.hasNormal())
+		{
+			mesh->material.normalMap0 = nullptr;
+		}
+
+		mesh->material.shininess = 128.0f;
+
+		//this is a fix for the first vertex in every mesh not loading its boneid and weights for some reason
+		for (unsigned int j = 0; j < newModel.meshes[i].vertices.size(); j++)
+		{
+
+
+			//std::cout << "mesh vertex: " << j << " boneID: " << newModel.meshes[i].vertices[j].boneIDs[0] << std::endl;// " boneName: " << newModel.Skeleton[newModel.meshes[i].vertices[j].boneIDs[0]].name << std::endl;
+			if (newModel.meshes[i].vertices[j].boneWeights[0] == 0.0f)
+			{
+
+				//std::cout << "mesh of: " << i << " has vertex: " << j << " with a bone weight of 0.0f!\n";
+
+				/*std::cout << "bone weight 0: " << newModel.meshes[i].vertices[j].boneWeights[0] << std::endl;
+				std::cout << "bone weight 1: " << newModel.meshes[i].vertices[j].boneWeights[1] << std::endl;
+				std::cout << "bone weight 2: " << newModel.meshes[i].vertices[j].boneWeights[2] << std::endl;
+				std::cout << "bone weight 3: " << newModel.meshes[i].vertices[j].boneWeights[3] << std::endl;
+
+				std::cout << "bone id 0: " << newModel.meshes[i].vertices[j].boneIDs[0] << std::endl;
+				std::cout << "bone id 1: " << newModel.meshes[i].vertices[j].boneIDs[1] << std::endl;
+				std::cout << "bone id 2: " << newModel.meshes[i].vertices[j].boneIDs[2] << std::endl;
+				std::cout << "bone id 3: " << newModel.meshes[i].vertices[j].boneIDs[3] << std::endl;*/
+
+				//for some reason the first vertex of every mesh loaded does not add bone data to it's vertices and im not sure why
+				if (j < newModel.meshes[i].vertices.size() - 1)
+				{
+					newModel.meshes[i].vertices[j].boneIDs[0] = newModel.meshes[i].vertices[j + 1].boneIDs[0];
+					newModel.meshes[i].vertices[j].boneIDs[1] = newModel.meshes[i].vertices[j + 1].boneIDs[1];
+					newModel.meshes[i].vertices[j].boneIDs[2] = newModel.meshes[i].vertices[j + 1].boneIDs[2];
+					newModel.meshes[i].vertices[j].boneIDs[3] = newModel.meshes[i].vertices[j + 1].boneIDs[3];
+
+					newModel.meshes[i].vertices[j].boneWeights[0] = newModel.meshes[i].vertices[j + 1].boneWeights[0];
+					newModel.meshes[i].vertices[j].boneWeights[1] = newModel.meshes[i].vertices[j + 1].boneWeights[1];
+					newModel.meshes[i].vertices[j].boneWeights[2] = newModel.meshes[i].vertices[j + 1].boneWeights[2];
+					newModel.meshes[i].vertices[j].boneWeights[3] = newModel.meshes[i].vertices[j + 1].boneWeights[3];
+				}
+
+			}
+
+		}
+	}
+
+	// std::cout << "bone count: " << newModel.Skeleton.size() << std::endl;
+
+	return newModel;
+}
+
+Mesh ResourceManager::loadMeshFromFile(std::string filePath)
+{
+	Mesh newMesh;
+	std::cout << "WARNING::FUNCTION::NOT::IMPLIMENTED!\n";
+
+	return newMesh;
+}

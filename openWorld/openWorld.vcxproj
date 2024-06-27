@@ -156,10 +156,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
-    <ClCompile Include="AssimpMesh.cpp" />
-    <ClCompile Include="AssimpModel.cpp" />
-    <ClCompile Include="AssimpSkeletalAnimation.cpp" />
-    <ClCompile Include="Bone.cpp" />
+    <ClCompile Include="assimpAnimationLoader.cpp" />
+    <ClCompile Include="assimpModelLoader.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -170,7 +168,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerEntity.cpp" />
     <ClCompile Include="reactPhysicsListener.cpp" />
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -184,12 +182,12 @@
     <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="animationDataDefinitions.h" />
     <ClInclude Include="AnimationDebug.h" />
     <ClInclude Include="Animator.h" />
-    <ClInclude Include="AssimpMesh.h" />
-    <ClInclude Include="AssimpModel.h" />
-    <ClInclude Include="AssimpSkeletalAnimation.h" />
-    <ClInclude Include="assimp_glm_helpers.h" />
+    <ClInclude Include="assimpAnimationLoader.h" />
+    <ClInclude Include="assimpGLMConverter.h" />
+    <ClInclude Include="assimpModelLoader.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider.h" />
@@ -203,7 +201,7 @@
     <ClInclude Include="playerActionDefinitions.h" />
     <ClInclude Include="playerEntity.h" />
     <ClInclude Include="reactPhysicsListener.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="renderer.h" />
     <ClInclude Include="renderingInfoDefinitions.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RigidBody.h" />

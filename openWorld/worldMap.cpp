@@ -20,9 +20,9 @@ std::vector <glm::vec3> worldMap::getVertices()
 	return this->terrainMesh;
 }
 
-void worldMap::updatePosition(Scene* scene, glm::vec3 position)
+void worldMap::updatePosition(scene* scene, glm::vec3 position)
 {
-	scene->updateTransform(this->transformID, position, glm::quat(), glm::vec3(1.0f));
+	//scene->updateTransform(this->transformID, position, glm::quat(), glm::vec3(1.0f));
 }
 
 std::vector <unsigned int> worldMap::getIndices()
@@ -30,14 +30,14 @@ std::vector <unsigned int> worldMap::getIndices()
 	return this->indices;
 }
 
-void worldMap::GenerateMap(std::string filename, std::string mapName, Scene* scene, Shader& shader)
+void worldMap::GenerateMap(std::string filename, std::string mapName, scene* scene, Shader& shader)
 {
-	this->worldModel = ResourceManager::loadModel(filename, mapName); //load map model from file
-	this->worldModelID = scene->createModel(*this->worldModel,shader);
-	this->transformID = scene->createTransform(glm::vec3(0.0,0.0,0.0),glm::quat(), glm::vec3(1.0, 1.0, 1.0));
-	ID sceneObjectID = scene->AddInstance(this->worldModelID, transformID);
-	this->instanceID = sceneObjectID;
-	generateTerrainHeight();
+	//this->worldModel = ResourceManager::loadModel(filename, mapName); //load map model from file
+	//this->worldModelID = scene->createModel(*this->worldModel,shader);
+	//this->transformID = scene->createTransform(glm::vec3(0.0,0.0,0.0),glm::quat(), glm::vec3(1.0, 1.0, 1.0));
+	//ID sceneObjectID = scene->AddInstance(this->worldModelID, transformID);
+	//this->instanceID = sceneObjectID;
+	//generateTerrainHeight();
 }
 
 float worldMap::getTerrainHeight(float x, float z) //throws error when x coordinate goes negative

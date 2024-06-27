@@ -1,61 +1,69 @@
 #pragma once
-#include <glad/glad.h>
-#include "GLFW/glfw3.h"
-
-#include <iostream>
-#include <vector>
-#include <map>
-#include <string>
+#ifndef ANIMATOR_H
+#define ANIMATOR_H
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/string_cast.hpp>
 
-#include "lookup_table.h"
-#include "ResourceManager.h"
+#include <unordered_map>
 
-#include "Scene.h"
+#include "renderingInfoDefinitions.h"
+#include "animationDataDefinitions.h"
 
+#include "Shader.h"
 
+//this is the last animation key used for the current animation
+struct animationKey
+{
+	KeyPosition position;
+	keyRotation rotation;
+	keyScale scale;
+};
 
-#ifndef ANIMATOR_H
-#define ANIMATOR_H
-class Animator
+class animator
 {
 public:
 
-	Animator();
-	~Animator();
+	static void addAnimation(Model* model, animation* animation);
 
-	void setCurrentAnimation(RenderAnimation* currentAnimation, RenderModel* currentModel);
+	static void removeAnimation(Model* model, animation* animation);
 
-	void updateCurrentAnimation(float& deltaTime, float& currentAnimationTime);
+	static void changeAnimation(Model* model, animation* newAnimation);
 
-	std::vector <glm::mat4> returnFinalMatrices();
+	static void setAnimationMatrices(Model* model, Shader* shader);
 
+	static void updateAnimations(float dt);
+
+	static void stepAnimation(animation* anim);
 
 private:
-	std::vector <glm::mat4> finalMatrices;
-	RenderAnimation* currentAnimation;
-	RenderModel* currentModel;
-	float deltatime;
 
-	void CalculateBonetransforms(AnimationBoneData node, glm::mat4 parentTransform, float& currentAnimationTime);
+	static glm::mat4 stepAnimations(float currentTime, animBone* bone);
 
-	glm::mat4 interpolatePosition(float animationTime, AnimationBoneData node);
+	animator() {};
 
-	glm::mat4 interpolateRotation(float animationTime, AnimationBoneData node);
+	static void updateAnimation(animation* animation, float dt, Model* model);
 
-	glm::mat4 interpolateScale(float animationTime, AnimationBoneData node);
+	static void CalculateBoneTransforms(AssimpNodeData* Node, glm::mat4 parentTransform, animation* anim, Model* model);
 
-	glm::mat4 getBoneLocalTransform(AnimationBoneData node, float& currentAnimationTime);
+	static glm::mat4 calculateLocalBoneTransform(float currentTime, animBone* bone);
 
-	int GetPositionIndex(float animationTime, AnimationBoneData node);
+	static glm::mat4 interpolatePosition(float animationTime, animBone* bone);
+	static glm::mat4 interpolateRotation(float animationTime, animBone* bone);
+	static glm::mat4 interpolateScale(float animationTime, animBone* bone);
 
-	int GetRotationIndex(float animationTime, AnimationBoneData node);
+	static float calculateScaleFactor(float lastTimeStamp, float nextTimeStamp, float currentTime);
 
-	int GetScaleIndex(float animationTime, AnimationBoneData node);
+	static	std::unordered_map<Model*, animation*> activeAnimations;
+	static	std::unordered_map<animation*, std::vector <glm::mat4>> animationMatrices;
 
-	float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
+
+	static std::vector <Model*> activeModels;
+
+	static int stepper;
 };
 
-#endif
+#endif // !ANIMATOR_H

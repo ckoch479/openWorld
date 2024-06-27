@@ -42,6 +42,11 @@ windowManager::windowManager()
 	glfwSetInputMode(this->currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
+void windowManager::setScreenSize(int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
 windowManager::~windowManager() 
 {
 	glfwTerminate();

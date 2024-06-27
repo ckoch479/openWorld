@@ -1,181 +1,269 @@
 #include "Animator.h"
 
-Animator::Animator()
+std::unordered_map<Model*, animation*>						      animator::activeAnimations;
+std::unordered_map<animation*, std::vector <glm::mat4>>			  animator::animationMatrices;
+
+std::vector <Model*>									          animator::activeModels;
+
+int animator::stepper;
+
+void animator::addAnimation(Model* model, animation* animation)
 {
+	stepper = 0;
+	activeAnimations[model] = animation;
+
 	for (unsigned int i = 0; i < 100; i++)
 	{
-		this->finalMatrices.push_back(glm::mat4(1.0f));
+		animationMatrices[activeAnimations[model]].push_back(glm::mat4(1.0f));
+		//model->boneMatrices[i] = glm::mat4(1.0f);
 	}
+
+	activeModels.push_back(model);
 }
 
-Animator::~Animator()
+void animator::removeAnimation(Model* model, animation* animation)
 {
 
 }
 
-void Animator::setCurrentAnimation(RenderAnimation* currentAnimation, RenderModel* currentModel)
+void animator::changeAnimation(Model* model, animation* newAnimation)
 {
-
-	if(this->currentAnimation != currentAnimation)
+	activeAnimations[model] = newAnimation;
+	animationMatrices[activeAnimations[model]].clear();
+	for(unsigned int i = 0; i < 100; i++)
 	{
-		this->currentAnimation = currentAnimation;
+		animationMatrices[activeAnimations[model]].push_back(glm::mat4(1.0f));
+	}
+	
+}
 
-		this->currentModel = currentModel;
-
-		for (unsigned int i = 0; i < 100; i++)
+void animator::setAnimationMatrices(Model* model, Shader* shader)
+{
+	shader->use();
+	animation* activeAnimation = activeAnimations[model];
+	if (activeAnimation)
+	{
+		for (unsigned int i = 0; i < 100; i++) //data gets to here and nothing happens
 		{
-			this->finalMatrices[i] = glm::mat4(1.0f);
+			//glm::mat4 transform = model->boneMatrices[i];
+			glm::mat4 transform = animationMatrices[activeAnimation][i];
+			std::string matrixString;
+			matrixString = "finalBoneMatrices[" + std::to_string(i) + "]";
+			shader->SetMatrix4(matrixString.c_str(), transform);
 		}
 	}
-	
-	else {}
-
-	
-}
-
-void Animator::updateCurrentAnimation(float& deltaTime, float& currentAnimationTime)
-{
-	//this->deltatime = deltaTime;
-
-	if(this->currentAnimation)
+	else
 	{
-		currentAnimationTime += currentAnimation->animationData.ticksPerSecond * deltaTime;
-		currentAnimationTime = fmod(currentAnimationTime,this->currentAnimation->animationData.duration);
-		CalculateBonetransforms(this->currentAnimation->animationData.rootBone, glm::mat4(1.0f),currentAnimationTime);
+		for (unsigned int i = 0; i < 100; i++) //data gets to here and nothing happens
+		{
+			std::string matrixString;
+			matrixString = "finalBoneMatrices[" + std::to_string(i) + "]";
+			shader->SetMatrix4(matrixString.c_str(), glm::mat4(1.0f));
+		}
 	}
 }
 
-std::vector <glm::mat4> Animator::returnFinalMatrices()
+void animator::updateAnimations(float dt)
 {
-	return this->finalMatrices;
+	//this will iterate through every active model/animation and update them, then it will add the correct matrices to the matrix map for use in the shader
+	for (unsigned int i = 0; i < activeModels.size(); i++)
+	{
+		updateAnimation(activeAnimations[activeModels[i]], dt, activeModels[i]);
+		stepAnimation(activeAnimations[activeModels[i]]);
+	}
 }
 
-void Animator::CalculateBonetransforms(AnimationBoneData node, glm::mat4 parentTransform, float& currentAnimationTime)
+void animator::updateAnimation(animation* animation, float dt, Model* model)
 {
-	std::string nodeName = node.name;
-	glm::mat4 transform = node.localTransformation;
+	animation->currentTime += animation->ticksPerSecond * dt;
+	animation->currentTime = fmod(animation->currentTime, animation->duration);
 
-	if(node.boneNode == true)
+	CalculateBoneTransforms(&animation->rootNode, glm::mat4(1.0f), animation, model);
+}
+
+void animator::CalculateBoneTransforms(AssimpNodeData* Node, glm::mat4 parentTransform, animation* anim, Model* model)
+{
+
+	std::string nodeName = Node->name;
+	glm::mat4 nodeTransform = Node->transformation;
+
+	animBone* bone = anim->animBones[nodeName];
+	if (bone)
 	{
-		//update / interpolate bone transforms
-		glm::mat4 updatedBoneTransform = getBoneLocalTransform(node,currentAnimationTime); // this will be changed to an interpolated position later
-		transform = updatedBoneTransform;
-		
+		//nodeTransform = calculateLocalBoneTransform(anim->currentTime,bone); //problem stepping to the next part of the animation is here
+		nodeTransform = stepAnimations(anim->currentTime, bone);
+		//std::cout << "node: " << bone->name << " transform: " << glm::to_string(nodeTransform) << std::endl;
+		//std::cout << bone->name << std::endl;
 	}
 
-	glm::mat4 globalTransform = parentTransform * transform;
+	glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-	auto boneInfoMap = this->currentModel->boneMap;
+	auto boneInfoMap = model->boneMap;
 	if (boneInfoMap.find(nodeName) != boneInfoMap.end())
 	{
-		int index = boneInfoMap[nodeName].BoneId;
-		glm::mat4 offset = boneInfoMap[nodeName].boneMatrix;
-		this->finalMatrices[index] = globalTransform * offset;
+		int index = boneInfoMap[nodeName].id;
+		glm::mat4 offset = boneInfoMap[nodeName].offsetMatrix;
+		//std::cout << index << std::endl;
+		animationMatrices[anim][index] = globalTransformation * offset;
+		//model->boneMatrices[index] = globalTransformation * offset;
 	}
 
-	
-
-	for (int i = 0; i < node.childrenCount; i++)
+	for (int i = 0; i < Node->childrenCount; i++)
 	{
-		CalculateBonetransforms(node.children[i], globalTransform, currentAnimationTime);
+		CalculateBoneTransforms(&Node->children[i], globalTransformation, anim, model);
+	}
+}
+
+glm::mat4 animator::stepAnimations(float currentTime, animBone* bone)
+{
+	glm::mat4 localMatrix(1.0f);
+
+	glm::mat4 translation(1.0f);
+	if (bone->currentPosition + stepper < bone->numPositions)
+	{
+		translation = glm::translate(glm::mat4(1.0f), bone->positions[bone->currentPosition + stepper].position);
+	}
+	else
+	{
+		translation = glm::translate(glm::mat4(1.0f), bone->positions[0].position);
+	}
+
+
+	glm::mat4 rotation(1.0f);
+	if (bone->currentRotation + stepper < bone->numRotations)
+	{
+		rotation = glm::toMat4(bone->rotations[bone->currentRotation + stepper].orientation);
+	}
+	else
+	{
+		rotation = glm::toMat4(bone->rotations[0].orientation);
+	}
+
+	glm::mat4 scale(1.0f);
+	if (bone->currentScale + stepper < bone->numScales)
+	{
+		scale = glm::scale(glm::mat4(1.0f), bone->scales[bone->currentScale].scale);
+	}
+	else
+	{
+		scale = glm::scale(glm::mat4(1.0f), bone->scales[0].scale);
+	}
+
+	localMatrix = translation * rotation * scale;
+	return localMatrix;
+}
+
+void animator::stepAnimation(animation* anim)
+{
+	/*stepper++;
+	if(stepper > 100)
+	{
+		stepper = 0;
+	}*/
+	for (unsigned int i = 0; i < anim->bones.size(); i++)
+	{
+		animBone* bone = &anim->bones[i];
+		bone->stepPosition();
+		bone->stepRotation();
+		bone->stepScale();
 	}
 
 }
 
-glm::mat4 Animator::interpolatePosition(float animationTime, AnimationBoneData node)
+glm::mat4 animator::calculateLocalBoneTransform(float currentTime, animBone* bone)
 {
-	if(1 == node.numPositions)
+	glm::mat4 localMatrix(1.0f);
+
+	glm::mat4 translation = interpolatePosition(currentTime, bone);
+
+	glm::mat4 rotation = interpolateRotation(currentTime, bone);
+
+	glm::mat4 scale = interpolateScale(currentTime, bone);
+
+	localMatrix = translation * rotation * scale;
+	return localMatrix;
+}
+//doesnt work right
+glm::mat4 animator::interpolatePosition(float animationTime, animBone* bone)
+{
+	if (1 == bone->numPositions)
 	{
-		return glm::translate(glm::mat4(1.0f), node.Positions[0].position);
+		return glm::translate(glm::mat4(1.0f), bone->positions[0].position);
 	}
 
-	int p0Index = GetPositionIndex(animationTime,node);
+	int p0Index = bone->currentPosition;
+	for (int index = 0; index < bone->numPositions - 1; ++index)
+	{
+		if (animationTime < bone->positions[index + 1].timeStamp)
+		{
+			p0Index = index;
+		}
+	}
 	int p1Index = p0Index + 1;
-	float scaleFactor = GetScaleFactor(node.Positions[p0Index].timestamp,
-		node.Positions[p1Index].timestamp, animationTime);
-	glm::vec3 finalPosition = glm::mix(node.Positions[p0Index].position, node.Positions[p1Index].position
-		, scaleFactor);
+
+	float scaleFactor = 0.0f;// calculateScaleFactor(bone->positions[p0Index].timeStamp, bone->positions[p1Index].timeStamp, animationTime);
+
+	glm::vec3 finalPosition = glm::mix(bone->positions[p0Index].position, bone->positions[p1Index].position, scaleFactor);
+	bone->currentPosition = p1Index;
+
 	return glm::translate(glm::mat4(1.0f), finalPosition);
 }
-
-glm::mat4 Animator::interpolateRotation(float animationTime, AnimationBoneData node)
+//doesnt work right
+glm::mat4 animator::interpolateRotation(float animationTime, animBone* bone)
 {
-	if (1 == node.numRotations)
+	if (1 == bone->numRotations)
 	{
-		auto rotation = glm::normalize(node.Rotations[0].rotation);
+		auto rotation = glm::normalize(bone->rotations[0].orientation);
 		return glm::toMat4(rotation);
 	}
 
-	int p0Index = GetRotationIndex(animationTime,node);
-	int p1Index = p0Index + 1;
-	float scaleFactor = GetScaleFactor(node.Rotations[p0Index].timestamp,
-		node.Rotations[p1Index].timestamp, animationTime);
-	glm::quat finalRotation = glm::slerp(node.Rotations[p0Index].rotation, node.Rotations[p1Index].rotation, scaleFactor);
+	int p0Index = bone->currentRotation;
+	for (int index = 0; index < bone->numRotations - 1; ++index)
+	{
+		if (animationTime < bone->rotations[index + 1].timeStamp)
+		{
+			p0Index = index;
+		}
+	}
 
-	finalRotation = glm::normalize(finalRotation);
+	int p1Index = p0Index + 1;
+	float scaleFactor = calculateScaleFactor(bone->rotations[p0Index].timeStamp, bone->rotations[p1Index].timeStamp, animationTime);
+
+	glm::quat finalRotation = glm::slerp(bone->rotations[p0Index].orientation, bone->rotations[p1Index].orientation, scaleFactor);
+
+	bone->currentRotation = p1Index;
 	return glm::toMat4(finalRotation);
 }
-
-glm::mat4 Animator::interpolateScale(float animationTime, AnimationBoneData node)
+//doesnt work right
+glm::mat4 animator::interpolateScale(float animationTime, animBone* bone)
 {
-	if (1 == node.numScalings)
-		return glm::scale(glm::mat4(1.0f), node.Scalings[0].scale);
+	if (1 == bone->numScales)
+	{
+		return glm::scale(glm::mat4(1.0f), bone->scales[0].scale);
+	}
 
-	int p0Index = GetScaleIndex(animationTime,node);
+	int p0Index = 0;
+	for (int index = 0; index < bone->numScales - 1; ++index)
+	{
+		if (animationTime < bone->scales[index + 1].timeStamp)
+		{
+			p0Index = index;
+		}
+	}
 	int p1Index = p0Index + 1;
-	float scaleFactor = GetScaleFactor(node.Scalings[p0Index].timestamp,
-		node.Scalings[p1Index].timestamp, animationTime);
-	glm::vec3 finalScale = glm::mix(node.Scalings[p0Index].scale, node.Scalings[p1Index].scale
-		, scaleFactor);
+
+	float scaleFactor = calculateScaleFactor(bone->scales[p0Index].timeStamp, bone->scales[p1Index].timeStamp, animationTime);
+
+	glm::vec3 finalScale = glm::mix(bone->scales[p0Index].scale, bone->scales[p1Index].scale, scaleFactor);
+
 	return glm::scale(glm::mat4(1.0f), finalScale);
 }
 
-float Animator::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
+float animator::calculateScaleFactor(float lastTimeStamp, float nextTimeStamp, float currentTime)
 {
 	float scaleFactor = 0.0f;
-	float midWayLength = animationTime - lastTimeStamp;
+	float midWayLength = currentTime - lastTimeStamp;
 	float framesDiff = nextTimeStamp - lastTimeStamp;
 	scaleFactor = midWayLength / framesDiff;
 	return scaleFactor;
-}
-
-int Animator::GetPositionIndex(float animationTime, AnimationBoneData node)
-{
-	for (int index = 0; index < node.numPositions - 1; ++index)
-	{
-		if (animationTime < node.Positions[index + 1].timestamp)
-			return index;
-	}
-	assert(0);
-}
-
-int Animator::GetRotationIndex(float animationTime, AnimationBoneData node)
-{
-	for (int index = 0; index < node.numRotations - 1; ++index)
-	{
-		if (animationTime < node.Rotations[index + 1].timestamp)
-			return index;
-	}
-	assert(0);
-}
-
-int Animator::GetScaleIndex(float animationTime, AnimationBoneData node)
-{
-	for (int index = 0; index < node.numScalings - 1; ++index)
-	{
-		if (animationTime < node.Scalings[index + 1].timestamp)
-			return index;
-	}
-	assert(0);
-}
-
-glm::mat4 Animator::getBoneLocalTransform(AnimationBoneData node,float& currentAnimationTime) 
-{
-	glm::mat4 translation = interpolatePosition(currentAnimationTime,node);
-	glm::mat4 rotation = interpolateRotation(currentAnimationTime, node);
-	glm::mat4 scale = interpolateScale(currentAnimationTime, node);
-
-	glm::mat4 localTransformation = translation * rotation * scale;
-
-	return localTransformation;
 }

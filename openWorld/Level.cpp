@@ -39,10 +39,10 @@ bool Level::hasTriggerBeenActivated(std::string triggerName)
 
 void Level::renderMap(Shader* shader)
 {
-	this->levelShader = shader;
-	this->transformID = this->levelScene->createTransform(glm::vec3(0.0f),glm::quat(),glm::vec3(1.0f));
-	this->worldModelID = this->levelScene->createModel(*this->levelModel,*this->levelShader);
-	this->instanceID = this->levelScene->AddInstance(this->worldModelID,this->transformID);
+	//this->levelShader = shader;
+	//this->transformID = this->levelScene->createTransform(glm::vec3(0.0f),glm::quat(),glm::vec3(1.0f));
+	//this->worldModelID = this->levelScene->createModel(*this->levelModel,*this->levelShader);
+	//this->instanceID = this->levelScene->AddInstance(this->worldModelID,this->transformID);
 }
 
 //debug only--------------------------------------------
@@ -82,7 +82,7 @@ void Level::setSkybox(std::vector <std::string> filePaths)
 
 }
 
-void Level::setLevelScene(Scene* scene)
+void Level::setLevelScene(scene* scene)
 {
 	this->levelScene = scene;
 }
@@ -96,7 +96,7 @@ void Level::createColliders()
 {
 	for(unsigned int i = 0; i < this->levelMeshes.size(); i++)
 	{
-		MeshData* mesh = levelMeshes[i];
+		Mesh* mesh = levelMeshes[i];
 		std::vector <glm::vec3> vertices;
 		for(unsigned int j = 0; j < mesh->vertices.size(); j++)
 		{

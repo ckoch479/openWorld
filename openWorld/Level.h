@@ -15,7 +15,7 @@
 struct levelObject
 {
 	std::string id;
-	ModelData* model;
+	Model* model;
 	rigidBody* body;
 
 	ID worldModelID; //for rendering
@@ -73,7 +73,7 @@ public:
 
 	void setSkybox(std::vector <std::string> filePaths);
 
-	void setLevelScene(Scene* scene);
+	void setLevelScene(scene* scene);
 
 	void setLevelPhysicsWorld(PhysicsWorld* world);
 
@@ -84,8 +84,8 @@ private:
 
 	//mRigidBody levelBody;//this is to store all colliders used by this level
 
-	ModelData* levelModel;
-	std::vector <MeshData*> levelMeshes; //makes it easier to calculate hitboxes and such for the level
+	Model* levelModel;
+	std::vector <Mesh*> levelMeshes; //makes it easier to calculate hitboxes and such for the level
 
 	ID worldModelID; //for rendering
 	ID instanceID;
@@ -97,7 +97,7 @@ private:
 	std::string name; //name of the level its self
 
 	Shader* levelShader;
-	Scene* levelScene;
+	scene* levelScene;
 	PhysicsWorld* world;
 
 	void parseLevelFile(std::string filePath);

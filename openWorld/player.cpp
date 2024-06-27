@@ -19,22 +19,22 @@ float player::GetRotationAngle()
 	return this->rotationAngle;
 }
 
-void player::LoadPlayerModel(const std::string filepath, std::string playername, Scene* scene, PhysicsWorld* world, Shader& shader)
+void player::LoadPlayerModel(const std::string filepath, std::string playername, scene* scene, PhysicsWorld* world, Shader& shader)
 {
 	this->playerName = playername;
 	this->playerModel = ResourceManager::loadModel(filepath,playername);
 
-	this->sceneModelID = scene->createModel(*this->playerModel,shader);
-	this->sceneTransformID = scene->createTransform(this->position,glm::quat(glm::vec3(0,this->rotationAngle,0)), this->scale);
+	//this->sceneModelID = scene->createModel(*this->playerModel,shader);
+	//this->sceneTransformID = scene->createTransform(this->position,glm::quat(glm::vec3(0,this->rotationAngle,0)), this->scale);
 
-	this->sceneObjectID = scene->AddInstance(this->sceneModelID,this->sceneTransformID);
+	//this->sceneObjectID = scene->AddInstance(this->sceneModelID,this->sceneTransformID);
 
 	this->scenePtr = scene;
 	this->shaderPtr = &shader;
 	this->worldPtr = world;
 }
 
-void player::AddAnimationtoPlayer(AnimationData* animation, std::string name) //for if you loaded the animation in manually
+void player::AddAnimationtoPlayer(animation* animation, std::string name) //for if you loaded the animation in manually
 {
 
 }
@@ -42,15 +42,15 @@ void player::AddAnimationtoPlayer(AnimationData* animation, std::string name) //
 void player::AddAnimationtoPlayer(std::string filepath, std::string name) 
 {
 	std::string animationName = name;
-	AnimationData* animation = ResourceManager::loadAnimation(filepath,name);
+	//animation* animation = ResourceManager::loadAnimation(filepath,name);
 
 	//add animation to the player class for later reference and use
 	this->SavedAnimations.push_back(animationName);
 
 	//add animation to the scene for future reference
-	ID newID = this->scenePtr->createAnimation(animation);
+	//ID newID = this->scenePtr->createAnimation(animation);
 
-	this->animationIDmap[animationName] = newID;
+	///this->animationIDmap[animationName] = newID;
 }
 
 std::string player::getCurrentAnimation()
@@ -134,7 +134,7 @@ void player::setPlayerFront(glm::vec3 front)
 
 void player::setActiveAnimation(std::string animationName)
 {
-	this->scenePtr->UpdateAnimation(this->sceneModelID,this->animationIDmap[animationName]);
+	//this->scenePtr->UpdateAnimation(this->sceneModelID,this->animationIDmap[animationName]);
 }
 
 void player::setMovementSpeed(float speed) 
@@ -163,8 +163,8 @@ void player::calculateVectors()
 	this->playerUp = glm::normalize(glm::cross(playerRight, playerFront));
 }
 
-void player::renderPlayer(float dt, Scene* scene, PhysicsWorld* world)
+void player::renderPlayer(float dt, scene* scene, PhysicsWorld* world)
 {
-	scene->updateTransform(this->sceneTransformID, this->position, glm::quat(glm::vec3(0,this->yaw,0)), this->scale);
+	//scene->updateTransform(this->sceneTransformID, this->position, glm::quat(glm::vec3(0,this->yaw,0)), this->scale);
 
 }

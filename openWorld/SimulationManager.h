@@ -23,12 +23,14 @@
 #include "worldMap.h"
 #include "Level.h"
 
+#include "playerEntity.h"
+
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
 
 enum gameState 
 {
-running, end, pause, loading, startup, shutdown
+active, end, pause, loading, startup, shutdown
 };
 
 class SimulationManager
@@ -50,8 +52,8 @@ public:
 	void setDeltaTime();
 private:
 
-	Scene* scene;
-	Renderer* renderer;
+	scene* sceneObj;
+	renderer* gameRenderer;
 	PhysicsWorld* world;
 	windowManager* WindowManager;
 	//InputManager* inputs;
@@ -60,6 +62,9 @@ private:
 	//physics/dynamics
 	//animation manager
 	//scripting manager
+
+	const unsigned int SCR_WIDTH = 1600;
+	const unsigned int SCR_HEIGHT = 800;
 
 	gameState state;
 

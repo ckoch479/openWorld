@@ -21,7 +21,7 @@ public:
 	~worldMap();
 
 	//load a mesh for terrain modeled in an outside program and extract height coordinates as well as add world details i.e skybox, trees, grass etc
-	void GenerateMap(std::string filename, std::string mapName, Scene* scene, Shader& shader); //loadModelData and collision data for a worldMap
+	void GenerateMap(std::string filename, std::string mapName, scene* scene, Shader& shader); //loadModelData and collision data for a worldMap
 
 	float getTerrainHeight(float x, float z); //input x,z coordinates for the world and the height will be returned
 
@@ -33,13 +33,13 @@ public:
 
 	std::vector <unsigned int> getIndices();
 
-	void updatePosition(Scene* scene,glm::vec3 position);
+	void updatePosition(scene* scene,glm::vec3 position);
 	
 private:
 
 	void generateTerrainHeight();
 
-	ModelData* worldModel;
+	Model* worldModel;
 	ID worldModelID; //for rendering
 	ID instanceID;
 	ID transformID;

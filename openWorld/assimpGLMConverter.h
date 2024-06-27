@@ -1,12 +1,12 @@
 #pragma once
+
 #include<assimp/quaternion.h>
 #include<assimp/vector3.h>
 #include<assimp/matrix4x4.h>
+#include<glm/glm.hpp>
+#include<glm/gtc/quaternion.hpp>
 
-#include "Includes/glm/glm.hpp"
-#include "Includes/glm/gtc/type_ptr.hpp"
-#include "Includes/glm/gtc/quaternion.hpp"
-
+//this is just a copy paste from a tutorial so dont judge me too much (thanks learnOpenGL.com)
 class AssimpGLMHelpers
 {
 public:
@@ -32,4 +32,3 @@ public:
 		return glm::quat(pOrientation.w, pOrientation.x, pOrientation.y, pOrientation.z);
 	}
 };
-
