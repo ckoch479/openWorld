@@ -5,7 +5,6 @@
 #include <map>
 #include <unordered_map>
 
-#include "scene.h"
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
 
@@ -13,7 +12,7 @@
 
 #include "ResourceManager.h"
 #include "Animator.h"
-#include "PhysicsWorld.h"
+
 
 #ifndef PLAYERENTITY_H
 #define PLAYERENTITY_H
@@ -30,10 +29,6 @@ public:
 	 playerEntity(std::string playerFilePath);
 
 	~playerEntity();
-
-	void addPLayerToScene(scene* currentScene,Shader* shader);
-
-	void addPlayerToPhysicsWorld(PhysicsWorld* world, glm::vec3 colliderOffset);
 
 	void savePlayerFile();//this will save players data to a .player file that can be used the next time a playerEntity is created
 
@@ -71,12 +66,11 @@ public:
 
 	int getPlayerMoveSpeed();
 
-	void updateEntity(scene* currentScene); //this should get called any time something about the player changes to update its data
-
 	//calling this will step through all loaded animations one by one to check if they work
 	void debugAnimations(); 
 
-	void updateSceneObject(scene* scene);
+	Model* getPlayerModel();
+
 
 private:
 
@@ -118,11 +112,6 @@ private:
 	Model* playerModel; //this is just a little thing to make rendering easier for myself
 
 	std::string playerName; //this one should be pretty self explanatory
-	std::string sceneID;
-	unsigned int physicsId;
-
-	//physicsWorld used by the player
-	PhysicsWorld* world;
 
 	//helper bools for updating the player on the fly
 	bool meshChange = false;

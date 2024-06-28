@@ -12,6 +12,7 @@
 
 #include<reactphysics3d/reactphysics3d.h>
 #include "reactPhysicsListener.h"
+#include "rayCastCallBack.h"
 
 
 #ifndef PHYSICSWORLD_H
@@ -83,11 +84,17 @@ struct debugLines
 struct debugTriangles
 {
 	glm::vec3 vertex;
-	glm::vec3 color;
 	glm::vec3 vertex2;
-	glm::vec3 color2;
 	glm::vec3 vertex3;
-	glm::vec3 color3;
+	//glm::vec3 color;
+	
+};
+
+struct rayCastIntersectInfo
+{
+	glm::vec3 worldPositionHitPoint;
+	glm::vec3 hitPointNormal;
+	bool hit;
 };
 
 class PhysicsWorld
@@ -142,7 +149,9 @@ public:
 
 	std::vector <debugTriangles> debugRenderer();
 
-	void rayCast(glm::vec3 startPoint,glm::vec3 endPoint);
+	//bool rayCast(glm::vec3 startPoint,glm::vec3 endPoint);
+
+	rayCastIntersectInfo rayCast(glm::vec3 startPoint, glm::vec3 endPoint);
 
 	void setTrigger();
 

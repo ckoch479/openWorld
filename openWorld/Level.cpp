@@ -109,6 +109,7 @@ void Level::createColliders()
 		mesh->indices;
 		
 			this->world->attachConcaveColliderToBody(convexMesh, glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), vertices, mesh->indices,this->rigidBodyId);
+		
 	}
 
 }

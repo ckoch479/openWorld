@@ -59,6 +59,11 @@ void SimulationManager::playerInputTestFunction(playerEntity* player, windowMana
 	{
 		player->setPlayerAction(jumping);
 	}
+
+	if (this->WindowManager->checkKey(258)) //tab
+	{
+		player->debugAnimations();
+	}
 }
 
 void SimulationManager::run() 
@@ -69,7 +74,7 @@ void SimulationManager::run()
 	Shader* depthShader = ResourceManager::loadShader("Shaders/shadowShader.vs", "Shaders/shadowShader.fs", nullptr, "depthShader");
 	Shader* debugDepthQuad = ResourceManager::loadShader("Shaders/debugDepthQuad.vs", "Shaders/debugDepthQuad.fs", nullptr, "depthQuad");
 	Shader* animationShader = ResourceManager::loadShader("Shaders/animationShader.vs", "Shaders/animationShader.fs", nullptr, "animShader");
-
+	//Shader* physicsDebugShader = ResourceManager::loadShader("Shaders/PhysicsTestShader.vs","Shaders/PhysicsTestShader.fs",nullptr,"physicsDebug");
 	//Game objects go here for testing independent parts of the engine--------------------------------------
 
 	Model* gltfModel = ResourceManager::loadModel("resources/Arissa/ArissaGLTF/Arissa.gltf", "gltfTest");
@@ -103,17 +108,27 @@ void SimulationManager::run()
 	this->gameRenderer->setDebugDepthQuadShader(debugDepthQuad);
 
 	playerEntity newPlayer("resources/player/player.gltf");
-	newPlayer.addPLayerToScene(this->sceneObj, animationShader);
-	transform newTransf;
-	newTransf.position = glm::vec3(0, 10, 0);
-	newTransf.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	newTransf.scale = glm::vec3(1.0f);
-	newPlayer.setPlayerTransform(newTransf);
-	newPlayer.addPlayerToPhysicsWorld(this->world, glm::vec3(0, 0, 0));
-	
-	/*unsigned int playerId;
-	playerId = this->world->createCapsuleShape(newPlayer.getPlayersTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.6, 1.5, Dynamic);
-	this->world->changeColliderOrigin(playerId, glm::vec3(0.0, 1.3, 0.0));*/
+	characterController playerController(&newPlayer,this->sceneObj,this->world, animationShader);
+
+	unsigned int boxId;
+	std::string boxSceneID;
+	transform boxTransform;
+	boxTransform.position = glm::vec3(4, 10, 4);
+	boxTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	boxTransform.scale = glm::vec3(1.0f);
+
+
+	Model* boxModel = ResourceManager::loadModel("resources/Assets/badCrate.obj","badBox");
+
+	std::vector <glm::vec3> boxVertices;
+	for(unsigned int i = 0 ; i < boxModel->meshes[0].vertices.size(); i++)
+	{
+		Vertex vertex = boxModel->meshes[0].vertices[i];
+		boxVertices.push_back(vertex.vertexPosition);
+	}
+	boxSceneID = sceneObj->addObjectToScene(boxModel, boxTransform,lightShader);
+
+	boxId = this->world->createRigidBody(boxTransform.position, boxTransform.orientation,20 ,boxVertices,Dynamic);
 
 	thirdPersonCamera playerCamera;
 	float pitch = 0, yaw = 0;
@@ -125,31 +140,13 @@ void SimulationManager::run()
 		setDeltaTime(); //update deltaTime for this loop
 		checkMouse();
 
-		newPlayer.updateEntity(this->sceneObj);
 
-		//if (!WindowManager->getCursorStatus()) {
-		//	////camera ----------------------------------------------------
-		//	float horizontalFromPlayer = radius * cos(cameraPitch);
-		//	float verticalDistance = radius * sin(cameraPitch);
-		//	this->cameraYaw = 180 - this->playerRotation + this->cameraFreeRotationAngle;
-		//	float Xoffset = horizontalFromPlayer * sin(this->playerRotation + cameraFreeRotationAngle);
-		//	float Zoffset = horizontalFromPlayer * cos(this->playerRotation + cameraFreeRotationAngle);
-		//	this->CameraPosition.x = this->playerPosition.x - Xoffset;
-		//	this->CameraPosition.y = this->playerPosition.y + verticalDistance;
-		//	this->CameraPosition.z = this->playerPosition.z - Zoffset;
-		//	////-----------------------------------------------------------
-		//}
-		//world collision
+		boxTransform.position = world->getBodyPosition(boxId);
+		boxTransform.orientation = world->getBodyRotation(boxId);
+		sceneObj->updateTransform(boxSceneID, boxTransform);
 
-		//transform* newTransform = newPlayer.getPlayersTransform();
-		//newTransform->position = this->world->getBodyPosition(playerId);
-		//newPlayer.setPlayerTransform(*newTransform);
 
-		
 
-		// set player movement
-		playerInputTestFunction(&newPlayer, this->WindowManager);
-		
 		if(this->WindowManager->checkKey(342))
 		{
 			//left alt
@@ -181,11 +178,6 @@ void SimulationManager::run()
 			newCamera.ProcessKeyboard(RIGHT, deltaTime);
 		};
 
-		if (this->WindowManager->checkKey(32))
-		{
-			//newPlayer.debugAnimations();
-		}
-
 		//mouse position;
 		float lastx = cursorX;
 		float lasty = cursorY;
@@ -200,10 +192,9 @@ void SimulationManager::run()
 		{
 			transform* newTransform = newPlayer.getPlayersTransform();
 			newTransform->orientation = glm::rotate(glm::toMat4(newTransform->orientation), xOffset * 0.01f, glm::vec3(0, 1, 0));
-			newPlayer.setPlayerTransform(*newTransform);
+			//newPlayer.setPlayerTransform(*newTransform);
 		}
 		
-
 		if(this->WindowManager->checkKey(49))//1 key
 		{
 			newCamera.setCameraFreeCam();
@@ -212,6 +203,9 @@ void SimulationManager::run()
 		{
 			newCamera.setCameraThirdPerson(2.6);
 		}
+
+		playerController.updateInputs(this->WindowManager);
+		playerController.updateController(deltaTime);
 	
 		//update physics
 		accumulator += deltaTime;
@@ -224,7 +218,6 @@ void SimulationManager::run()
 		//draw contents to actual game window
 		animator::updateAnimations(deltaTime);
 
-		newPlayer.updateSceneObject(this->sceneObj);
 		
 		this->gameRenderer->drawScene(this->sceneObj);
 

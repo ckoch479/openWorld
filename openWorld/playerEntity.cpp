@@ -6,7 +6,7 @@ playerEntity::playerEntity(std::string playerFilePath)
 	loadPlayerAnimations(playerFilePath);
 
 	transform newTransform;
-	newTransform.position = glm::vec3(1, 2, -3);
+	newTransform.position = glm::vec3(2, 10, -2);
 	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	newTransform.scale = glm::vec3(1.0f);
 
@@ -18,12 +18,6 @@ playerEntity::playerEntity(std::string playerFilePath)
 	this->currentAnimation = this->animations["idle"];
 	animator::addAnimation(this->playerModel, this->currentAnimation);
 	updateEntity();
-	
-}
-
-void playerEntity::addPLayerToScene(scene* currentScene, Shader* shader)
-{
-	this->sceneID = currentScene->addObjectToScene(this->playerModel,this->currentTransform,shader);
 }
 
 //not all animations added yet and no error checking yet really
@@ -139,11 +133,6 @@ void playerEntity::setPlayerMeshes(playerParts part, Mesh* newMesh)
 	updateEntity();
 }
 
-void playerEntity::updateSceneObject(scene* scene)
-{
-	scene->updateTransform(this->sceneID, this->currentTransform);
-}
-
 void playerEntity::debugAnimations()
 {
 	if (stepper >= actionDebugger.size()) { stepper = 0; }
@@ -151,39 +140,6 @@ void playerEntity::debugAnimations()
 	updateEntity();
 	stepper++;
 
-}
-
-void playerEntity::addPlayerToPhysicsWorld(PhysicsWorld* world, glm::vec3 colliderOffset)
-{
-	this->physicsId = world->createCapsuleShape(this->currentTransform.position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.6, 1.5, Dynamic);
-	world->changeColliderOrigin(this->physicsId, colliderOffset);
-	this->world = world;
-}
-
-void playerEntity::updateEntity(scene* currentScene)
-{
-	if(meshChange)
-	{
-		//update meshes in the scene or whatever
-	}
-
-	if(actionChange) 
-	{
-		//update action parameters
-		updateActions();
-		actionChange = false;
-	}
-
-	if (animationChange)
-	{
-		//update to the new animation, after action change check because thats what should set new animations and nothing else
-		//animator::addAnimation(this->playerModel,this->currentAnimation);
-		animator::changeAnimation(this->playerModel, this->currentAnimation);
-		animationChange = false;
-	}
-
-	currentScene->updateTransform(this->sceneID,this->currentTransform);
-	
 }
 
 void playerEntity::updateEntity()
@@ -203,11 +159,15 @@ void playerEntity::updateEntity()
 	if (animationChange)
 	{
 		//update to the new animation, after action change check because thats what should set new animations and nothing else
-		//animator::addAnimation(this->playerModel, this->currentAnimation);
 		animator::changeAnimation(this->playerModel, this->currentAnimation);
 		animationChange = false;
 	}
 
+}
+
+Model* playerEntity::getPlayerModel()
+{
+	return this->playerModel;
 }
 
 void playerEntity::updateActions()

@@ -15,6 +15,7 @@
 #include "camera.h"
 #include "resourceManager.h"
 #include "animator.h"
+#include "PhysicsWorld.h"
 
 #ifndef RENDERER_H
 #define RENDERER_H
@@ -35,6 +36,8 @@ public:
 	void setDebugDepthQuadShader(Shader* shader);
 
 	void setScreenEffectShader(Shader* shader);
+
+	void renderPhysicsWorldDebugger(Shader* shader, PhysicsWorld* world, scene* scene);
 
 private:
 
@@ -62,6 +65,8 @@ private:
 	glm::mat4 renderSpotShadowMap(scene* scene, unsigned int* depthMapFBO);
 
 	void generateScreenEffectBuffer(unsigned int* hdrFBO, unsigned int* depthRBO, unsigned int* colorBuffer);
+
+	
 
 	//used for rendering hud objects or menu objects
 	void load2DRenderShader();

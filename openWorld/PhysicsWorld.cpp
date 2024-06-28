@@ -97,7 +97,7 @@ unsigned int PhysicsWorld::createRigidBody(glm::vec3 position, glm::quat rotatio
 	this->rigidBodies[rigidBodyID].body->updateMassPropertiesFromColliders();
 	this->rigidBodies[rigidBodyID].body->updateLocalCenterOfMassFromColliders();
 
-	//this->rigidBodies[rigidBodyID].body->setIsDebugEnabled(true);
+	this->rigidBodies[rigidBodyID].body->setIsDebugEnabled(true);
 
 	return rigidBodyID;
 }
@@ -113,12 +113,14 @@ unsigned int PhysicsWorld::CreateRigidBody()
 
 	reactphysics3d::RigidBody* newBody = this->world->createRigidBody(transform);
 	newBody->setType(rp3d::BodyType::STATIC);
+	newBody->setIsDebugEnabled(true);
 
 	Body.body = newBody;
 	Body.ID = newId;
 	Body.type = Static;
 
 	this->RigidBodies[newId] = Body;
+	
 
 	return newId;
 }
@@ -426,9 +428,9 @@ std::vector <debugTriangles> PhysicsWorld::debugRenderer()
 	debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE,true);
 	debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
 
-	const int numlines = debugRenderer.getNbLines(); //number of lines;
+	//const int numlines = debugRenderer.getNbLines(); //number of lines;
 	const int numTriangles = debugRenderer.getNbTriangles();
-	std::vector <debugLines> debugData;
+	//std::vector <debugLines> debugData;
 	std::vector <debugTriangles> triangleData;
 
 	for(unsigned int i = 0; i < numTriangles; i++)
@@ -441,97 +443,72 @@ std::vector <debugTriangles> PhysicsWorld::debugRenderer()
 		newTriangle.vertex3 = glm::vec3(triangles[i].point3.x, triangles[i].point3.y, triangles[i].point3.z);;
 		
 
-		switch(triangles[i].color1)
-		{
-		case(0xff0000): //RED
-			newTriangle.color = glm::vec3(255, 0, 0);
-			break;
-		case(0x00ff00): //Green
-			newTriangle.color = glm::vec3(0, 255, 0);
-			break;
-		case(0x0000ff): //BLUE
-			newTriangle.color = glm::vec3(0, 0, 255);
-			break;
-		case(0x000000): //BLACK
-			newTriangle.color = glm::vec3(0, 0, 0);
-			break;
-		case(0xffffff): //WHITE
-			newTriangle.color = glm::vec3(255, 255, 255);
-			break;
-		case(0xffff00): //YELLOW
-			newTriangle.color = glm::vec3(255, 255, 0);
-			break;
-		case(0xff00ff): //MAGENTA
-			newTriangle.color = glm::vec3(255, 0, 255);
-			break;
-		case(0x00ffff): //CYAN
-			newTriangle.color = glm::vec3(0, 255, 255);
-			break;
-		}
-
-		switch (triangles[i].color2)
-		{
-		case(0xff0000): //RED
-			newTriangle.color2 = glm::vec3(255, 0, 0);
-			break;
-		case(0x00ff00): //Green
-			newTriangle.color2 = glm::vec3(0, 255, 0);
-			break;
-		case(0x0000ff): //BLUE
-			newTriangle.color2 = glm::vec3(0, 0, 255);
-			break;
-		case(0x000000): //BLACK
-			newTriangle.color2 = glm::vec3(0, 0, 0);
-			break;
-		case(0xffffff): //WHITE
-			newTriangle.color2 = glm::vec3(255, 255, 255);
-			break;
-		case(0xffff00): //YELLOW
-			newTriangle.color2 = glm::vec3(255, 255, 0);
-			break;
-		case(0xff00ff): //MAGENTA
-			newTriangle.color2 = glm::vec3(255, 0, 255);
-			break;
-		case(0x00ffff): //CYAN
-			newTriangle.color2 = glm::vec3(0, 255, 255);
-			break;
-		}
-
-		switch (triangles[i].color3)
-		{
-		case(0xff0000): //RED
-			newTriangle.color2 = glm::vec3(255, 0, 0);
-			break;
-		case(0x00ff00): //Green
-			newTriangle.color2 = glm::vec3(0, 255, 0);
-			break;
-		case(0x0000ff): //BLUE
-			newTriangle.color2 = glm::vec3(0, 0, 255);
-			break;
-		case(0x000000): //BLACK
-			newTriangle.color2 = glm::vec3(0, 0, 0);
-			break;
-		case(0xffffff): //WHITE
-			newTriangle.color2 = glm::vec3(255, 255, 255);
-			break;
-		case(0xffff00): //YELLOW
-			newTriangle.color2 = glm::vec3(255, 255, 0);
-			break;
-		case(0xff00ff): //MAGENTA
-			newTriangle.color2 = glm::vec3(255, 0, 255);
-			break;
-		case(0x00ffff): //CYAN
-			newTriangle.color2 = glm::vec3(0, 255, 255);
-			break;
-		}
-
+		//switch(triangles[i].color1)
+		//{
+		//case(0xff0000): //RED
+		//	newTriangle.color = glm::vec3(255, 0, 0);
+		//	break;
+		//case(0x00ff00): //Green
+		//	newTriangle.color = glm::vec3(0, 255, 0);
+		//	break;
+		//case(0x0000ff): //BLUE
+		//	newTriangle.color = glm::vec3(0, 0, 255);
+		//	break;
+		//case(0x000000): //BLACK
+		//	newTriangle.color = glm::vec3(0, 0, 0);
+		//	break;
+		//case(0xffffff): //WHITE
+		//	newTriangle.color = glm::vec3(255, 255, 255);
+		//	break;
+		//case(0xffff00): //YELLOW
+		//	newTriangle.color = glm::vec3(255, 255, 0);
+		//	break;
+		//case(0xff00ff): //MAGENTA
+		//	newTriangle.color = glm::vec3(255, 0, 255);
+		//	break;
+		//case(0x00ffff): //CYAN
+		//	newTriangle.color = glm::vec3(0, 255, 255);
+		//	break;
+		//}
+		//std::cout << "pushing back new debug triangle!\n";
 		triangleData.push_back(newTriangle);
 	}
 
 	return triangleData;
 }
 
+rayCastIntersectInfo PhysicsWorld::rayCast(glm::vec3 startPoint, glm::vec3 endPoint)
+{
+	rp3d::Vector3 PointA(startPoint.x, startPoint.y, startPoint.z);
+	rp3d::Vector3 PointB(endPoint.x, endPoint.y, endPoint.z);
 
+	
+
+	rp3d::RaycastInfo newInfo;
+	rp3d::Ray ray(PointA, PointB);
+	
+	rayCastCallBack rayCallBack;
+
+	this->world->raycast(ray,&rayCallBack);
+	//bool isHit = rayCallBack.notifyRaycastHit(newInfo);
+
+	//if(isHit)
+	//{
+		rayCastIntersectInfo castInfo;
+		castInfo.worldPositionHitPoint = glm::vec3(newInfo.worldPoint.x, newInfo.worldPoint.y, newInfo.worldPoint.z);
+		castInfo.hitPointNormal = glm::vec3(newInfo.worldNormal.x, newInfo.worldNormal.y, newInfo.worldNormal.z);
+		castInfo.hit = true;
+		return castInfo;
+	//}
+	/*if(!isHit)
+	{*/
+		/*rayCastIntersectInfo castInfo;
+		castInfo.worldPositionHitPoint = glm::vec3(0, 0, 0);
+		castInfo.hitPointNormal = glm::vec3(0, 1, 0);
+		bool hit = false;
+		return castInfo;*/
+	//}
+}
 
 
 

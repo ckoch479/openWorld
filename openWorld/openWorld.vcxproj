@@ -159,6 +159,7 @@
     <ClCompile Include="assimpAnimationLoader.cpp" />
     <ClCompile Include="assimpModelLoader.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="characterController.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Includes\glad\glad.c" />
@@ -167,6 +168,7 @@
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerEntity.cpp" />
+    <ClCompile Include="rayCastCallBack.cpp" />
     <ClCompile Include="reactPhysicsListener.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -190,6 +192,7 @@
     <ClInclude Include="assimpModelLoader.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="characterController.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Includes\glad\glad.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="playerActionDefinitions.h" />
     <ClInclude Include="playerEntity.h" />
+    <ClInclude Include="rayCastCallBack.h" />
     <ClInclude Include="reactPhysicsListener.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderingInfoDefinitions.h" />

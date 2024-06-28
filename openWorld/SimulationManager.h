@@ -16,6 +16,8 @@
 #include "GameObject.h"
 #include "thirdPersonCamera.h"
 
+#include "characterController.h"
+
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
