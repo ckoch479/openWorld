@@ -52,6 +52,11 @@ void thirdPersonCamera::calculateCameraPosition(glm::vec3 playerPosition, glm::v
 	this->cameraPosition.z = playerPosition.z - Zoffset;
 }
 
+//glm::mat4 thirdPersonCamera::getViewMatrix()
+//{
+//	
+//}
+
 void thirdPersonCamera::updateCameraRotation(float cursorX, float cursorY)
 {
 	

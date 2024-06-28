@@ -17,6 +17,13 @@ enum Camera_Movement {
 	RIGHT
 };
 
+enum Mode
+{
+    firstPerson,
+    thirdPerson,
+    freeCam,
+};
+
 // Default camera values
 const float YAW =   0.0f;
 const float PITCH = 0.0f;
@@ -68,37 +75,72 @@ public:
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction, float deltaTime)
     {
-        float velocity = MovementSpeed * deltaTime;
-        if (direction == FORWARD)
-            Position += Front * velocity;
-        if (direction == BACKWARD)
-            Position -= Front * velocity;
-        if (direction == LEFT)
-            Position -= Right * velocity;
-        if (direction == RIGHT)
-            Position += Right * velocity;
+        if (this->cameraMode == freeCam)
+        {
+            float velocity = MovementSpeed * deltaTime;
+            if (direction == FORWARD)
+                Position += Front * velocity;
+            if (direction == BACKWARD)
+                Position -= Front * velocity;
+            if (direction == LEFT)
+                Position -= Right * velocity;
+            if (direction == RIGHT)
+                Position += Right * velocity;
+        }
     }
 
+    bool isThirdPerson();
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
+    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true, glm::vec3 playerPos = glm::vec3(0,0,0), float playerRot = 0.0)
     {
-        xoffset *= MouseSensitivity;
-        yoffset *= MouseSensitivity;
 
-        Yaw += xoffset;
-        Pitch += yoffset;
-
-        // make sure that when pitch is out of bounds, screen doesn't get flipped
-        if (constrainPitch)
+        switch(cameraMode)
         {
-            if (Pitch > 89.0f)
-                Pitch = 89.0f;
-            if (Pitch < -89.0f)
-                Pitch = -89.0f;
+        case(freeCam):
+
+            xoffset *= MouseSensitivity;
+            yoffset *= MouseSensitivity;
+
+            Yaw += xoffset;
+            Pitch += yoffset;
+
+            // make sure that when pitch is out of bounds, screen doesn't get flipped
+            if (constrainPitch)
+            {
+                if (Pitch > 89.0f)
+                    Pitch = 89.0f;
+                if (Pitch < -89.0f)
+                    Pitch = -89.0f;
+            }
+
+            updateCameraVectors();
+
+            break;
+
+        case(thirdPerson):
+           
+            yoffset *= MouseSensitivity;
+            Pitch += yoffset * 0.01;
+            this->cameraFreeRotationAngle += xoffset * 0.01;
+            if(Pitch > 7.0f)
+            {
+                Pitch = 7.0f;
+            }
+
+            if (Pitch < 5.5f)
+            {
+                Pitch = 5.5f;
+            }
+
+            updateThirdPersonCamera(playerPos, playerRot);
+            break;
+
+
         }
+      
 
         // update Front, Right and Up Vectors using the updated Euler angles
-        updateCameraVectors();
+        
     }
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
@@ -111,8 +153,18 @@ public:
             Zoom = 45.0f;
     }
 
+    void setCameraThirdPerson(float radiusFromPlayer);
+
+    void setCameraFreeCam();
+
 private:
     // calculates the front vector from the Camera's (updated) Euler Angles
+    Mode cameraMode = freeCam;
+    float radiusFromPlayer = 2;
+    float cameraFreeRotationAngle = 0;
+
+    void updateThirdPersonCamera(glm::vec3 playerPos, float playerRot);
+
     void updateCameraVectors()
     {
         // calculate the new Front vector

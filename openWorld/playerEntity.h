@@ -13,6 +13,7 @@
 
 #include "ResourceManager.h"
 #include "Animator.h"
+#include "PhysicsWorld.h"
 
 #ifndef PLAYERENTITY_H
 #define PLAYERENTITY_H
@@ -31,6 +32,8 @@ public:
 	~playerEntity();
 
 	void addPLayerToScene(scene* currentScene,Shader* shader);
+
+	void addPlayerToPhysicsWorld(PhysicsWorld* world, glm::vec3 colliderOffset);
 
 	void savePlayerFile();//this will save players data to a .player file that can be used the next time a playerEntity is created
 
@@ -73,6 +76,8 @@ public:
 	//calling this will step through all loaded animations one by one to check if they work
 	void debugAnimations(); 
 
+	void updateSceneObject(scene* scene);
+
 private:
 
 	void updateEntity();
@@ -80,10 +85,12 @@ private:
 	void loadPlayerAnimations(std::string playerFilePath); //directory for player animations will be under the players file path in a file named animations
 
 	void updateActions();
+
+	void calculateRelTransform();
 	//data:
 	playerActions currentAction;
 	
-	float moveSpeed;
+	float moveSpeed = 1.0f;
 
 	//animation names should exactly match player action name as well key word is should it is me making this thing
 	//also animations is only handled by the class you cannot manually change the animations only player actions
@@ -112,6 +119,10 @@ private:
 
 	std::string playerName; //this one should be pretty self explanatory
 	std::string sceneID;
+	unsigned int physicsId;
+
+	//physicsWorld used by the player
+	PhysicsWorld* world;
 
 	//helper bools for updating the player on the fly
 	bool meshChange = false;

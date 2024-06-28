@@ -40,9 +40,8 @@ private:
 	void generateTerrainHeight();
 
 	Model* worldModel;
-	ID worldModelID; //for rendering
-	ID instanceID;
-	ID transformID;
+	transform transf;
+
 	std::map <float, std::map<float, float>> XZtable; 
 
 	int terrainWidth = 0;

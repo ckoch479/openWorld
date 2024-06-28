@@ -19,8 +19,8 @@
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
-#include "player.h"
-#include "worldMap.h"
+
+
 #include "Level.h"
 
 #include "playerEntity.h"
@@ -50,6 +50,8 @@ public:
 	void checkMouse();
 
 	void setDeltaTime();
+
+	void playerInputTestFunction(playerEntity* player, windowManager* window);
 private:
 
 	scene* sceneObj;

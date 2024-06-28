@@ -1,5 +1,54 @@
 #include "Camera.h"
 
+
+void Camera::updateThirdPersonCamera(glm::vec3 playerPos, float playerRot)
+{
+	//playerPos.y += 1.5f; //for a more over the shoulder look
+	
+	float horizontalFromPlayer = this->radiusFromPlayer * cos(this->Pitch);
+	float verticalDistance = this->radiusFromPlayer * sin(this->Pitch);
+	this->Yaw = 180 - playerRot + this->cameraFreeRotationAngle;
+	//this->Yaw = playerRot + this->cameraFreeRotationAngle;
+	float Xoffset = horizontalFromPlayer * sin(playerRot + cameraFreeRotationAngle);
+	float Zoffset = horizontalFromPlayer * cos(playerRot + cameraFreeRotationAngle);
+	this->Position.x = playerPos.x - Xoffset;
+	this->Position.y = playerPos.y + verticalDistance;
+	this->Position.z = playerPos.z - Zoffset;
+
+	glm::vec3 front;
+	front.x = playerPos.x - this->Position.x;
+	front.y = playerPos.y - this->Position.y;
+	front.z = playerPos.z - this->Position.z;
+
+	this->Position += Right * 0.5f;
+
+	Front = glm::normalize(front);
+	// also re-calculate the Right and Up vector
+	Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	Up = glm::normalize(glm::cross(Right, Front));
+}
+
+bool Camera::isThirdPerson()
+{
+	bool mode = false;
+	if(this->cameraMode == thirdPerson)
+	{
+		mode = true;
+	}
+
+	return mode;
+}
+
+void Camera::setCameraThirdPerson(float radiusFromPlayer)
+{
+	this->cameraMode = thirdPerson;
+	this->radiusFromPlayer = radiusFromPlayer;
+}
+
+void Camera::setCameraFreeCam()
+{
+	this->cameraMode = freeCam;
+}
 //glm::mat4 Camera::GetViewMatrix() 
 //{
 //	return glm::lookAt(CameraPosition, Front, Up);

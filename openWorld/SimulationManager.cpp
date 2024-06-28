@@ -27,6 +27,40 @@ void SimulationManager::shutDown()
 	
 }
 
+//for debugging purposes
+void SimulationManager::playerInputTestFunction(playerEntity* player, windowManager* window)
+{
+	if (this->WindowManager->checkKey(87)) //w
+	{
+		player->setPlayerAction(walking);
+	};
+
+	if (!this->WindowManager->checkKey(87))
+	{
+		player->setPlayerAction(idle);
+	}
+
+	if (this->WindowManager->checkKey(65)) //a
+	{
+		player->setPlayerAction(sideWalkLeft);
+	};
+
+	if (this->WindowManager->checkKey(83)) //s
+	{
+		player->setPlayerAction(walkingBack);
+	};
+
+	if (this->WindowManager->checkKey(68)) //d
+	{
+		player->setPlayerAction(sideWalkRight);
+	};
+
+	if (this->WindowManager->checkKey(32)) //space
+	{
+		player->setPlayerAction(jumping);
+	}
+}
+
 void SimulationManager::run() 
 {
 	ID MeshID, TransformID;
@@ -45,33 +79,41 @@ void SimulationManager::run()
 	gltfTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	std::string name = this->sceneObj->addObjectToScene(gltfModel, gltfTransform, lightShader);
 
-	Model* newModel2 = ResourceManager::loadModel("resources/Assets/badCrate.obj", "testModel2");
+	/*Model* newModel2 = ResourceManager::loadModel("resources/Assets/badCrate.obj", "testModel2");
 	transform testTransform;
 	testTransform.position = glm::vec3(0, -1, 0);
 	testTransform.scale = glm::vec3(40, 0.1, 40);
 	testTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	this->sceneObj->addObjectToScene(newModel2, testTransform, lightShader);
+	this->sceneObj->addObjectToScene(newModel2, testTransform, lightShader);*/
 
 	this->sceneObj->setDirectionalLight(glm::vec3(-1.0f, -1.0f, -0.5f), glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.4, 0.4, 0.5), glm::vec3(0.3, 0.3, 0.3));
 
-	/*unsigned int playerId;
-	playerId = this->world->createCapsuleShape(newPlayer.GetCurrentPosition(), glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.6, 1.5, Dynamic);*/
-
-	/*Level level1;
-	level1.setLevelScene(this->scene);
+	
+	Level level1;
+	level1.setLevelScene(this->sceneObj);
 	level1.setLevelPhysicsWorld(this->world);
 	level1.setLevelModel("resources/Terrain/flatForest.obj");
-	level1.renderMap(&LightShader);*/
+	level1.renderMap(lightShader);
 
 	Camera newCamera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 	this->sceneObj->setCamera(&newCamera);
+
 	this->sceneObj->setDepthShader(depthShader);
 	this->gameRenderer->setDebugDepthQuadShader(debugDepthQuad);
 
 	playerEntity newPlayer("resources/player/player.gltf");
 	newPlayer.addPLayerToScene(this->sceneObj, animationShader);
+	transform newTransf;
+	newTransf.position = glm::vec3(0, 10, 0);
+	newTransf.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	newTransf.scale = glm::vec3(1.0f);
+	newPlayer.setPlayerTransform(newTransf);
+	newPlayer.addPlayerToPhysicsWorld(this->world, glm::vec3(0, 0, 0));
 	
+	/*unsigned int playerId;
+	playerId = this->world->createCapsuleShape(newPlayer.getPlayersTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.6, 1.5, Dynamic);
+	this->world->changeColliderOrigin(playerId, glm::vec3(0.0, 1.3, 0.0));*/
 
 	thirdPersonCamera playerCamera;
 	float pitch = 0, yaw = 0;
@@ -99,7 +141,14 @@ void SimulationManager::run()
 		//}
 		//world collision
 
+		//transform* newTransform = newPlayer.getPlayersTransform();
+		//newTransform->position = this->world->getBodyPosition(playerId);
+		//newPlayer.setPlayerTransform(*newTransform);
+
+		
+
 		// set player movement
+		playerInputTestFunction(&newPlayer, this->WindowManager);
 		
 		if(this->WindowManager->checkKey(342))
 		{
@@ -134,7 +183,7 @@ void SimulationManager::run()
 
 		if (this->WindowManager->checkKey(32))
 		{
-			newPlayer.debugAnimations();
+			//newPlayer.debugAnimations();
 		}
 
 		//mouse position;
@@ -145,18 +194,37 @@ void SimulationManager::run()
 
 		float xOffset = cursorX - lastx;
 		float yOffset = lasty - cursorY;
-		newCamera.ProcessMouseMovement(xOffset,yOffset);
+		newCamera.ProcessMouseMovement(xOffset,yOffset,true,newPlayer.getPlayersTransform()->position + glm::vec3(0,1.5,0), 0);
+		
+		if(newCamera.isThirdPerson())
+		{
+			transform* newTransform = newPlayer.getPlayersTransform();
+			newTransform->orientation = glm::rotate(glm::toMat4(newTransform->orientation), xOffset * 0.01f, glm::vec3(0, 1, 0));
+			newPlayer.setPlayerTransform(*newTransform);
+		}
+		
+
+		if(this->WindowManager->checkKey(49))//1 key
+		{
+			newCamera.setCameraFreeCam();
+		}
+		if(this->WindowManager->checkKey(50))//2 key
+		{
+			newCamera.setCameraThirdPerson(2.6);
+		}
 	
 		//update physics
 		accumulator += deltaTime;
 		while(accumulator >= timestep)
 		{
-			//this->world->stepSimulation(this->deltaTime);
+			this->world->stepSimulation(this->deltaTime);
 			accumulator -= timestep;
 		}
 		
 		//draw contents to actual game window
 		animator::updateAnimations(deltaTime);
+
+		newPlayer.updateSceneObject(this->sceneObj);
 		
 		this->gameRenderer->drawScene(this->sceneObj);
 

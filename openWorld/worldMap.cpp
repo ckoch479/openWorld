@@ -2,7 +2,12 @@
 
 worldMap::worldMap()
 {
+	transform newTransform;
+	newTransform.position = glm::vec3(0.0f);
+	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	newTransform.scale = glm::vec3(1.0f);
 
+	this->transf = newTransform;
 }
 
 worldMap::~worldMap()
@@ -32,12 +37,8 @@ std::vector <unsigned int> worldMap::getIndices()
 
 void worldMap::GenerateMap(std::string filename, std::string mapName, scene* scene, Shader& shader)
 {
-	//this->worldModel = ResourceManager::loadModel(filename, mapName); //load map model from file
-	//this->worldModelID = scene->createModel(*this->worldModel,shader);
-	//this->transformID = scene->createTransform(glm::vec3(0.0,0.0,0.0),glm::quat(), glm::vec3(1.0, 1.0, 1.0));
-	//ID sceneObjectID = scene->AddInstance(this->worldModelID, transformID);
-	//this->instanceID = sceneObjectID;
-	//generateTerrainHeight();
+	this->worldModel = ResourceManager::loadModel(filename,mapName);
+	scene->addObjectToScene(this->worldModel, this->transf, &shader);
 }
 
 float worldMap::getTerrainHeight(float x, float z) //throws error when x coordinate goes negative

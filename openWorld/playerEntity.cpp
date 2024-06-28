@@ -139,6 +139,11 @@ void playerEntity::setPlayerMeshes(playerParts part, Mesh* newMesh)
 	updateEntity();
 }
 
+void playerEntity::updateSceneObject(scene* scene)
+{
+	scene->updateTransform(this->sceneID, this->currentTransform);
+}
+
 void playerEntity::debugAnimations()
 {
 	if (stepper >= actionDebugger.size()) { stepper = 0; }
@@ -146,6 +151,13 @@ void playerEntity::debugAnimations()
 	updateEntity();
 	stepper++;
 
+}
+
+void playerEntity::addPlayerToPhysicsWorld(PhysicsWorld* world, glm::vec3 colliderOffset)
+{
+	this->physicsId = world->createCapsuleShape(this->currentTransform.position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.6, 1.5, Dynamic);
+	world->changeColliderOrigin(this->physicsId, colliderOffset);
+	this->world = world;
 }
 
 void playerEntity::updateEntity(scene* currentScene)
@@ -171,6 +183,7 @@ void playerEntity::updateEntity(scene* currentScene)
 	}
 
 	currentScene->updateTransform(this->sceneID,this->currentTransform);
+	
 }
 
 void playerEntity::updateEntity()
@@ -194,10 +207,12 @@ void playerEntity::updateEntity()
 		animator::changeAnimation(this->playerModel, this->currentAnimation);
 		animationChange = false;
 	}
+
 }
 
 void playerEntity::updateActions()
 {
+	
 	switch(this->currentAction)
 	{
 	case(idle):
@@ -218,6 +233,7 @@ void playerEntity::updateActions()
 	case(walking):
 		this->currentAnimation = this->animations["walking"];
 		this->animationChange = true;
+		
 		//move forward as well by however much
 		break;
 
@@ -252,13 +268,13 @@ void playerEntity::updateActions()
 		break;
 
 	case(jumping):
-		this->currentAnimation = this->animations["crouchWalkingRifle"];
+		this->currentAnimation = this->animations["jumping"];
 		this->animationChange = true;
 		//jump (duh), move up and down a lil bit
 		break;
 
 	case(dying):
-		this->currentAnimation = this->animations["jumping"];
+		this->currentAnimation = this->animations["dying"];
 		this->animationChange = true;
 		//die, thats pretty much it
 		break;
@@ -333,4 +349,21 @@ void playerEntity::setPlayerMoveSpeed(int newSpeed)
 int playerEntity::getPlayerMoveSpeed()
 {
 	return this->moveSpeed;
+}
+
+void playerEntity::calculateRelTransform()
+{
+	glm::quat tempQuat = this->currentTransform.orientation;
+
+	glm::vec3 front;
+	front.x = 2 * (tempQuat.x * tempQuat.z + tempQuat.w * tempQuat.y);
+	front.y = 2 * (tempQuat.y * tempQuat.z - tempQuat.w * tempQuat.x);
+	front.z = 1 - 2 * (tempQuat.x * tempQuat.x + tempQuat.y + tempQuat.y);
+
+	glm::vec3 right = glm::vec3(0,0,0);
+	glm::vec3 up = glm::vec3(0,0,0);
+
+	this->relativeTransf.front = front;
+	this->relativeTransf.up = up;
+	this->relativeTransf.right = right;
 }

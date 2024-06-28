@@ -87,9 +87,6 @@ private:
 	Model* levelModel;
 	std::vector <Mesh*> levelMeshes; //makes it easier to calculate hitboxes and such for the level
 
-	ID worldModelID; //for rendering
-	ID instanceID;
-	ID transformID;
 	unsigned int rigidBodyId;
 
 	std::map <std::string, LevelTrigger> levelTriggers;

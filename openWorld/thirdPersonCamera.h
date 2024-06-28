@@ -26,6 +26,8 @@ public:
 	//this updates only the camera rotation given an x and y from the cursor
 	void updateCameraRotation(float cursorX, float cursorY);
 
+	//glm::mat4 getViewMatrix();
+
 private:
 
 	glm::vec3 cameraPosition;

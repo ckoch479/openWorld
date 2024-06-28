@@ -39,10 +39,13 @@ bool Level::hasTriggerBeenActivated(std::string triggerName)
 
 void Level::renderMap(Shader* shader)
 {
-	//this->levelShader = shader;
-	//this->transformID = this->levelScene->createTransform(glm::vec3(0.0f),glm::quat(),glm::vec3(1.0f));
-	//this->worldModelID = this->levelScene->createModel(*this->levelModel,*this->levelShader);
-	//this->instanceID = this->levelScene->AddInstance(this->worldModelID,this->transformID);
+	transform newTransform;
+	newTransform.position = glm::vec3(0.0f);
+	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	newTransform.scale = glm::vec3(1.0f);
+
+	this->levelShader = shader;
+	this->levelScene->addObjectToScene(this->levelModel, newTransform, shader);
 }
 
 //debug only--------------------------------------------
