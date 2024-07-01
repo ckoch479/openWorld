@@ -94,7 +94,7 @@ void renderer::generateDepthMap(unsigned int* depthMapTex, unsigned int* depthMa
 
 glm::mat4 renderer::renderDirectionalShadowMap(scene* scene, unsigned int* depthMapFBO)
 {
-	glm::vec3 lightPos = (scene->getDirectionalLight()->direction * glm::vec3(-20));
+	glm::vec3 lightPos = (scene->getDirectionalLight()->direction * glm::vec3(-50));
 	Shader* simpleDepthShader = scene->getDepthShader();
 	std::vector <renderInfo*> data = scene->getRenderingInfo();
 
@@ -224,12 +224,12 @@ void renderer::drawScene(scene* scene)
 
 
 	//shadow debug 
-	//this->debugDepthQuad->use();
-	//this->debugDepthQuad->SetFloat("near_plane",near_plane);
-	//this->debugDepthQuad->SetFloat("far_plane",far_plane);
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, depthMap);
-	//renderScreenQuad();
+	/*this->debugDepthQuad->use();
+	this->debugDepthQuad->SetFloat("near_plane",near_plane);
+	this->debugDepthQuad->SetFloat("far_plane",far_plane);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	renderScreenQuad();*/
 
 	/*glBindBuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);

@@ -1,10 +1,11 @@
 #include "Animator.h"
 
 std::unordered_map<Model*, animation*>						      animator::activeAnimations;
+
 std::unordered_map<animation*, std::vector <glm::mat4>>			  animator::animationMatrices;
 
 std::vector <Model*>									          animator::activeModels;
-
+								  
 int animator::stepper;
 
 void animator::addAnimation(Model* model, animation* animation)

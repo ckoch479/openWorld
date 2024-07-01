@@ -18,7 +18,16 @@ void characterController::updateInputs(windowManager* manager)
 {
 	if (manager->checkKey(87)) //w
 	{
-		this->player->setPlayerAction(walking);
+		if(manager->checkKey(340))//left shift
+		{
+			this->player->setPlayerAction(jogging);
+		}
+		else
+		{
+			this->player->setPlayerAction(walking);
+		}
+		
+
 	};
 
 	if (!manager->checkKey(87))
@@ -45,6 +54,16 @@ void characterController::updateInputs(windowManager* manager)
 	{
 		this->player->setPlayerAction(jumping);
 	}
+
+	if(manager->leftClick())
+	{
+		this->player->setPlayerAction(aimingRifle);
+	}
+
+	if(manager->rightClick())
+	{
+		this->player->setPlayerAction(aimingPistol);
+	}
 }
 
 
@@ -60,40 +79,60 @@ void characterController::addPlayerToScene(Shader* shader)
 
 void characterController::addPlayerToWorld()
 {
-	this->physicsId = this->world->createCapsuleShape(this->player->getPlayersTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.6, 1.5, Dynamic);
-	this->world->changeColliderOrigin(this->physicsId, glm::vec3(0.0, 1.5, 0.0));
-	this->world->lockBodyRotationAxis(this->physicsId, glm::vec3(0, 1, 0));
+	this->physicsId = this->world->createCapsuleShape(this->player->getPlayersTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.8, 1.5, Dynamic);
+	this->world->changeColliderOrigin(this->physicsId, glm::vec3(0.0, 1.7, 0.0));
+	this->world->lockBodyRotationAxis(this->physicsId, glm::vec3(1, 1, 1));
 }
 
 
 
-void characterController::updateController(float dt)
+void characterController::updateController(float dt, Level currentLevel)
 {
+	bool groundContact = false;
 	//calculate new postions/orientations
 	transform* playerTransform = player->getPlayersTransform();
-	glm::vec3 newPosition = world->getBodyPosition(physicsId);// playerTransform->position;
-	//glm::quat newOrientation = playerTransform->orientation;
+	glm::vec3 newPosition(1.0f);// = playerTransform->position;// world->getBodyPosition(physicsId);// playerTransform->position;
+	glm::vec3 physWorldPos = playerTransform->position;// this->world->getBodyPosition(this->physicsId);
 
-	//do fun and cool math stuff here 
-	rayCastIntersectInfo newInfo;
-	newInfo = this->world->rayCast(newPosition + glm::vec3(0,-0.1,0), glm::vec3(newPosition.x, -20, newPosition.z));
+	//checking for ground collision and applying gravity
+	float height = currentLevel.getHeightAtPosition(playerTransform->position);
+	if (playerTransform->position.y > height)
+	{
+		playerTransform->position.y = newPosition.y - (60 * 9.8) * dt;
+		//playerVelocity.y += -((playerMass * 9.8) * dt);
+	}
+
+	if (playerTransform->position.y <= height)
+	{
+		playerTransform->position.y = height;
+		playerVelocity.y = 0.0f;
+		groundContact = true;
+	}
+
+	//change velocity if walking
+	if(this->player->getPlayerAction() == walking)
+	{
+		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
+		playerTransform->position = glm::vec3(physWorldPos.x, playerTransform->position.y, physWorldPos.z) + glm::vec3(relativeFront.x,0, relativeFront.z) * (float)player->getPlayerMoveSpeed() * dt;
+	}
+	if(this->player->getPlayerAction() == jogging)
+	{
+		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
+		playerTransform->position = glm::vec3(physWorldPos.x, playerTransform->position.y, physWorldPos.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)player->getPlayerMoveSpeed() * 2.0f * dt;
+	}
 	
-	if(newInfo.hit == true) 
+	if (this->player->getPlayerAction() == jumping) //not working quite yet
 	{
-		std::cout << "raycast hit found!\n";
-		std::cout << newInfo.worldPositionHitPoint.x << " , " << newInfo.worldPositionHitPoint.y << " , " << newInfo.worldPositionHitPoint.z << std::endl;
-		playerTransform->position.y = newInfo.worldPositionHitPoint.y; +0.01;
-	}
+		if (groundContact)
+		{
+			
+		}
+	} 
+	
 
-	if(!newInfo.hit)
-	{
-		std::cout << "no hit detected\n";
-	}
-	//update scene and physicsWorld with positions;
-
+	this->world->setBodyPosition(this->physicsId, playerTransform->position);
 	this->sceneObj->updateTransform(this->sceneId, *playerTransform);
-	//this->world->setBodyPosition(this->physicsId,playerTransform->position);
-
 	this->player->setPlayerTransform(*playerTransform);
+	player->calculateRelTransform();
 	//update orientation too momentarily
 }

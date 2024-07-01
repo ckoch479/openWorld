@@ -11,6 +11,13 @@ playerEntity::playerEntity(std::string playerFilePath)
 	newTransform.scale = glm::vec3(1.0f);
 
 	this->currentTransform = newTransform;//default transform for now
+	relTransform newTransf;
+	newTransf.front = glm::vec3(0,0,-1);
+	newTransf.up = glm::vec3(0,1,0);
+	newTransf.right = glm::vec3(1,0,0);
+	this->relativeTransf = newTransf;
+	calculateRelTransform();
+
 	//all set to new since its a new player being made (born if you will)
 	this->meshChange = true;
 	this->actionChange = true;
@@ -32,6 +39,12 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	//idleRifle //found
 	this->animations["idleRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleIdle.gltf", "playerIdleRifle", "player");
 	this->actionDebugger.push_back(idleRifle);
+	//aimingPistol
+	this->animations["aimingPistol"] = ResourceManager::loadAnimation("resources/player/animations/pistolAim.gltf", "playerAimPistol", "player");
+	this->actionDebugger.push_back(aimingPistol);
+	//aimingRifle
+	this->animations["aimingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleAim.gltf", "playerAimRifle", "player");
+	this->actionDebugger.push_back(aimingRifle);
 	//walking //found
 	this->animations["walking"] = ResourceManager::loadAnimation("resources/player/animations/walking.gltf", "playerWalking", "player");
 	this->actionDebugger.push_back(walking);
@@ -190,6 +203,16 @@ void playerEntity::updateActions()
 		this->animationChange = true;
 		break;
 
+	case(aimingPistol):
+		this->currentAnimation = this->animations["aimingPistol"];
+		this->animationChange = true;
+		break;
+
+	case(aimingRifle):
+		this->currentAnimation = this->animations["aimingRifle"];
+		this->animationChange = true;
+		break;
+
 	case(walking):
 		this->currentAnimation = this->animations["walking"];
 		this->animationChange = true;
@@ -311,19 +334,30 @@ int playerEntity::getPlayerMoveSpeed()
 	return this->moveSpeed;
 }
 
+playerActions playerEntity::getPlayerAction()
+{
+	return this->currentAction;
+}
+
 void playerEntity::calculateRelTransform()
 {
 	glm::quat tempQuat = this->currentTransform.orientation;
 
 	glm::vec3 front;
-	front.x = 2 * (tempQuat.x * tempQuat.z + tempQuat.w * tempQuat.y);
-	front.y = 2 * (tempQuat.y * tempQuat.z - tempQuat.w * tempQuat.x);
-	front.z = 1 - 2 * (tempQuat.x * tempQuat.x + tempQuat.y + tempQuat.y);
+	//front.x = 2 * (tempQuat.x * tempQuat.z + tempQuat.w * tempQuat.y);
+	//front.y = 2 * (tempQuat.y * tempQuat.z - tempQuat.w * tempQuat.x);
+	//front.z = 1 - 2 * (tempQuat.x * tempQuat.x + tempQuat.y + tempQuat.y);
+
+	front = tempQuat * glm::vec3(0, 0, 1);
 
 	glm::vec3 right = glm::vec3(0,0,0);
 	glm::vec3 up = glm::vec3(0,0,0);
+	
+	//std::cout << "player front: " << glm::to_string(front) << std::endl;
 
-	this->relativeTransf.front = front;
+	this->relativeTransf.front = glm::normalize(front);
+
+	//std::cout << "player fron normalized: " << glm::to_string(glm::normalize(front)) << std::endl;
 	this->relativeTransf.up = up;
 	this->relativeTransf.right = right;
 }

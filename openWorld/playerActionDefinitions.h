@@ -5,6 +5,9 @@ enum playerActions
 	idlePistol,
 	idleRifle,
 
+	aimingPistol,
+	aimingRifle,
+
 	walking,
 	sideWalkLeft,
 	sideWalkRight,

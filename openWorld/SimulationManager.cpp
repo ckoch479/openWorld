@@ -84,12 +84,6 @@ void SimulationManager::run()
 	gltfTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	std::string name = this->sceneObj->addObjectToScene(gltfModel, gltfTransform, lightShader);
 
-	/*Model* newModel2 = ResourceManager::loadModel("resources/Assets/badCrate.obj", "testModel2");
-	transform testTransform;
-	testTransform.position = glm::vec3(0, -1, 0);
-	testTransform.scale = glm::vec3(40, 0.1, 40);
-	testTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	this->sceneObj->addObjectToScene(newModel2, testTransform, lightShader);*/
 
 	this->sceneObj->setDirectionalLight(glm::vec3(-1.0f, -1.0f, -0.5f), glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.4, 0.4, 0.5), glm::vec3(0.3, 0.3, 0.3));
 
@@ -110,7 +104,7 @@ void SimulationManager::run()
 	playerEntity newPlayer("resources/player/player.gltf");
 	characterController playerController(&newPlayer,this->sceneObj,this->world, animationShader);
 
-	unsigned int boxId;
+	/*unsigned int boxId;
 	std::string boxSceneID;
 	transform boxTransform;
 	boxTransform.position = glm::vec3(4, 10, 4);
@@ -128,7 +122,8 @@ void SimulationManager::run()
 	}
 	boxSceneID = sceneObj->addObjectToScene(boxModel, boxTransform,lightShader);
 
-	boxId = this->world->createRigidBody(boxTransform.position, boxTransform.orientation,20 ,boxVertices,Dynamic);
+	boxId = this->world->createRigidBody(boxTransform.position, boxTransform.orientation,20 ,boxVertices,Dynamic);*/
+	//this->world->changeColliderOrigin(boxId, glm::vec3(0, -1.0, 0));
 
 	thirdPersonCamera playerCamera;
 	float pitch = 0, yaw = 0;
@@ -141,9 +136,11 @@ void SimulationManager::run()
 		checkMouse();
 
 
-		boxTransform.position = world->getBodyPosition(boxId);
+		/*boxTransform.position = world->getBodyPosition(boxId);
 		boxTransform.orientation = world->getBodyRotation(boxId);
-		sceneObj->updateTransform(boxSceneID, boxTransform);
+		sceneObj->updateTransform(boxSceneID, boxTransform);*/
+
+		//std::cout << "box position: " << glm::to_string(boxTransform.position) << std::endl;
 
 
 
@@ -205,7 +202,7 @@ void SimulationManager::run()
 		}
 
 		playerController.updateInputs(this->WindowManager);
-		playerController.updateController(deltaTime);
+		playerController.updateController(deltaTime, level1);
 	
 		//update physics
 		accumulator += deltaTime;

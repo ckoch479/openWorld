@@ -71,6 +71,9 @@ public:
 
 	Model* getPlayerModel();
 
+	playerActions getPlayerAction();
+
+	void calculateRelTransform();
 
 private:
 
@@ -80,11 +83,10 @@ private:
 
 	void updateActions();
 
-	void calculateRelTransform();
 	//data:
 	playerActions currentAction;
 	
-	float moveSpeed = 1.0f;
+	float moveSpeed = 4.0f;
 
 	//animation names should exactly match player action name as well key word is should it is me making this thing
 	//also animations is only handled by the class you cannot manually change the animations only player actions

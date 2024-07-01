@@ -23,6 +23,13 @@ struct animationKey
 	keyScale scale;
 };
 
+struct blendedAnimation
+{
+	animation* anim1;
+	animation* anim2;
+	float blendFactor;
+};
+
 class animator
 {
 public:
@@ -59,7 +66,6 @@ private:
 
 	static	std::unordered_map<Model*, animation*> activeAnimations;
 	static	std::unordered_map<animation*, std::vector <glm::mat4>> animationMatrices;
-
 
 	static std::vector <Model*> activeModels;
 

@@ -43,6 +43,10 @@ public:
 	void getMousePosition(double* x, double* y);
 
 	void setScreenSize(int width, int height);
+
+	bool leftClick();
+	bool rightClick();
+	bool middleClick();
 private:
 
 	GLFWwindow* currentWindow;

@@ -37,6 +37,36 @@ struct LevelSkyBox
 	std::vector <std::string> filePaths; //file paths for skybox textures
 };
 
+struct triangle
+{
+	triangle(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3)
+	{
+		point1 = p1;
+		point2 = p2;
+		point3 = p3;
+	};
+	triangle()
+	{
+	
+	}
+
+	glm::vec3 point1;
+	glm::vec3 point2;
+	glm::vec3 point3;
+};
+
+struct terrainTile
+{
+	
+	triangle Triangle1;
+	triangle Triangle2;
+
+	glm::vec2 bottomLeft;
+	glm::vec2 topRight;
+
+	float averageHeight;
+};
+
 #ifndef LEVEL_H
 #define LEVEL_H
 
@@ -77,6 +107,8 @@ public:
 
 	void setLevelPhysicsWorld(PhysicsWorld* world);
 
+	float getHeightAtPosition(glm::vec3 position);
+
 	//--------------------------------------
 private:
 
@@ -100,6 +132,13 @@ private:
 	void parseLevelFile(std::string filePath);
 	
 	void createColliders();
+
+	void generateHeightMapForPlayer();
+
+	std::vector <glm::vec3> vertices;
+	std::vector <unsigned int> indices;
+
+	std::vector <terrainTile> tiles;
 };
 
 #endif // !LEVEL_H

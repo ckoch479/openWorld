@@ -149,6 +149,19 @@ void windowManager::pollScroll()
 	mouseScrollY = 0;
 }
 
+bool windowManager::leftClick()
+{
+	return this->leftMouse;
+}
+bool windowManager::rightClick()
+{
+	return this->rightMouse;
+}
+bool windowManager::middleClick()
+{
+	return this->middleMouse;
+}
+
 //these as far as i know right now cannot be class methods 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
