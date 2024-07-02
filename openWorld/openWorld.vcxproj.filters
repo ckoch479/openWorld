@@ -117,6 +117,18 @@
     <ClCompile Include="assimpModelLoader.cpp">
       <Filter>Source Files\loadingUtilites</Filter>
     </ClCompile>
+    <ClCompile Include="characterController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rayCastCallBack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gamePhysicsWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameObjectManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -211,6 +223,21 @@
     </ClInclude>
     <ClInclude Include="testingBoxMeshFunctions.h">
       <Filter>Header Files\loadingUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="characterController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rayCastCallBack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamePhysicsWorld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObjectManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="objTypeDefinitions.h">
+      <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

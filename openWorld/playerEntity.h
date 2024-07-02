@@ -12,6 +12,7 @@
 
 #include "ResourceManager.h"
 #include "Animator.h"
+#include "GameObject.h"
 
 
 #ifndef PLAYERENTITY_H
@@ -114,6 +115,11 @@ private:
 	Model* playerModel; //this is just a little thing to make rendering easier for myself
 
 	std::string playerName; //this one should be pretty self explanatory
+
+	//inventory and equiped items:
+	std::unordered_map<playerParts, GameObject*> playerInventory; //player equiped items and where, some items like backpacks have inventory
+	GameObject* rightHandEquiped; //item in right hand
+	GameObject* leftHandEquiped; //item in left hand
 
 	//helper bools for updating the player on the fly
 	bool meshChange = false;

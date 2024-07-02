@@ -104,7 +104,7 @@ void SimulationManager::run()
 	playerEntity newPlayer("resources/player/player.gltf");
 	characterController playerController(&newPlayer,this->sceneObj,this->world, animationShader);
 
-	/*unsigned int boxId;
+	unsigned int boxId;
 	std::string boxSceneID;
 	transform boxTransform;
 	boxTransform.position = glm::vec3(4, 10, 4);
@@ -122,7 +122,7 @@ void SimulationManager::run()
 	}
 	boxSceneID = sceneObj->addObjectToScene(boxModel, boxTransform,lightShader);
 
-	boxId = this->world->createRigidBody(boxTransform.position, boxTransform.orientation,20 ,boxVertices,Dynamic);*/
+	boxId = this->world->createRigidBody(boxTransform.position, boxTransform.orientation,20 ,boxVertices,Dynamic);
 	//this->world->changeColliderOrigin(boxId, glm::vec3(0, -1.0, 0));
 
 	thirdPersonCamera playerCamera;
@@ -136,9 +136,9 @@ void SimulationManager::run()
 		checkMouse();
 
 
-		/*boxTransform.position = world->getBodyPosition(boxId);
+		boxTransform.position = world->getBodyPosition(boxId);
 		boxTransform.orientation = world->getBodyRotation(boxId);
-		sceneObj->updateTransform(boxSceneID, boxTransform);*/
+		sceneObj->updateTransform(boxSceneID, boxTransform);
 
 		//std::cout << "box position: " << glm::to_string(boxTransform.position) << std::endl;
 

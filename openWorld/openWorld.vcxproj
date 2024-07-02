@@ -162,6 +162,8 @@
     <ClCompile Include="characterController.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="gameObjectManager.cpp" />
+    <ClCompile Include="gamePhysicsWorld.cpp" />
     <ClCompile Include="Includes\glad\glad.c" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="lookup_table.cpp" />
@@ -195,10 +197,13 @@
     <ClInclude Include="characterController.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="gameObjectManager.h" />
+    <ClInclude Include="gamePhysicsWorld.h" />
     <ClInclude Include="Includes\glad\glad.h" />
     <ClInclude Include="keyDefinitions.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="lookup_table.h" />
+    <ClInclude Include="objTypeDefinitions.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerActionDefinitions.h" />
