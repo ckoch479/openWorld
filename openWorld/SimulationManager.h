@@ -13,15 +13,13 @@
 #include "Camera.h"
 #include "Shader.h"
 
-#include "GameObject.h"
+#include "gameObjectManager.h"
 #include "thirdPersonCamera.h"
 
 #include "characterController.h"
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
-
-
 
 #include "Level.h"
 

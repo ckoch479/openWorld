@@ -268,3 +268,13 @@ float animator::calculateScaleFactor(float lastTimeStamp, float nextTimeStamp, f
 	scaleFactor = midWayLength / framesDiff;
 	return scaleFactor;
 }
+
+glm::mat4 animator::getBoneCurrentTransform(std::string name, Model* model)
+{
+	glm::mat4 boneTransform;
+
+	unsigned int boneID = model->boneMap[name].id;
+	boneTransform = animationMatrices[activeAnimations[model]][boneID];
+
+	return boneTransform;
+}

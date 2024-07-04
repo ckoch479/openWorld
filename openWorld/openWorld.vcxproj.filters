@@ -40,6 +40,12 @@
     <Filter Include="Source Files\loadingUtilites">
       <UniqueIdentifier>{1fda62d8-48ec-4b5f-88c2-b2370f4b9927}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObjectHeaders\worldItems">
+      <UniqueIdentifier>{e4835361-1472-4a42-bc11-921646642145}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjectBody\worldItems">
+      <UniqueIdentifier>{398f4aa5-e789-435f-99c0-d939bb605983}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -84,9 +90,6 @@
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files\PhysicsandDynamicsBody</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\GameObjectBody</Filter>
-    </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
@@ -126,8 +129,20 @@
     <ClCompile Include="gamePhysicsWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="handGun.cpp">
+      <Filter>Source Files\GameObjectBody\worldItems</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Source Files\GameObjectBody\worldItems</Filter>
+    </ClCompile>
+    <ClCompile Include="inventorySlot.cpp">
+      <Filter>Source Files\GameObjectBody\worldItems</Filter>
+    </ClCompile>
     <ClCompile Include="gameObjectManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameObjectBody\worldItems</Filter>
+    </ClCompile>
+    <ClCompile Include="playerHandSlot.cpp">
+      <Filter>Source Files\GameObjectBody\worldItems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,9 +187,6 @@
     </ClInclude>
     <ClInclude Include="RigidBody.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
       <Filter>Header Files\GameObjectHeaders</Filter>
@@ -234,10 +246,19 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gameObjectManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
     </ClInclude>
-    <ClInclude Include="objTypeDefinitions.h">
-      <Filter>Header Files\GameObjectHeaders</Filter>
+    <ClInclude Include="handGun.h">
+      <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
+    </ClInclude>
+    <ClInclude Include="inventorySlot.h">
+      <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
+    </ClInclude>
+    <ClInclude Include="playerHandSlot.h">
+      <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

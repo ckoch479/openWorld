@@ -133,5 +133,7 @@ void characterController::updateController(float dt, Level currentLevel)
 	this->sceneObj->updateTransform(this->sceneId, *playerTransform);
 	this->player->setPlayerTransform(*playerTransform);
 	player->calculateRelTransform();
+
+	player->setHandPositions();
 	//update orientation too momentarily
 }

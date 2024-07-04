@@ -46,6 +46,8 @@ public:
 
 	static void stepAnimation(animation* anim);
 
+	static glm::mat4 getBoneCurrentTransform(std::string name, Model* model);
+
 private:
 
 	static glm::mat4 stepAnimations(float currentTime, animBone* bone);

@@ -12,8 +12,8 @@
 
 #include "ResourceManager.h"
 #include "Animator.h"
-#include "GameObject.h"
 
+#include "playerHandSlot.h"
 
 #ifndef PLAYERENTITY_H
 #define PLAYERENTITY_H
@@ -76,6 +76,14 @@ public:
 
 	void calculateRelTransform();
 
+	void equipLeftHand(std::shared_ptr<item> newItem);
+	void equipRightHand(std::shared_ptr<item> newItem);
+
+	void setHandPositions();
+
+	glm::mat4 getLeftHandMat();
+	glm::mat4 getRightHandMat();
+
 private:
 
 	void updateEntity();
@@ -83,6 +91,8 @@ private:
 	void loadPlayerAnimations(std::string playerFilePath); //directory for player animations will be under the players file path in a file named animations
 
 	void updateActions();
+
+	
 
 	//data:
 	playerActions currentAction;
@@ -117,9 +127,8 @@ private:
 	std::string playerName; //this one should be pretty self explanatory
 
 	//inventory and equiped items:
-	std::unordered_map<playerParts, GameObject*> playerInventory; //player equiped items and where, some items like backpacks have inventory
-	GameObject* rightHandEquiped; //item in right hand
-	GameObject* leftHandEquiped; //item in left hand
+	playerHandSlot leftHand;
+	playerHandSlot rightHand;
 
 	//helper bools for updating the player on the fly
 	bool meshChange = false;

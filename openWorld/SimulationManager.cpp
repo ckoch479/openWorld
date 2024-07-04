@@ -111,6 +111,27 @@ void SimulationManager::run()
 	boxTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	boxTransform.scale = glm::vec3(1.0f);
 
+	transform newObjTransform;
+	newObjTransform.position = glm::vec3(0, 0, 0);
+	newObjTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	newObjTransform.scale = glm::vec3(0.01f);
+
+	gameObjectManager newManager;
+unsigned int objID = newManager.createHandGun("resources/Assets/1911Modified.gltf",100,glm::vec3(0,0,0),"handGun",glm::vec3(1.0f),glm::vec3(0,0,1));
+
+std::string sceneobjID;
+
+if(auto weapon = std::dynamic_pointer_cast<handGun>(newManager.getItemPTR(objID)))
+{
+	std::cout << "this is a gun pew pew pew\n";
+	Model* newModels = weapon->getModel();
+
+	sceneobjID = this->sceneObj->addObjectToScene(newModels,newObjTransform,lightShader);
+}
+
+newPlayer.equipRightHand(newManager.getItemPTR(objID));
+
+
 
 	Model* boxModel = ResourceManager::loadModel("resources/Assets/badCrate.obj","badBox");
 
@@ -203,6 +224,15 @@ void SimulationManager::run()
 
 		playerController.updateInputs(this->WindowManager);
 		playerController.updateController(deltaTime, level1);
+
+		transform tempTran;
+		tempTran.position = newPlayer.getRightHandMat() * glm::vec4(1.0f);
+		tempTran.orientation = glm::quat(1.0, 0, 0, 0);
+		tempTran.scale = glm::vec3(0.01f);
+
+		//std::cout << "hand position: " << glm::to_string(newPlayer.getRightHandMat()) << std::endl;
+
+		this->sceneObj->updateTransform(sceneobjID, tempTran);
 	
 		//update physics
 		accumulator += deltaTime;

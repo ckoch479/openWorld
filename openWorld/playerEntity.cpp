@@ -360,4 +360,34 @@ void playerEntity::calculateRelTransform()
 	//std::cout << "player fron normalized: " << glm::to_string(glm::normalize(front)) << std::endl;
 	this->relativeTransf.up = up;
 	this->relativeTransf.right = right;
+
+	
 }
+
+void playerEntity::setHandPositions()
+{
+	this->leftHand.updatePosition(animator::getBoneCurrentTransform("mixamorig:LeftHand", this->playerModel));
+	this->rightHand.updatePosition(animator::getBoneCurrentTransform("mixamorig:RightHand", this->playerModel));
+}
+
+void playerEntity::equipLeftHand(std::shared_ptr<item> newItem)
+{
+	this->leftHand.addItem(newItem, animator::getBoneCurrentTransform("mixamorig:LeftHand", this->playerModel));
+}
+
+void playerEntity::equipRightHand(std::shared_ptr<item> newItem)
+{
+	this->rightHand.addItem(newItem, animator::getBoneCurrentTransform("mixamorig:RightHand", this->playerModel));
+}
+
+
+glm::mat4 playerEntity::getLeftHandMat()
+{
+	return animator::getBoneCurrentTransform("mixamorig:LeftHand", this->playerModel);
+}
+
+glm::mat4 playerEntity::getRightHandMat()
+{
+	return animator::getBoneCurrentTransform("mixamorig:RightHand", this->playerModel);
+}
+
