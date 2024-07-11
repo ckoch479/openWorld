@@ -16,14 +16,12 @@
 #include "gameObjectManager.h"
 #include "thirdPersonCamera.h"
 
-#include "characterController.h"
-
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
 #include "Level.h"
 
-#include "playerEntity.h"
+#include "playerManager.h"
 
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
@@ -46,8 +44,6 @@ public:
 	void run();
 
 	void shutDown();
-
-	void checkMouse();
 
 	void setDeltaTime();
 
@@ -72,24 +68,6 @@ private:
 
 	float deltaTime = 0.0f;
 	float lastFrame = 1.0f;
-
-	float lastMouseX = 400.0f;
-	float lastMouseY = 300.0f;
-
-	float mouseSensitivity = 0.3f;
-
-	bool firstMouse = true;
-
-	//testing
-
-	glm::vec3 playerPosition = glm::vec3(0,0,0);
-	float playerRotation = 0.0;
-	float radius = 5.0;
-
-	glm::vec3 CameraPosition;
-	float cameraPitch = 0.0f;
-	float cameraYaw = 0.0f;
-	float cameraFreeRotationAngle = 0.0f;
 
 	float timestep = 1.0f / 60;
 	float accumulator = 0.0f;

@@ -73,10 +73,7 @@ enum playerParts
 	leftHand,
 	rightHand,
 
-	pelvis,
-
-	leftLeg,
-	rightLeg,
+	legs,
 
 	leftFoot,
 	rightFoot,

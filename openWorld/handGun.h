@@ -8,6 +8,8 @@
 #include "item.h"
 
 #include "ResourceManager.h"
+#include "Scene.h"
+#include "Shader.h"
 
 #ifndef HANDGUN_H
 #define HANDGUN_H
@@ -16,9 +18,7 @@
 class handGun : public item
 {
 public:
-	handGun(std::string filePath, float baseDamage, glm::vec3 handPoint, std::string name, glm::vec3 barrelPos, glm::vec3 front);
-
-	handGun() {};
+	handGun(std::string filePath, std::string name, float mass, float volume);
 
 	~handGun() override;
 
@@ -31,42 +31,22 @@ public:
 	float getMass() const override { return this->mass; }
 	float getVolume() const override { return this->volume; }
 
-	Model* getModel() { return this->model; }
-
-	glm::vec3 getBarrelPos();
-	glm::vec3 getDirection();
-
-	glm::mat4 getTransform();
-	void setTransform(glm::mat4 transf);
-
-
+	void addToScene(scene* scene, Shader* shader); 
+	void updateTransform(scene* scene, transform newTransform);
 
 private:
 	//local points on the object that is used for player/entity animations
-	glm::vec3 handPoint1; //hand Point relative to the gun (should be the grip on a handgun)
-	glm::vec3 handPoint2; //second point if used relative to the gun
-	bool twoHanded; //is this object one handed or two handed
-
-	float baseDamage;
-
-	bool hasMagazine;
-	//Magazine* currentMagazine
-	bool chambered;
-
-	//ammoType
-
-	glm::vec3 front;  //world space front
-	glm::vec3 barrel; //relative position of the barrel
-
-	glm::mat4 worldTransform;
 	Model* model;
+	std::string sceneID;
+	transform sceneTransform;
 
-	std::string name;
-	bool equipable;
-	bool stackable;
-	bool consumable;
 	float mass; //mass/volume used for inventory management 
 	float volume;
+	std::string name;
+
+	bool hasMagazine = false;
+	bool chambered = false;
+	//Magazine* currentMagazine
 };
 
 #endif // !HANDGUN_H

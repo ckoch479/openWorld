@@ -6,7 +6,7 @@ playerEntity::playerEntity(std::string playerFilePath)
 	loadPlayerAnimations(playerFilePath);
 
 	transform newTransform;
-	newTransform.position = glm::vec3(2, 10, -2);
+	newTransform.position = glm::vec3(0, 2, 0);
 	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	newTransform.scale = glm::vec3(1.0f);
 
@@ -133,12 +133,15 @@ void playerEntity::savePlayerFile()
 
 void playerEntity::setPlayerAction(playerActions action)
 {
-	this->currentAction = action;
-	this->actionChange = true;
-	updateEntity();
+	if(this->currentAction != action)
+	{
+		this->currentAction = action;
+		this->actionChange = true;
+		updateEntity();
+	}
 }
 
-//change player looks/resistances
+//change player looks
 void playerEntity::setPlayerMeshes(playerParts part, Mesh* newMesh)
 {
 	this->playersParts[part] = newMesh;
@@ -266,45 +269,14 @@ void playerEntity::updateActions()
 	}
 }
 
-void playerEntity::setPlayerResistance(playerParts part, int newResistance)
+void playerEntity::addPlayerToScene(scene* scene, Shader* shader)
 {
-	this->resistance[part] = newResistance;
+	this->sceneID = scene->addObjectToScene(this->playerModel, this->currentTransform, shader);
 }
 
-//change health parameters
-void playerEntity::setPlayerInjury(playerParts part, injuryStatus status)
+void playerEntity::updatePlayerScene(scene* scene)
 {
-	this->playerInjuries[part] = status;
-}
-
-void playerEntity::setPlayerHealth(int health)
-{
-	this->health = health;
-}
-
-void playerEntity::setPlayerStamina(int stamina)
-{
-	this->stamina = stamina;
-}
-
-injuryStatus playerEntity::getInjuryStatus(playerParts part)
-{
-	return this->playerInjuries[part];
-}
-
-int playerEntity::getPlayerHealth()
-{
-	return this->health;
-}
-
-int playerEntity::getPlayerStamina()
-{
-	return this->stamina;
-}
-
-int playerEntity::getPlayerResistance(playerParts part)
-{
-	return resistance[part];
+	scene->updateTransform(this->sceneID, this->currentTransform);
 }
 
 //player movement
@@ -322,16 +294,6 @@ transform* playerEntity::getPlayersTransform()
 relTransform* playerEntity::getPlayerRelativeTransform()
 {
 	return &this->relativeTransf;
-}
-
-void playerEntity::setPlayerMoveSpeed(int newSpeed)
-{
-	this->moveSpeed = newSpeed;
-}
-
-int playerEntity::getPlayerMoveSpeed()
-{
-	return this->moveSpeed;
 }
 
 playerActions playerEntity::getPlayerAction()
@@ -364,30 +326,44 @@ void playerEntity::calculateRelTransform()
 	
 }
 
-void playerEntity::setHandPositions()
+glm::mat4 playerEntity::getLeftHandTransform()
 {
-	this->leftHand.updatePosition(animator::getBoneCurrentTransform("mixamorig:LeftHand", this->playerModel));
-	this->rightHand.updatePosition(animator::getBoneCurrentTransform("mixamorig:RightHand", this->playerModel));
+	glm::mat4 handTransform(1.0f);
+
+	Bone* bone = &this->playerModel->boneMap["mixamorig:LeftHand"];
+	
+
+	handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
+
+	return handTransform;
 }
 
-void playerEntity::equipLeftHand(std::shared_ptr<item> newItem)
+glm::mat4 playerEntity::getRightHandTransform()
 {
-	this->leftHand.addItem(newItem, animator::getBoneCurrentTransform("mixamorig:LeftHand", this->playerModel));
+	glm::mat4 handTransform(1.0f);
+
+	Bone* bone = &this->playerModel->boneMap["mixamorig:RightHand"];
+	
+
+	handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
+
+	return handTransform;
 }
 
-void playerEntity::equipRightHand(std::shared_ptr<item> newItem)
+glm::mat4 playerEntity::getRightHandOffsetMatrix()
 {
-	this->rightHand.addItem(newItem, animator::getBoneCurrentTransform("mixamorig:RightHand", this->playerModel));
+	glm::mat4 handOffset(1.0f);
+
+	handOffset = this->playerModel->boneMap["mixamorig:RightHand"].offsetMatrix;
+
+	return handOffset;
 }
 
-
-glm::mat4 playerEntity::getLeftHandMat()
+glm::mat4 playerEntity::getLeftHandOffsetMatrix()
 {
-	return animator::getBoneCurrentTransform("mixamorig:LeftHand", this->playerModel);
-}
+	glm::mat4 handOffset(1.0f);
 
-glm::mat4 playerEntity::getRightHandMat()
-{
-	return animator::getBoneCurrentTransform("mixamorig:RightHand", this->playerModel);
-}
+	handOffset = this->playerModel->boneMap["mixamorig:LeftHand"].offsetMatrix;
 
+	return handOffset;
+}

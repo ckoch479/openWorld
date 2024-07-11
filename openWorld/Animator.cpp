@@ -269,12 +269,19 @@ float animator::calculateScaleFactor(float lastTimeStamp, float nextTimeStamp, f
 	return scaleFactor;
 }
 
-glm::mat4 animator::getBoneCurrentTransform(std::string name, Model* model)
+glm::mat4 animator::getFinalBoneMatrix(Model* model, animation* animation, Bone* bone)
 {
-	glm::mat4 boneTransform;
+	int boneId = bone->id;
+	//std::cout << bone->name << std::endl;
+	glm::mat4 finalMatrix(1.0f);
 
-	unsigned int boneID = model->boneMap[name].id;
-	boneTransform = animationMatrices[activeAnimations[model]][boneID];
-
-	return boneTransform;
+	if (activeAnimations[model])
+	{
+		finalMatrix = animationMatrices[activeAnimations[model]][boneId];
+	}
+	if (!activeAnimations[model])
+	{
+		std::cout << "ERROR::MODEL::DOES::NOT::HAVE::CURRENT::ANIMATION\n";
+	}
+	return finalMatrix;
 }

@@ -5,7 +5,6 @@
 
 #include "item.h"
 
-
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
 
@@ -24,7 +23,7 @@ public:
 	gameObjectManager() {};
 	~gameObjectManager() {};
 
-	unsigned int createHandGun(std::string filePath, float baseDamage, glm::vec3 handPoint, std::string name, glm::vec3 barrelPos, glm::vec3 front);
+	unsigned int createHandGun(std::string filePath, std::string name, float mass, float volume);
 	
 	std::shared_ptr<item> getItemPTR(unsigned int id) { return worldItems[id]; }
 

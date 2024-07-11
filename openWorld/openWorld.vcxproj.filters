@@ -46,6 +46,12 @@
     <Filter Include="Source Files\GameObjectBody\worldItems">
       <UniqueIdentifier>{398f4aa5-e789-435f-99c0-d939bb605983}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\player">
+      <UniqueIdentifier>{75b0aeed-cc02-43b8-a913-7e878ae724eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\player">
+      <UniqueIdentifier>{18118fd2-a895-418a-b568-57be219631c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -111,17 +117,11 @@
     <ClCompile Include="thirdPersonCamera.cpp">
       <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
-    <ClCompile Include="playerEntity.cpp">
-      <Filter>Source Files\GameObjectBody</Filter>
-    </ClCompile>
     <ClCompile Include="assimpAnimationLoader.cpp">
       <Filter>Source Files\loadingUtilites</Filter>
     </ClCompile>
     <ClCompile Include="assimpModelLoader.cpp">
       <Filter>Source Files\loadingUtilites</Filter>
-    </ClCompile>
-    <ClCompile Include="characterController.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="rayCastCallBack.cpp">
       <Filter>Source Files</Filter>
@@ -143,6 +143,18 @@
     </ClCompile>
     <ClCompile Include="playerHandSlot.cpp">
       <Filter>Source Files\GameObjectBody\worldItems</Filter>
+    </ClCompile>
+    <ClCompile Include="characterController.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerEntity.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerManager.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerInventoryManager.cpp">
+      <Filter>Source Files\player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -218,9 +230,6 @@
     <ClInclude Include="renderingInfoDefinitions.h">
       <Filter>Header Files\definitionHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="playerEntity.h">
-      <Filter>Header Files\GameObjectHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="animationDataDefinitions.h">
       <Filter>Header Files\definitionHeaders</Filter>
     </ClInclude>
@@ -235,9 +244,6 @@
     </ClInclude>
     <ClInclude Include="testingBoxMeshFunctions.h">
       <Filter>Header Files\loadingUtilities</Filter>
-    </ClInclude>
-    <ClInclude Include="characterController.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rayCastCallBack.h">
       <Filter>Header Files</Filter>
@@ -259,6 +265,18 @@
     </ClInclude>
     <ClInclude Include="playerHandSlot.h">
       <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
+    </ClInclude>
+    <ClInclude Include="characterController.h">
+      <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="playerEntity.h">
+      <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="playerManager.h">
+      <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerInventoryManager.h">
+      <Filter>Header Files\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,13 +1,13 @@
 #include "characterController.h"
 
-characterController::characterController(playerEntity* newPlayer, scene* newScene, PhysicsWorld* newWorld, Shader* shader)
+characterController::characterController(playerEntity* newPlayer, PhysicsWorld* newWorld, Camera* newCamera)
 {
 	this->player = newPlayer;
-	this->sceneObj = newScene;
 	this->world = newWorld;
-	addPlayerToScene(shader);
+	this->playerCamera = newCamera;
 	addPlayerToWorld();
 }
+
 
 characterController::~characterController()
 {
@@ -18,41 +18,75 @@ void characterController::updateInputs(windowManager* manager)
 {
 	if (manager->checkKey(87)) //w
 	{
-		if(manager->checkKey(340))//left shift
+		if (playerCamera->isThirdPerson())
 		{
-			this->player->setPlayerAction(jogging);
-		}
-		else
-		{
-			this->player->setPlayerAction(walking);
+			if (manager->checkKey(340))//left shift
+			{
+				this->player->setPlayerAction(jogging);
+			}
+			else
+			{
+				this->player->setPlayerAction(walking);
+			}
 		}
 		
+		if (!playerCamera->isThirdPerson()) 
+		{
+			this->cameraForward = true;
+		}
 
 	};
 
-	if (!manager->checkKey(87))
+	if (!manager->checkKey(87)) //w
 	{
 		this->player->setPlayerAction(idle);
 	}
 
 	if (manager->checkKey(65)) //a
 	{
-		this->player->setPlayerAction(sideWalkLeft);
+		if (playerCamera->isThirdPerson())
+		{
+			this->player->setPlayerAction(sideWalkLeft);
+		}
+
+		if (!playerCamera->isThirdPerson())
+		{
+			this->cameraLeft = true;
+		}
 	};
 
 	if (manager->checkKey(83)) //s
 	{
-		this->player->setPlayerAction(walkingBack);
+		if (playerCamera->isThirdPerson())
+		{
+			this->player->setPlayerAction(walkingBack);
+		}
+
+		if (!playerCamera->isThirdPerson())
+		{
+			this->cameraBackWard = true;
+		}
 	};
 
 	if (manager->checkKey(68)) //d
 	{
-		this->player->setPlayerAction(sideWalkRight);
+		if (playerCamera->isThirdPerson())
+		{
+			this->player->setPlayerAction(sideWalkRight);
+		}
+
+		if (!playerCamera->isThirdPerson())
+		{
+			this->cameraRight = true;
+		}
 	};
 
 	if (manager->checkKey(32)) //space
 	{
-		this->player->setPlayerAction(jumping);
+		if (playerCamera->isThirdPerson())
+		{
+			this->player->setPlayerAction(jumping);
+		}
 	}
 
 	if(manager->leftClick())
@@ -63,19 +97,45 @@ void characterController::updateInputs(windowManager* manager)
 	if(manager->rightClick())
 	{
 		this->player->setPlayerAction(aimingPistol);
+		this->playerCamera->Zoom = 25.0f;
+	}
+	if(!manager->rightClick())
+	{
+		this->playerCamera->Zoom = 45.0f;
+	}
+
+	//camera control
+	if (manager->checkKey(49))//1 key
+	{
+		playerCamera->setCameraFreeCam();
+	}
+	if (manager->checkKey(50))//2 key
+	{
+		playerCamera->setCameraThirdPerson(2.6);
+	}
+
+	
+
+	
+	//third person camera controls---------------------------------------------------------
+	//mouse position;
+	float lastx = cursorX;
+	float lasty = cursorY;
+
+	manager->getMousePosition(&cursorX, &cursorY);
+
+	float xOffset = cursorX - lastx;
+	float yOffset = lasty - cursorY;
+	playerCamera->ProcessMouseMovement(xOffset, yOffset, true, glm::vec3(0, 1.5, 0) + this->player->getPlayersTransform()->position , 0);
+
+	if (playerCamera->isThirdPerson())
+	{
+		transform* newTransform = this->player->getPlayersTransform();
+		newTransform->orientation = glm::rotate(glm::toMat4(newTransform->orientation), xOffset * 0.01f, glm::vec3(0, 1, 0));
+		this->player->setPlayerTransform(*newTransform);
 	}
 }
 
-
-
-void characterController::addPlayerToScene(Shader* shader)
-{
-	transform* playerTranform = this->player->getPlayersTransform();
-	Model* playerModel = this->player->getPlayerModel();
-	Shader* playerShader = shader;
-
-	this->sceneId = this->sceneObj->addObjectToScene(playerModel,*playerTranform,shader);
-}
 
 void characterController::addPlayerToWorld()
 {
@@ -112,12 +172,12 @@ void characterController::updateController(float dt, Level currentLevel)
 	if(this->player->getPlayerAction() == walking)
 	{
 		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
-		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x,0, relativeFront.z) * (float)player->getPlayerMoveSpeed() * dt;
+		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x,0, relativeFront.z) * (float)4.0 * dt;
 	}
 	if(this->player->getPlayerAction() == jogging)
 	{
 		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
-		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)player->getPlayerMoveSpeed() * 2.0f * dt;
+		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)4.0 * 2.0f * dt;
 	}
 	
 	if (this->player->getPlayerAction() == jumping) //not working quite yet
@@ -130,10 +190,32 @@ void characterController::updateController(float dt, Level currentLevel)
 	
 
 	this->world->setBodyPosition(this->physicsId, playerTransform->position);
-	this->sceneObj->updateTransform(this->sceneId, *playerTransform);
 	this->player->setPlayerTransform(*playerTransform);
 	player->calculateRelTransform();
 
-	player->setHandPositions();
-	//update orientation too momentarily
+	//camera controll (free cam)
+	if(cameraForward)
+	{
+		this->playerCamera->ProcessKeyboard(FORWARD, dt);
+		cameraForward = false;
+	}
+
+	if (cameraLeft) 
+	{
+		this->playerCamera->ProcessKeyboard(LEFT, dt);
+		cameraLeft = false;
+	}
+
+	if (cameraRight)
+	{
+		this->playerCamera->ProcessKeyboard(RIGHT, dt);
+		cameraRight = false;
+	}
+
+	if(cameraBackWard)
+	{
+		this->playerCamera->ProcessKeyboard(BACKWARD, dt);
+		cameraBackWard = false;
+	}
+	
 }

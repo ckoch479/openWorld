@@ -2,11 +2,14 @@
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "includes/glm/gtx/quaternion.hpp"
 
 #include "item.h"
-#include "handGun.h"
 #include "gameObjectManager.h"
 
+#include "handGun.h"
 
 #ifndef PLAYERHANDSLOT_H
 #define PLAYERHANDSLOT_H
@@ -14,7 +17,12 @@ class playerHandSlot
 {
 public:
 
-	void addItem(std::shared_ptr<item> newItem, glm::mat4 transf); //same as equiping the item
+	playerHandSlot(glm::mat4 boneOffsetMatrix);
+	~playerHandSlot();
+
+	void addItem(std::shared_ptr<item> newItem, scene* scene, Shader* shader); //same as equiping the item
+
+	void updatePosition(scene* scene, glm::mat4& handTransform, transform& playerTransform);
 
 	void removeItem(); //clear the current item
 
@@ -22,14 +30,12 @@ public:
 
 	std::shared_ptr <item> swapItem(std::shared_ptr<item> newItem); //swap current item with a different item
 
-	void updatePosition(glm::mat4 transf);
-
 private:
 
-	void updateTransform();
+	glm::mat4 getHandTransform(transform& playerTransform, glm::mat4& boneTransform);
 
 	std::shared_ptr<item> currentItem;
-	glm::mat4 transf;
+	glm::mat4 boneOffsetMat;
 
 };
 

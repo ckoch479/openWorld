@@ -1,25 +1,19 @@
 #include "handGun.h"
 
-handGun::handGun(std::string filePath, float baseDamage, glm::vec3 handPoint, std::string name, glm::vec3 barrelPos, glm::vec3 front)
+handGun::handGun(std::string filePath, std::string name, float mass, float volume)
 {
 	this->model = ResourceManager::loadModel(filePath,name);
-	this->baseDamage = baseDamage;
-	this->handPoint1 = glm::vec3(this->model->boneMap["handle"].offsetMatrix * glm::vec4(1,1,1,1));// handPoint; //not working currently
-	this->twoHanded = false;
-	this->barrel = barrelPos;
-	this->front = front;
-	this->chambered = false;
-	this->hasMagazine = false;
 
 	this->name = name;
-	this->consumable = false;
-	this->equipable = true;
-	this->stackable = false;
-	this->mass = 10;
-	this->volume = this->mass;
+	this->mass = mass;
+	this->volume = volume;
 
-	//std::cout << "hand gun handle: " << glm::to_string(this->model->boneMap["handle"].offsetMatrix) << std::endl;
+	transform newTransform;
+	newTransform.position = glm::vec3(0.0f);
+	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	newTransform.scale = glm::vec3(0.01f);
 
+	this->sceneTransform = newTransform;
 }
 
 handGun::~handGun()
@@ -27,22 +21,17 @@ handGun::~handGun()
 
 }
 
-glm::vec3 handGun::getBarrelPos()
+void handGun::addToScene(scene* scene, Shader* shader)
 {
-	return this->barrel;
+	this->sceneID = scene->addObjectToScene(this->model, this->sceneTransform, shader);
+
+	std::cout << "handgun being added to scene\n";
 }
 
-glm::vec3 handGun::getDirection()
+void handGun::updateTransform(scene* scene, transform newTransform)
 {
-	return this->front;
+	this->sceneTransform = newTransform; //+ this->localTransform;
+	sceneTransform.scale = glm::vec3(0.01f);
+	scene->updateTransform(this->sceneID, this->sceneTransform);
 }
 
-glm::mat4 handGun::getTransform()
-{
-	return this->worldTransform;
-}
-
-void handGun::setTransform(glm::mat4 transf)
-{
-	this->worldTransform = transf;
-}

@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+
 #ifndef ITEM_H
 #define ITEM_H
 
@@ -21,6 +22,7 @@ public:
 
 	virtual float getMass() const = 0;
 	virtual float getVolume() const = 0;
+
 
 private:
 

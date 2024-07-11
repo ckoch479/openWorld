@@ -12,6 +12,8 @@
 
 #include "ResourceManager.h"
 #include "Animator.h"
+#include "Scene.h"
+#include "Shader.h"
 
 #include "playerHandSlot.h"
 
@@ -38,23 +40,6 @@ public:
 	//change player looks/resistances
 	void setPlayerMeshes(playerParts part, Mesh* newMesh); //allows on the fly update to a player mesh for each body part
 
-	void setPlayerResistance(playerParts part, int newResistance);
-
-	//change health parameters
-	void setPlayerInjury(playerParts part, injuryStatus status);
-
-	void setPlayerHealth(int health);
-
-	void setPlayerStamina(int stamina);
-
-	injuryStatus getInjuryStatus(playerParts part);
-
-	int getPlayerHealth();
-
-	int getPlayerStamina();
-
-	int getPlayerResistance(playerParts part);
-
 	//player movement
 
 	void setPlayerTransform(transform newTransform);
@@ -62,10 +47,6 @@ public:
 	transform* getPlayersTransform();
 
 	relTransform* getPlayerRelativeTransform(); //this cannot be set manually and is only updated by the class based on render transform parameters
-
-	void setPlayerMoveSpeed(int newSpeed);
-
-	int getPlayerMoveSpeed();
 
 	//calling this will step through all loaded animations one by one to check if they work
 	void debugAnimations(); 
@@ -76,13 +57,15 @@ public:
 
 	void calculateRelTransform();
 
-	void equipLeftHand(std::shared_ptr<item> newItem);
-	void equipRightHand(std::shared_ptr<item> newItem);
+	void addPlayerToScene(scene* scene, Shader* shader);
 
-	void setHandPositions();
+	void updatePlayerScene(scene* scene);
 
-	glm::mat4 getLeftHandMat();
-	glm::mat4 getRightHandMat();
+	glm::mat4 getLeftHandTransform();
+	glm::mat4 getRightHandTransform();
+
+	glm::mat4 getRightHandOffsetMatrix();
+	glm::mat4 getLeftHandOffsetMatrix();
 
 private:
 
@@ -92,13 +75,9 @@ private:
 
 	void updateActions();
 
-	
-
 	//data:
 	playerActions currentAction;
 	
-	float moveSpeed = 4.0f;
-
 	//animation names should exactly match player action name as well key word is should it is me making this thing
 	//also animations is only handled by the class you cannot manually change the animations only player actions
 	std::unordered_map<std::string, animation*> animations;
@@ -111,29 +90,24 @@ private:
 	//players mesh (changing clothing/gear and such), actual data is stored in resource manager
 	std::unordered_map<playerParts, Mesh*> playersParts;
 
-	//injuries and health concerns
-	std::unordered_map<playerParts, injuryStatus> playerInjuries;
-	int health;
-	int stamina; //how long the player can preform actions like sprinting, climbing, ect
-
-	//this is armor resistance kinda like thicker clothing and such
-	std::unordered_map<playerParts, int> resistance;
-
 	//player file path from .player file format
 	std::string playerFilePath;
 
 	Model* playerModel; //this is just a little thing to make rendering easier for myself
 
-	std::string playerName; //this one should be pretty self explanatory
 
-	//inventory and equiped items:
-	playerHandSlot leftHand;
-	playerHandSlot rightHand;
+
+	std::string playerName; //this one should be pretty self explanatory
+	std::string sceneID;
 
 	//helper bools for updating the player on the fly
 	bool meshChange = false;
 	bool animationChange = false;
 	bool actionChange = false;
+
+	bool leftHandWeapon = false;
+	bool rightHandWeapon = false;
+	bool bothHandWeapon = false;
 
 	//debug data delete later
 	int stepper = 0;
