@@ -71,7 +71,7 @@ private:
 	//used for rendering hud objects or menu objects
 	void load2DRenderShader();
 
-	void render2DScreenObjects();
+	void render2DScreenObjects(scene* scene);
 
 	const unsigned int SCR_WIDTH = 1600;
 	const unsigned int SCR_HEIGHT = 800;
@@ -89,6 +89,7 @@ private:
 
 	Shader* debugDepthQuad;
 	Shader* screenEffectShader;
+	Shader* screenShapeShader;
 
 	//shadow data:
 

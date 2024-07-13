@@ -3,6 +3,7 @@
 renderer::renderer()
 {
 	//create the screen quad vao,vbo for rendering effects and such
+	load2DRenderShader();
 	createScreenQuad();
 	generateDepthMap(&depthMap, &depthMapFBO);
 	//generateScreenEffectBuffer(&this->hdrFBO,&this->depthBuffer,&this->colorBuffer); // doesnt work as of right now idk why
@@ -195,6 +196,7 @@ void renderer::renderCubeShadowMap(scene* scene, glm::vec3 lightPos, unsigned in
 
 void renderer::drawScene(scene* scene)
 {
+	
 	std::vector <renderInfo*> data = scene->getRenderingInfo();
 
 	//glm::mat4 lightSpaceMatrix = renderDirectionalShadowMap(scene, &this->depthMapFBO);//directional shadow map
@@ -208,12 +210,12 @@ void renderer::drawScene(scene* scene)
 	//render everything again
 	for (unsigned int i = 0; i < data.size(); i++)
 	{
-		glActiveTexture(GL_TEXTURE4);
-		glUniform1i(glGetUniformLocation(data[i]->shader->ID, "shadowMap"), 4);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
+		//glActiveTexture(GL_TEXTURE4);
+		//glUniform1i(glGetUniformLocation(data[i]->shader->ID, "shadowMap"), 4);
+		//glBindTexture(GL_TEXTURE_2D, depthMap);
 
 		//data[i]->shader->SetMatrix4("lightSpaceMatrix", lightSpaceMatrix);
-		data[i]->shader->SetFloat("far_plane", this->far_plane);
+		//data[i]->shader->SetFloat("far_plane", this->far_plane);
 
 		addLightUniformsToShader(scene, data[i]->shader);
 
@@ -242,6 +244,8 @@ void renderer::drawScene(scene* scene)
 	glUniform1i(glGetUniformLocation(this->screenEffectShader->ID, "hdrBuffer"), 0);
 	glBindTexture(GL_TEXTURE_2D, colorBuffer);
 	renderScreenQuad();*/
+
+	render2DScreenObjects(scene);
 
 }
 
@@ -522,4 +526,35 @@ void renderer::renderPhysicsWorldDebugger(Shader* shader, PhysicsWorld* world, s
 		glBindVertexArray(0);
 		//std::cout << "triangles drawing:" << std::endl;
 	}
+}
+
+void renderer::load2DRenderShader()
+{
+	this->screenShapeShader = ResourceManager::loadShader("Shaders/3.3.shader.vs","Shaders/3.3.shader.fs",nullptr,"screenShapeShader");
+}
+
+void renderer::render2DScreenObjects(scene* scene)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	std::vector <shape2D*> data = scene->getScreenShapes();
+	glDisable(GL_CULL_FACE);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	//render everything
+	for (unsigned int i = 0; i < data.size(); i++)
+	{
+		this->screenShapeShader->use();
+		glBindVertexArray(data[i]->VAO);
+
+		glDrawArrays(GL_TRIANGLES, 0,static_cast<unsigned int>(data[i]->vertices.size()));
+		
+	}
+
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+
+	glBindVertexArray(0);
 }

@@ -26,8 +26,8 @@ struct renderInfo
 
 struct renderInfo2D
 {
-	shape2D* screenShape;
-	glm::vec2 screenPos;//these will be in a range between -500 - +500 both in the x and y directions instead of the normal -1 - 1 of opengl
+	shape2D screenShape;
+	glm::vec2 screenPos;//in NDC -1 - +1
 };
 
 //scene is a database of all objects that need to be drawn. Each object is placed in a table. 
@@ -44,8 +44,12 @@ public:
 	//add object to scene for rendering
 	std::string addObjectToScene(Model* model, transform transf, Shader* shader);
 
+	std::string add2DScreenShape(shape2D screenShape, glm::vec2 pos);
+
 	//remove object from scene when done using it
 	void removeObjectFromScene(std::string id);
+
+	void remove2DsceenShape(std::string id);
 
 	//update object transform given its id
 	void updateTransform(std::string id, transform transform);
@@ -53,7 +57,11 @@ public:
 	//dumps all rendering info into a vector to be sent to the renderer
 	std::vector <renderInfo*> getRenderingInfo();
 
+	std::vector <shape2D*> getScreenShapes(); //also for renderer
+
 	void generateModelRenderData(Mesh* mesh);
+
+	void generate2DShapeData(shape2D* shape);
 
 	std::vector <unsigned int> getModelVAOs(std::string modelID);
 
@@ -90,7 +98,10 @@ private:
 
 	std::unordered_map <std::string, transform> sceneTransforms;
 
+	std::unordered_map <std::string, renderInfo2D> Objects2D;
+
 	std::vector <std::string> modelIds;
+	std::vector <std::string> model2Dids;
 
 	unsigned int idCounter = 0; //counter for scene objects allows all objects to be referenced for rendering
 

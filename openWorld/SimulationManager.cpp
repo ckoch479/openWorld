@@ -55,15 +55,6 @@ void SimulationManager::run()
 	this->sceneObj->setDepthShader(depthShader);
 	this->gameRenderer->setDebugDepthQuadShader(debugDepthQuad);
 
-	/*Model* mapModel = ResourceManager::loadModel("resources/Terrain/citySceneOneModel.gltf", "mapModel");
-	transform mapTransform;
-	mapTransform.position = glm::vec3(1.0f);
-	mapTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	mapTransform.scale = glm::vec3(1.0,0.05,1.0f);*/
-
-	/*sceneObj->addObjectToScene(mapModel, mapTransform, lightShader);*/
-
-	
 	//item testing:
 	gameObjectManager newManager;
 	unsigned int gunId = newManager.createHandGun("resources/Assets/1911Modified.gltf","handGun",10,10);
@@ -72,6 +63,15 @@ void SimulationManager::run()
 	playerManager newPlayer(this->sceneObj,this->world,this->WindowManager,animationShader, lightShader,"resources/player/player.gltf",&newCamera);
 	newPlayer.testItemSlots(newManager.getItemPTR(gunId));
 	//newPlayer.testItemSlots(newManager.getItemPTR(gunId));
+
+	ShapeGenerator newShaper;
+
+	//shape2D newshape = newShaper.generateCharacter('a', 1, 1, glm::vec4(1.0, 0.0, 1.0, 0.7));
+	//shape2D newshape = newShaper.generateBox(0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.3));
+	//shape2D newshape = newShaper.generateCircle(0.01, glm::vec4(1.0,1.0,1.0,0.3), 30);
+	//shape2D newshape = newShaper.generateTriangle(1, 1, glm::vec4(1.0, 1.0, 1.0, 0.3));
+	shape2D newshape = newShaper.generateCharacter('b', 1, 1, glm::vec4(1.0, 0.0, 1.0, 0.7));
+	this->sceneObj->add2DScreenShape(newshape, glm::vec2(0, 0));
 
 	//------------------------------------------
 	//unsigned int boxId;

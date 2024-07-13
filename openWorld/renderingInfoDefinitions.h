@@ -122,14 +122,28 @@ struct relTransform
 struct Vertex2D
 {
 	glm::vec2 position; //local position will be transformed by a positonal transform when rendered
-	glm::vec2 texCoord;
+	glm::vec4 color;    //color of this vertex
+
+	Vertex2D(float x, float y, float r, float g, float b, float a)
+	{
+		this->position.x = x;
+		this->position.y = y;
+		this->color.x = r;
+		this->color.y = g;
+		this->color.z = b;
+		this->color.w = a;
+	}
+
+	Vertex2D(float x, float y, glm::vec4 RGBA)
+	{
+		this->position.x = x;
+		this->position.y = y;
+		this->color = RGBA;
+	}
 };
 struct shape2D
 {
 	std::vector <Vertex2D> vertices;
-	
-	textureData textureInfo;
-	Texture* shapeTexture;
 
 	unsigned int VAO;
 	unsigned int VBO;

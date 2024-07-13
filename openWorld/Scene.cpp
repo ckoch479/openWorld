@@ -47,8 +47,6 @@ std::string scene::addObjectToScene(Model* model, transform transf, Shader* shad
 		generateModelRenderData(&activeModels[Modelid].model->meshes[i]); //this function generates a VAO and VBO for each mesh in the model
 	}
 
-
-
 	return Modelid;
 }
 
@@ -245,6 +243,61 @@ Shader* scene::getDepthCubeShader()
 	return this->depthCubeShader;
 }
 
+//2d rendering
+
+std::string scene::add2DScreenShape(shape2D screenShape, glm::vec2 pos)
+{
+	std::string newId = createUniqueID();
+
+	renderInfo2D newInfo;
+	newInfo.screenShape = screenShape;
+	newInfo.screenPos = pos;
+
+	this->Objects2D[newId] = newInfo;
+	this->model2Dids.push_back(newId);
+
+	generate2DShapeData(&this->Objects2D[newId].screenShape);
+
+	return newId;
+}
+
+void scene::remove2DsceenShape(std::string id)
+{
+
+}
+
+//returns a vector of pointers of shape2D for rendering
+std::vector <shape2D*> scene::getScreenShapes()
+{
+	std::vector <shape2D*> renderDump;
+
+	for (unsigned int i = 0; i < model2Dids.size(); i++)
+	{
+		renderDump.push_back(&Objects2D[model2Dids[i]].screenShape);
+	}
+
+	return renderDump;
+}
+
+void scene::generate2DShapeData(shape2D* shape)
+{
+	unsigned int* VAO = &shape->VAO;
+	unsigned int* VBO = &shape->VBO;
+
+	glGenVertexArrays(1, VAO);
+	glGenBuffers(1, VBO);
+
+	glBindVertexArray(*VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+	glBufferData(GL_ARRAY_BUFFER, shape->vertices.size() * sizeof(Vertex2D), &shape->vertices[0], GL_STATIC_DRAW);
+
+	//vertex positions
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)0);
+	// vertex colors
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, color));
+}
 
 //void Scene::MoveCamera(Camera_Movement direction, float deltaTime) 
 //{

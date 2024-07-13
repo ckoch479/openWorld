@@ -22,6 +22,7 @@
 #include "Level.h"
 
 #include "playerManager.h"
+#include "ShapeGenerator.h"
 
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
