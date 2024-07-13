@@ -20,6 +20,7 @@ void SimulationManager::Init()
 	this->world = new PhysicsWorld;
 
 	this->state = active;
+	this->subState = mainMenu;
 };
 
 void SimulationManager::shutDown()
@@ -44,7 +45,7 @@ void SimulationManager::run()
 	Level level1;
 	level1.setLevelScene(this->sceneObj);
 	level1.setLevelPhysicsWorld(this->world);
-	level1.setLevelModel("resources/Terrain/flatForest.obj");
+	level1.setLevelModel("resources/Terrain/citySceneOneModel.gltf");
 	level1.renderMap(lightShader);
 
 	Camera newCamera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -53,6 +54,14 @@ void SimulationManager::run()
 
 	this->sceneObj->setDepthShader(depthShader);
 	this->gameRenderer->setDebugDepthQuadShader(debugDepthQuad);
+
+	/*Model* mapModel = ResourceManager::loadModel("resources/Terrain/citySceneOneModel.gltf", "mapModel");
+	transform mapTransform;
+	mapTransform.position = glm::vec3(1.0f);
+	mapTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	mapTransform.scale = glm::vec3(1.0,0.05,1.0f);*/
+
+	/*sceneObj->addObjectToScene(mapModel, mapTransform, lightShader);*/
 
 	
 	//item testing:
@@ -65,53 +74,63 @@ void SimulationManager::run()
 	//newPlayer.testItemSlots(newManager.getItemPTR(gunId));
 
 	//------------------------------------------
-	unsigned int boxId;
-	std::string boxSceneID;
-	transform boxTransform;
-	boxTransform.position = glm::vec3(4, 10, 4);
-	boxTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	boxTransform.scale = glm::vec3(1.0f);
+	//unsigned int boxId;
+	//std::string boxSceneID;
+	//transform boxTransform;
+	//boxTransform.position = glm::vec3(4, 10, 4);
+	//boxTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	//boxTransform.scale = glm::vec3(1.0f);
 
-	transform newObjTransform;
-	newObjTransform.position = glm::vec3(0, 0, 0);
-	newObjTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	newObjTransform.scale = glm::vec3(0.01f);
+	//transform newObjTransform;
+	//newObjTransform.position = glm::vec3(0, 0, 0);
+	//newObjTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	//newObjTransform.scale = glm::vec3(0.01f);
 
-	Model* boxModel = ResourceManager::loadModel("resources/Assets/badCrate.obj","badBox");
+	//Model* boxModel = ResourceManager::loadModel("resources/Assets/badCrate.obj","badBox");
 
-	std::vector <glm::vec3> boxVertices;
-	for(unsigned int i = 0 ; i < boxModel->meshes[0].vertices.size(); i++)
-	{
-		Vertex vertex = boxModel->meshes[0].vertices[i];
-		boxVertices.push_back(vertex.vertexPosition);
-	}
-	boxSceneID = sceneObj->addObjectToScene(boxModel, boxTransform,lightShader);
+	//std::vector <glm::vec3> boxVertices;
+	//for(unsigned int i = 0 ; i < boxModel->meshes[0].vertices.size(); i++)
+	//{
+	//	Vertex vertex = boxModel->meshes[0].vertices[i];
+	//	boxVertices.push_back(vertex.vertexPosition);
+	//}
+	//boxSceneID = sceneObj->addObjectToScene(boxModel, boxTransform,lightShader);
 
-	boxId = this->world->createRigidBody(boxTransform.position, boxTransform.orientation,20 ,boxVertices,Dynamic);
+	//boxId = this->world->createRigidBody(boxTransform.position, boxTransform.orientation,20 ,boxVertices,Dynamic);
 	//this->world->changeColliderOrigin(boxId, glm::vec3(0, -1.0, 0));
 
+	this->state = debug; //game state overwrite for testing
 
+	//main loop this will start on the game menu and and such
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
 	while (this->state == active)
 	{
 		setDeltaTime(); //update deltaTime for this loop
 		
 
-		boxTransform.position = world->getBodyPosition(boxId);
+		/*boxTransform.position = world->getBodyPosition(boxId);
 		boxTransform.orientation = world->getBodyRotation(boxId);
-		sceneObj->updateTransform(boxSceneID, boxTransform);
-
-
-		if(this->WindowManager->checkKey(342))
+		sceneObj->updateTransform(boxSceneID, boxTransform);*/
+		
+		while(subState == mainMenu)
 		{
-			//left alt
-			this->WindowManager->enableCursor();
+			//draw background scene
+			//draw menu buttons (new,load,settings,credits,exit)
+			//track mouseMovement
+			//changeGamestate/subState as indicated
+
 		}
 
-		if (this->WindowManager->checkKey(341)) 
-		{
-			this->WindowManager->disableCursor();
-		}
+		//if(this->WindowManager->checkKey(342))
+		//{
+		//	//left alt
+		//	this->WindowManager->enableCursor();
+		//}
+
+		//if (this->WindowManager->checkKey(341)) 
+		//{
+		//	this->WindowManager->disableCursor();
+		//}
 
 		newPlayer.updateManager(deltaTime, &level1);
 
@@ -130,6 +149,69 @@ void SimulationManager::run()
 
 		//shutdown key check (esc)----------------------------
 		if(this->WindowManager->checkKey(256))
+		{
+			this->state = shutdown;
+		}
+
+		//----------------------------------------------------
+		this->WindowManager->pollWindowEvents();
+	}
+
+	//level editor is active:
+	while(state == editor)
+	{
+		setDeltaTime();
+
+
+		this->gameRenderer->drawScene(this->sceneObj);
+
+		if (this->WindowManager->checkKey(256))
+		{
+			this->state = shutdown;
+		}
+
+		this->WindowManager->pollWindowEvents();
+	}
+
+	//jump directly into gameplay with player movement and such
+	while(state == debug)
+	{
+		setDeltaTime(); //update deltaTime for this loop
+
+
+		/*boxTransform.position = world->getBodyPosition(boxId);
+		boxTransform.orientation = world->getBodyRotation(boxId);
+		sceneObj->updateTransform(boxSceneID, boxTransform);*/
+
+
+		//if(this->WindowManager->checkKey(342))
+		//{
+		//	//left alt
+		//	this->WindowManager->enableCursor();
+		//}
+
+		//if (this->WindowManager->checkKey(341)) 
+		//{
+		//	this->WindowManager->disableCursor();
+		//}
+
+		newPlayer.updateManager(deltaTime, &level1);
+
+		//update physics
+		accumulator += deltaTime;
+		while (accumulator >= timestep)
+		{
+			this->world->stepSimulation(this->deltaTime);
+			accumulator -= timestep;
+		}
+
+		//draw contents to actual game window
+		animator::updateAnimations(deltaTime);
+
+		this->gameRenderer->drawScene(this->sceneObj);
+
+		//shutdown key check (esc)----------------------------
+		if (this->WindowManager->checkKey(256))
 		{
 			this->state = shutdown;
 		}

@@ -45,6 +45,7 @@ Model assimpModelLoader::getModel()
 	newModel.meshes = this->meshes;
 	newModel.Skeleton = this->skeleton;
 	newModel.boneMap = this->boneMap;
+
 	return newModel;
 }
 

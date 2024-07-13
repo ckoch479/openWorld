@@ -28,7 +28,25 @@
 
 enum gameState 
 {
-active, end, pause, loading, startup, shutdown
+active, 
+end, 
+pause, 
+loading, 
+startup, 
+shutdown, 
+editor, 
+debug,
+};
+
+enum subGameState
+{
+	mainMenu,
+	settingsMenu,
+	creditsMenu,
+	newGame,
+	campaignOne,
+	campaignTwo,
+	sandBox,
 };
 
 class SimulationManager
@@ -65,6 +83,7 @@ private:
 	const unsigned int SCR_HEIGHT = 800;
 
 	gameState state;
+	subGameState subState;
 
 	float deltaTime = 0.0f;
 	float lastFrame = 1.0f;

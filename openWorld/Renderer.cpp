@@ -197,8 +197,8 @@ void renderer::drawScene(scene* scene)
 {
 	std::vector <renderInfo*> data = scene->getRenderingInfo();
 
-	glm::mat4 lightSpaceMatrix = renderDirectionalShadowMap(scene, &this->depthMapFBO);//directional shadow map
-
+	//glm::mat4 lightSpaceMatrix = renderDirectionalShadowMap(scene, &this->depthMapFBO);//directional shadow map
+	//rendering shadows causes double the render latency
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
@@ -212,7 +212,7 @@ void renderer::drawScene(scene* scene)
 		glUniform1i(glGetUniformLocation(data[i]->shader->ID, "shadowMap"), 4);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 
-		data[i]->shader->SetMatrix4("lightSpaceMatrix", lightSpaceMatrix);
+		//data[i]->shader->SetMatrix4("lightSpaceMatrix", lightSpaceMatrix);
 		data[i]->shader->SetFloat("far_plane", this->far_plane);
 
 		addLightUniformsToShader(scene, data[i]->shader);

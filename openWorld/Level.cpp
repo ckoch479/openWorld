@@ -42,7 +42,7 @@ void Level::renderMap(Shader* shader)
 	transform newTransform;
 	newTransform.position = glm::vec3(0.0f);
 	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	newTransform.scale = glm::vec3(1.0f);
+	newTransform.scale = glm::vec3(0.4f,0.03,0.4f);
 
 	this->levelShader = shader;
 	this->levelScene->addObjectToScene(this->levelModel, newTransform, shader);
