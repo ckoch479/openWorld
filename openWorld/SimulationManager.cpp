@@ -70,8 +70,8 @@ void SimulationManager::run()
 	//shape2D newshape = newShaper.generateBox(0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.3));
 	//shape2D newshape = newShaper.generateCircle(0.01, glm::vec4(1.0,1.0,1.0,0.3), 30);
 	//shape2D newshape = newShaper.generateTriangle(1, 1, glm::vec4(1.0, 1.0, 1.0, 0.3));
-	//shape2D newshape = newShaper.generateCharacter('c', 0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.7));
-	//this->sceneObj->add2DScreenShape(newshape, glm::vec2(0, 0));
+	shape2D newshape = newShaper.generateCharacter('q', 0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.7));
+	this->sceneObj->add2DScreenShape(newshape, glm::vec2(0, 0));
 
 	//------------------------------------------
 	//unsigned int boxId;
