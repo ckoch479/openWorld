@@ -14,6 +14,7 @@ shape2D ShapeGenerator::generateCharacter(char letter, float width, float height
 {
 	shape2D newShape;
 	
+	newShape = generateCircle(width / 4, RGBA, 30); //if the letter given is invalid draw a circle first
 	switch(letter)
 	{
 	case('a'):
@@ -916,53 +917,77 @@ shape2D ShapeGenerator::generateLetterQ(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
 	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.0 * height,RGBA),
+
+	Vertex2D( 0.0 * width, 0.0 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.3 * height,RGBA),
 
 	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.3 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.3 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.1 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.2 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.2 * height,RGBA),
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.2 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.3 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.3 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.2 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.3 * height,RGBA),
+	Vertex2D(-0.3 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.2 * height,RGBA),
 
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.1 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.2 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.1 * height,RGBA),
+	
+	Vertex2D(-0.2 * width,-0.1 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.2 * height,RGBA),
+
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.2 * height,RGBA),
+
+	Vertex2D(-0.1 * width,-0.2 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.0 * width,-0.2 * height,RGBA),
+
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.3 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -975,9 +1000,57 @@ shape2D ShapeGenerator::generateLetterR(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.3 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.1 *width, 0.4 *height,RGBA),
+	Vertex2D(-0.1 *width, 0.3 *height,RGBA),
+	Vertex2D( 0.2 *width, 0.4 *height,RGBA),
+
+	Vertex2D(-0.1 *width, 0.3 *height,RGBA),
+	Vertex2D( 0.2 *width, 0.4 *height,RGBA),
+	Vertex2D( 0.3 *width, 0.3 *height,RGBA),
+
+	Vertex2D(0.1 *width, 0.3 *height,RGBA),
+	Vertex2D(0.3 *width, 0.1 *height,RGBA),
+	Vertex2D(0.3 *width, 0.3 *height,RGBA),
+
+	Vertex2D(0.2 *width, 0.2 *height,RGBA),
+	Vertex2D(0.2 *width, 0.0 *height,RGBA),
+	Vertex2D(0.3 *width, 0.1 *height,RGBA),
+
+	Vertex2D(0.1 *width, 0.1 *height,RGBA),
+	Vertex2D(0.2 *width, 0.0 *height,RGBA),
+	Vertex2D(0.2 *width, 0.2 *height,RGBA),
+
+	Vertex2D(-0.1 *width, 0.1 *height,RGBA),
+	Vertex2D(-0.1 *width, 0.0 *height,RGBA),
+	Vertex2D(0.1 *width, 0.1 *height,RGBA),
+
+	Vertex2D(-0.1 *width, 0.0 *height,RGBA),
+	Vertex2D( 0.2 *width, 0.0 *height,RGBA),
+	Vertex2D( 0.1 *width, 0.1 *height,RGBA),
+
+	Vertex2D(-0.1 *width, 0.0 *height,RGBA),
+	Vertex2D(-0.1 *width, -0.1 *height,RGBA),
+	Vertex2D(0.0 *width, 0.0 *height,RGBA),
+
+	Vertex2D( 0.0 *width,  0.0 *height,RGBA),
+	Vertex2D(-0.1 *width, -0.1 *height,RGBA),
+	Vertex2D( 0.1 *width, -0.4 *height,RGBA),
+
+	Vertex2D(0.0 *width, 0.0 *height,RGBA),
+	Vertex2D(0.1 *width, -0.4 *height,RGBA),
+	Vertex2D(0.3 *width, -0.4 *height,RGBA),
+
+	Vertex2D(0.0 * width,  0.0 * height,RGBA),
+	Vertex2D(0.3 * width, -0.4 * height,RGBA),
+	Vertex2D(0.1 * width,  0.0 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -990,9 +1063,49 @@ shape2D ShapeGenerator::generateLetterS(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
+
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.2 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.3 * height,RGBA),
+
+	Vertex2D(-0.3 * width, 0.3 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.2 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.3 * width, 0.3 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.2 * height,RGBA),
+
+	Vertex2D(-0.2 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.2 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.1 * height,RGBA),
+
+	Vertex2D( 0.1 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.1 * height,RGBA),
+
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.3 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.3 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -1005,9 +1118,21 @@ shape2D ShapeGenerator::generateLetterT(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.2 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.2 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.2 * height,RGBA),
+
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.2 * height,RGBA),
+
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -1020,9 +1145,33 @@ shape2D ShapeGenerator::generateLetterU(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.3 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+
 	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.0 * width,-0.2 * height,RGBA),
+
+	Vertex2D( 0.0 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+
+	Vertex2D( 0.0 * width,-0.2 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.1 * height,RGBA),
+
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.2 * height,RGBA),
+
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.2 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -1035,9 +1184,25 @@ shape2D ShapeGenerator::generateLetterV(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.0 * width,-0.1 * height,RGBA),
+
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.0 * width,-0.1 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+
+	Vertex2D( 0.0 * width,-0.1 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -1050,9 +1215,57 @@ shape2D ShapeGenerator::generateLetterW(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.3 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.4 * height,RGBA),
+
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.2 * height,RGBA),
+
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.2 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.3 * height,RGBA),
+
+	Vertex2D( 0.0 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.3 * height,RGBA),
+
+	Vertex2D( 0.0 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.3 * height,RGBA),
+
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.3 * height,RGBA),
+
+	Vertex2D( 0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.3 * height,RGBA),
+
+	Vertex2D( 0.2 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
+
+	Vertex2D( 0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -1065,9 +1278,45 @@ shape2D ShapeGenerator::generateLetterX(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.1 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.0 * width,-0.1 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.1 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.0 * width,-0.1 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+
+	Vertex2D( 0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.0 * width,-0.1 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.0 * height,RGBA),
+
+	Vertex2D( 0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
+
+	Vertex2D( 0.0 * width,-0.1 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.1 * height,RGBA),
+
+	Vertex2D( 0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.4 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -1080,9 +1329,33 @@ shape2D ShapeGenerator::generateLetterY(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.1 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.0 * height,RGBA),
+
+	Vertex2D( 0.0 * width, 0.1 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+
+	Vertex2D( 0.1 * width, 0.4 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width, 0.0 * height,RGBA),
+
+	Vertex2D(-0.1 * width, 0.0 * height,RGBA),
+	Vertex2D(-0.1 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.1 * width,-0.4 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;
@@ -1095,9 +1368,45 @@ shape2D ShapeGenerator::generateLetterZ(float width, float height, glm::vec4 RGB
 
 	std::vector <Vertex2D> screenData
 	{
-	Vertex2D(-0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.1 * width,-0.1 * height,RGBA),
-	Vertex2D(0.0 * width, 0.1 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.3 * width, 0.2 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.3 * height,RGBA),
+
+	Vertex2D(-0.3 * width, 0.4 * height,RGBA),
+	Vertex2D(-0.2 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.2 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
+
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.4 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
+
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.3 * width, 0.2 * height,RGBA),
+	Vertex2D( 0.2 * width, 0.3 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.2 * height,RGBA),
+	Vertex2D(-0.3 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+
+	Vertex2D(-0.3 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.4 * height,RGBA),
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+
+	Vertex2D(-0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.2 * width,-0.3 * height,RGBA),
+
+	Vertex2D( 0.2 * width,-0.3 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.4 * height,RGBA),
+	Vertex2D( 0.3 * width,-0.2 * height,RGBA),
 	};
 
 	newShape.vertices = screenData;

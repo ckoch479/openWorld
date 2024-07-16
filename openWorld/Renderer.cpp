@@ -549,6 +549,14 @@ void renderer::render2DScreenObjects(scene* scene)
 		this->screenShapeShader->use();
 		glBindVertexArray(data[i]->VAO);
 
+		glm::mat4 model(1.0f);
+
+		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+		model = glm::translate(model, glm::vec3(-9,0,0));
+		
+
+		this->screenShapeShader->SetMatrix4("model", model);
+
 		glDrawArrays(GL_TRIANGLES, 0,static_cast<unsigned int>(data[i]->vertices.size()));
 		
 	}
