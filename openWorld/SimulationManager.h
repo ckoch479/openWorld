@@ -23,6 +23,7 @@
 
 #include "playerManager.h"
 #include "ShapeGenerator.h"
+#include "guiManager.h"
 
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H

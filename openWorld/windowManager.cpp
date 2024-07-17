@@ -20,6 +20,8 @@ windowManager::windowManager()
 
 	//create window object
 	this->currentWindow = glfwCreateWindow(this->screenWidth, this->screenHeight, "openWorld", NULL, NULL);
+
+	//this->currentWindow = glfwCreateWindow(this->screenWidth, this->screenHeight, "openWorld", glfwGetPrimaryMonitor(), NULL); //for full screen window
 	if (this->currentWindow == NULL)
 	{
 		std::cout << "Failed to create GLFW window!" << std::endl;
@@ -47,8 +49,15 @@ void windowManager::setScreenSize(int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+void windowManager::getScreenSize(int* width, int* height)
+{
+	*width = this->screenWidth;
+	*height = this->screenHeight;
+}
+
 windowManager::~windowManager() 
 {
+	glfwDestroyWindow(this->currentWindow);
 	glfwTerminate();
 }
 

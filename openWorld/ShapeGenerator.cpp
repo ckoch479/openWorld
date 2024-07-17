@@ -96,6 +96,12 @@ shape2D ShapeGenerator::generateCharacter(char letter, float width, float height
 		newShape = generateLetterZ(width, height, RGBA);
 		break;
 
+	case(' '):
+		newShape = shape2D();
+
+		Vertex2D newVert(0,0,glm::vec4(0.0f));
+		newShape.vertices.push_back(newVert);
+		break;
 	}
 
 	return newShape;

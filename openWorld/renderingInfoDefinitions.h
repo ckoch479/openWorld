@@ -145,6 +145,10 @@ struct shape2D
 {
 	std::vector <Vertex2D> vertices;
 
+	//has these instead of a transform
+	glm::vec3 position;
+	glm::vec3 scale;
+
 	unsigned int VAO;
 	unsigned int VBO;
 };

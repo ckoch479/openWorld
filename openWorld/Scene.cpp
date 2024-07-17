@@ -245,14 +245,13 @@ Shader* scene::getDepthCubeShader()
 
 //2d rendering
 
-std::string scene::add2DScreenShape(shape2D screenShape, glm::vec2 pos)
+std::string scene::add2DScreenShape(shape2D screenShape)
 {
 	std::string newId = createUniqueID();
 
 	renderInfo2D newInfo;
 	newInfo.screenShape = screenShape;
-	newInfo.screenPos = pos;
-
+	
 	this->Objects2D[newId] = newInfo;
 	this->model2Dids.push_back(newId);
 
@@ -264,6 +263,12 @@ std::string scene::add2DScreenShape(shape2D screenShape, glm::vec2 pos)
 void scene::remove2DsceenShape(std::string id)
 {
 
+}
+
+void scene::update2Dshape(std::string id, glm::vec2 pos, glm::vec2 scale)
+{
+	this->Objects2D[id].screenShape.position = glm::vec3(pos.x, pos.y, 0.0f);
+	this->Objects2D[id].screenShape.scale = glm::vec3(scale.x, scale.y, 1.0f);
 }
 
 //returns a vector of pointers of shape2D for rendering

@@ -64,14 +64,20 @@ void SimulationManager::run()
 	newPlayer.testItemSlots(newManager.getItemPTR(gunId));
 	//newPlayer.testItemSlots(newManager.getItemPTR(gunId));
 
-	ShapeGenerator newShaper;
-
-	//shape2D newshape = newShaper.generateCharacter('a', 1, 1, glm::vec4(1.0, 0.0, 1.0, 0.7));
-	//shape2D newshape = newShaper.generateBox(0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.3));
-	//shape2D newshape = newShaper.generateCircle(0.01, glm::vec4(1.0,1.0,1.0,0.3), 30);
-	//shape2D newshape = newShaper.generateTriangle(1, 1, glm::vec4(1.0, 1.0, 1.0, 0.3));
+	/*ShapeGenerator newShaper;
 	shape2D newshape = newShaper.generateCharacter('k', 0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.7));
-	this->sceneObj->add2DScreenShape(newshape, glm::vec2(0, 0));
+	newshape.position = glm::vec3(0.1,0.1,0.0f);
+	newshape.scale = glm::vec3(0.1f,0.1f,1.0f);
+	this->sceneObj->add2DScreenShape(newshape);*/
+
+	//textBox newBox("continue", glm::vec2(0.0, 0.0), glm::vec2(0.3, 0.05),1.5,1.0, glm::vec4(1.0,1.0,1.0,0.3)); //16:1 ratio
+
+	//newBox.letters;
+
+	//for(unsigned int i = 0; i < newBox.letters.size(); i++)
+	//{
+	//	sceneObj->add2DScreenShape(newBox.letters[i]);
+	//}
 
 	//------------------------------------------
 	//unsigned int boxId;
@@ -121,16 +127,16 @@ void SimulationManager::run()
 
 		}
 
-		//if(this->WindowManager->checkKey(342))
-		//{
-		//	//left alt
-		//	this->WindowManager->enableCursor();
-		//}
+		if(this->WindowManager->checkKey(342))
+		{
+			//left alt
+			this->WindowManager->enableCursor();
+		}
 
-		//if (this->WindowManager->checkKey(341)) 
-		//{
-		//	this->WindowManager->disableCursor();
-		//}
+		if (this->WindowManager->checkKey(341)) 
+		{
+			this->WindowManager->disableCursor();
+		}
 
 		newPlayer.updateManager(deltaTime, &level1);
 
@@ -184,16 +190,21 @@ void SimulationManager::run()
 		sceneObj->updateTransform(boxSceneID, boxTransform);*/
 
 
-		//if(this->WindowManager->checkKey(342))
-		//{
-		//	//left alt
-		//	this->WindowManager->enableCursor();
-		//}
+		if(this->WindowManager->checkKey(342))
+		{
+			//left alt
+			this->WindowManager->enableCursor();
+		}
 
-		//if (this->WindowManager->checkKey(341)) 
-		//{
-		//	this->WindowManager->disableCursor();
-		//}
+		if (this->WindowManager->checkKey(341)) 
+		{
+			this->WindowManager->disableCursor();
+		}
+
+		double x = 0, y = 0;
+		this->WindowManager->getMousePosition(&x, &y);
+		//std::cout << "mouse pos: " << x << "," << y << std::endl;
+		//mouse position is directly related to window size
 
 		newPlayer.updateManager(deltaTime, &level1);
 

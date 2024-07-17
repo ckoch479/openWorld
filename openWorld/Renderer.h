@@ -73,8 +73,8 @@ private:
 
 	void render2DScreenObjects(scene* scene);
 
-	const unsigned int SCR_WIDTH = 1600;
-	const unsigned int SCR_HEIGHT = 800;
+	const unsigned int SCR_WIDTH =  1920;
+	const unsigned int SCR_HEIGHT =  1080;
 
 	unsigned int screenQuadVAO;
 	unsigned int screenQuadVBO;

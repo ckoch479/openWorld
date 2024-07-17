@@ -165,6 +165,9 @@
     <ClCompile Include="ShapeGenerator.cpp">
       <Filter>Source Files\2Drendering</Filter>
     </ClCompile>
+    <ClCompile Include="guiManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -289,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="ShapeGenerator.h">
       <Filter>Header Files\2Drendering</Filter>
+    </ClInclude>
+    <ClInclude Include="guiManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

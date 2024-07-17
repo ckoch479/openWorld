@@ -163,6 +163,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="gamePhysicsWorld.cpp" />
+    <ClCompile Include="guiManager.cpp" />
     <ClCompile Include="handGun.cpp" />
     <ClCompile Include="Includes\glad\glad.c" />
     <ClCompile Include="inventorySlot.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="gamePhysicsWorld.h" />
+    <ClInclude Include="guiManager.h" />
     <ClInclude Include="handGun.h" />
     <ClInclude Include="Includes\glad\glad.h" />
     <ClInclude Include="inventorySlot.h" />

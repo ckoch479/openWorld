@@ -44,6 +44,8 @@ public:
 
 	void setScreenSize(int width, int height);
 
+	void getScreenSize(int* width, int* height);
+
 	bool leftClick();
 	bool rightClick();
 	bool middleClick();
@@ -51,8 +53,8 @@ private:
 
 	GLFWwindow* currentWindow;
 	//default values
-	int screenWidth = 1600;
-	int screenHeight = 800;
+	int screenWidth =  1920; //16:9 aspect ratio was 1600/800
+	int screenHeight =  1080;
 
 	//a bool array of keys each index is the key name/number as defined by GLFW
 	bool keys[348];

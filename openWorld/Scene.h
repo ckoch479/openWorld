@@ -27,7 +27,6 @@ struct renderInfo
 struct renderInfo2D
 {
 	shape2D screenShape;
-	glm::vec2 screenPos;//in NDC -1 - +1
 };
 
 //scene is a database of all objects that need to be drawn. Each object is placed in a table. 
@@ -44,7 +43,7 @@ public:
 	//add object to scene for rendering
 	std::string addObjectToScene(Model* model, transform transf, Shader* shader);
 
-	std::string add2DScreenShape(shape2D screenShape, glm::vec2 pos);
+	std::string add2DScreenShape(shape2D screenShape);
 
 	//remove object from scene when done using it
 	void removeObjectFromScene(std::string id);
@@ -53,6 +52,8 @@ public:
 
 	//update object transform given its id
 	void updateTransform(std::string id, transform transform);
+
+	void update2Dshape(std::string id, glm::vec2 pos, glm::vec2 scale);
 
 	//dumps all rendering info into a vector to be sent to the renderer
 	std::vector <renderInfo*> getRenderingInfo();
