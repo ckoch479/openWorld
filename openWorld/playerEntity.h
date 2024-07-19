@@ -67,6 +67,9 @@ public:
 	glm::mat4 getRightHandOffsetMatrix();
 	glm::mat4 getLeftHandOffsetMatrix();
 
+	glm::vec3 getLeftHandDireciton();
+	glm::vec3 getRightHandDirection();
+
 private:
 
 	void updateEntity();

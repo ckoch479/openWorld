@@ -33,12 +33,20 @@ public:
 
 	void addToScene(scene* scene, Shader* shader); 
 	void updateTransform(scene* scene, transform newTransform);
+	transform getTransform() { return this->sceneTransform; }
+
+	void shoot(); //create projectile in the world
 
 private:
 	//local points on the object that is used for player/entity animations
 	Model* model;
 	std::string sceneID;
 	transform sceneTransform;
+
+	//temporary use these to create the final orientation
+	glm::vec3 front = glm::vec3(0,0,-1);
+	glm::vec3 up = glm::vec3(0,1,0);
+	glm::vec3 right = glm::vec3(1,0,0);
 
 	float mass; //mass/volume used for inventory management 
 	float volume;

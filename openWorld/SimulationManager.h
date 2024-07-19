@@ -81,8 +81,8 @@ private:
 	//animation manager
 	//scripting manager
 
-	const unsigned int SCR_WIDTH = 1600;
-	const unsigned int SCR_HEIGHT = 800;
+	int SCR_WIDTH = 1600;
+	int SCR_HEIGHT = 800;
 
 	gameState state;
 	subGameState subState;

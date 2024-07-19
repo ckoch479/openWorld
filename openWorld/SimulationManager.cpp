@@ -79,32 +79,6 @@ void SimulationManager::run()
 	//	sceneObj->add2DScreenShape(newBox.letters[i]);
 	//}
 
-	//------------------------------------------
-	//unsigned int boxId;
-	//std::string boxSceneID;
-	//transform boxTransform;
-	//boxTransform.position = glm::vec3(4, 10, 4);
-	//boxTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	//boxTransform.scale = glm::vec3(1.0f);
-
-	//transform newObjTransform;
-	//newObjTransform.position = glm::vec3(0, 0, 0);
-	//newObjTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	//newObjTransform.scale = glm::vec3(0.01f);
-
-	//Model* boxModel = ResourceManager::loadModel("resources/Assets/badCrate.obj","badBox");
-
-	//std::vector <glm::vec3> boxVertices;
-	//for(unsigned int i = 0 ; i < boxModel->meshes[0].vertices.size(); i++)
-	//{
-	//	Vertex vertex = boxModel->meshes[0].vertices[i];
-	//	boxVertices.push_back(vertex.vertexPosition);
-	//}
-	//boxSceneID = sceneObj->addObjectToScene(boxModel, boxTransform,lightShader);
-
-	//boxId = this->world->createRigidBody(boxTransform.position, boxTransform.orientation,20 ,boxVertices,Dynamic);
-	//this->world->changeColliderOrigin(boxId, glm::vec3(0, -1.0, 0));
-
 	this->state = debug; //game state overwrite for testing
 
 	//main loop this will start on the game menu and and such

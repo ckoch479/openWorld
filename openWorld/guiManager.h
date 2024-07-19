@@ -31,6 +31,8 @@ struct textBox
 
 	std::vector <shape2D> letters;
 
+	textBox() {}
+
 	textBox(std::string text,glm::vec2 NDCcoords, glm::vec2 NDCscale, float spacing, float height, glm::vec4 RGBA)
 	{
 		this->text = text;
@@ -88,6 +90,11 @@ struct displayBox
 		this->size = scale;
 	}
 
+	displayBox()
+	{
+	
+	}
+
 };
 
 struct GUIobject
@@ -95,6 +102,13 @@ struct GUIobject
 	displayBox renderBox;
 	textBox renderText;
 	menuButton collisionBox;
+
+	GUIobject() 
+	{
+		renderBox = *new displayBox();
+		renderText = *new textBox();
+		collisionBox = *new menuButton();
+	};
 };
 
 //manager for all things like menu buttons, text boxes, HUDs, and more

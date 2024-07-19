@@ -29,37 +29,39 @@ void playerHandSlot::addItem(std::shared_ptr<item> newItem, scene* scene, Shader
 	}
 }
 
-void playerHandSlot::updatePosition(scene* scene, glm::mat4& handTransform, transform& playerTransform)
+void playerHandSlot::updatePosition(scene* scene, glm::mat4& handTransform, transform& playerTransform, glm::vec3 boneDirection)
 {
 	if(this->currentItem) //if there is a current item update its position
 	{
 		if (auto weapon = std::dynamic_pointer_cast<handGun>(this->currentItem)) //if this item is a handgun
 		{
 			transform newTransform;
+			transform objectTransform = weapon->getTransform();
 
-			glm::mat4 bonePos = getHandTransform(playerTransform, handTransform);
+			glm::mat4 bonePos = getHandTransform(playerTransform, handTransform, boneDirection);
 
 			glm::vec4 objectBonePosition = glm::inverse(bonePos) * glm::vec4(playerTransform.position, 1.0);
 
 			newTransform.position = objectBonePosition + glm::vec4(playerTransform.position, 1.0f);
 
-			/*glm::vec3 scale;
-			scale.x = sqrt((bonePos[0][0] * bonePos[0][0]) + (bonePos[0][1] * bonePos[0][1]) + (bonePos[0][2] * bonePos[0][2]));
-			scale.y = sqrt((bonePos[1][0] * bonePos[1][0]) + (bonePos[1][1] * bonePos[1][1]) + (bonePos[1][2] * bonePos[1][2]));
-			scale.z = sqrt((bonePos[2][0] * bonePos[2][0]) + (bonePos[2][1] * bonePos[2][1]) + (bonePos[2][2] * bonePos[2][2]));
+			glm::vec3 front = glm::normalize(boneDirection);
+			glm::vec3 up = glm::normalize(glm::cross(front, glm::vec3(0,1,0)));
+			glm::vec3 right = glm::normalize(glm::cross(front,up));
 
-			glm::quat baseQuat(1.0, 0.0, 0.0, 0.0);
-			baseQuat.w = sqrt(1 + (bonePos[0][0] / scale.x) + (bonePos[1][1] / scale.y) + (bonePos[2][2] / scale.z)) / 2;
-			baseQuat.x = (bonePos[2][1] / scale.y) - (bonePos[1][2] /scale.z) / (4 * baseQuat.w);
-			baseQuat.y = (bonePos[0][2] / scale.z) - (bonePos[2][0] / scale.x) / (4 * baseQuat.w);
-			baseQuat.z = (bonePos[1][0] / scale.x) - (bonePos[0][1] / scale.y) / (4 * baseQuat.w);
+			glm::mat4 localRot(1.0f);
+			localRot[0][0] = front.x; localRot[0][1] = front.y; localRot[0][2] = front.z;
+			localRot[1][0] = up.x;    localRot[1][1] = up.y;    localRot[1][2] = up.z;
+			localRot[2][0] = right.x; localRot[2][1] = right.y; localRot[2][2] = right.z;
 
-			baseQuat = glm::normalize(baseQuat);
-			
-			glm::quat objectBoneRotation = glm::toQuat(glm::inverse(bonePos)) * playerTransform.orientation;
-			objectBoneRotation = glm::normalize(objectBoneRotation);*/
+			glm::quat correctionQuat(1.0f, 0.0, 0.0, 0.0 );
 
-			newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0) * playerTransform.orientation;
+			glm::mat4 rotateMat(1.0f);
+			rotateMat = glm::rotate(rotateMat, 2.0f, glm::vec3(1, 0, 0));//x
+			rotateMat = glm::rotate(rotateMat, 2.0f, glm::vec3(0, 1, 0)); //y
+			rotateMat = glm::rotate(rotateMat, 0.0f, glm::vec3(0, 0, 1));//z 
+			correctionQuat = glm::toQuat(rotateMat);
+
+			newTransform.orientation = glm::toMat4(correctionQuat) * glm::inverse(localRot) * glm::toMat4(playerTransform.orientation);
 			newTransform.scale = glm::vec3(1.0f);
 
 			weapon->updateTransform(scene, newTransform);
@@ -68,7 +70,7 @@ void playerHandSlot::updatePosition(scene* scene, glm::mat4& handTransform, tran
 }
 
 //this returns the position of the hand bones in world space of the hand bone, not a rotation or scaling
-glm::mat4 playerHandSlot::getHandTransform(transform& playerTransform, glm::mat4& boneTransform)
+glm::mat4 playerHandSlot::getHandTransform(transform& playerTransform, glm::mat4& boneTransform, glm::vec3 boneDirection)
 {
 	glm::mat4 handMat(1.0f);
 
@@ -77,8 +79,11 @@ glm::mat4 playerHandSlot::getHandTransform(transform& playerTransform, glm::mat4
 	playerMat = playerMat * glm::toMat4(playerTransform.orientation);
 	playerMat = glm::scale(playerMat, playerTransform.scale);
 
-	handMat = playerMat * this->boneOffsetMat * glm::inverse(boneTransform);
-	handMat = handMat * glm::inverse(glm::toMat4(playerTransform.orientation));
+	handMat = playerMat * this->boneOffsetMat * glm::inverse(boneTransform); // from origin to model space, to bone space, then apply anim transform
+
+
+	handMat = handMat * glm::inverse(glm::toMat4(playerTransform.orientation)); //this makes the object rotate in relation to the body in world space
+
 
 	return handMat; //multiply the object by this matrix to move it to the players hand bone space
 }
@@ -90,10 +95,11 @@ void playerHandSlot::removeItem()
 
 void playerHandSlot::useItem()
 {
-	//if(auto weapon = std::dynamic_pointer_cast<handGun>(this->currentItem))
-	//{
-	//	//shoot pew pew pew pew
-	//}
+	if(auto weapon = std::dynamic_pointer_cast<handGun>(this->currentItem))
+	{
+		//shoot pew pew pew pew
+		
+	}
 }
 
 std::shared_ptr <item> playerHandSlot::swapItem(std::shared_ptr<item> newItem)

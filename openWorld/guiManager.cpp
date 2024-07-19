@@ -29,20 +29,30 @@ unsigned int guiManager::createGuiObject(glm::vec2 NDCpos, glm::vec2 NDCsize, gl
 {
 	unsigned int newId = createUniqueID();
 
-	this->objects[newId].renderBox = *new displayBox(RGBA,NDCpos,NDCsize);
-	this->objects[newId].renderBox.boxShape = shaper->generateBox(NDCsize.x, NDCsize.y,RGBA);
-	this->objects[newId].renderBox.boxShape.position = glm::vec3(NDCpos,0.0f);
+	displayBox newBox(RGBA, NDCpos, NDCsize);
+	newBox.boxShape = shaper->generateBox(NDCsize.x, NDCsize.y, RGBA);
+	newBox.boxShape.position = glm::vec3(NDCpos, 0.0f);
 
-	//this->objects[newId].renderText = textBox("continue", glm::vec2(0.0, 0.0), glm::vec2(0.3, 0.05), 1.5, 1.0, glm::vec4(0.3, 0.3, 0.3, 1.0));
-	//
-	////this->objects[newId].collisionBox;
+	GUIobject newGui;
+	newGui.renderBox = newBox;
 
-	//this->currentScene->add2DScreenShape(this->objects[newId].renderBox.boxShape);
+	this->objects[newId] = newGui;
+	
+	//this->objects[newId].renderBox = *new displayBox(RGBA,NDCpos,NDCsize);
+	//this->objects[newId].renderBox.boxShape = shaper->generateBox(NDCsize.x, NDCsize.y,RGBA);
+	//this->objects[newId].renderBox.boxShape.position = glm::vec3(NDCpos,0.0f);
 
-	//for(unsigned int i = 0; i < this->objects[newId].renderText.letters.size(); i++)
-	//{
-	//	currentScene->add2DScreenShape(this->objects[newId].renderText.letters[i]);
-	//}
+	this->objects[newId].renderText = textBox(boxText, NDCpos, NDCsize, 1.5, 1.0, RGBA);
+	
+	//this->objects[newId].collisionBox;
+
+	this->currentScene->add2DScreenShape(this->objects[newId].renderBox.boxShape);
+
+	for(unsigned int i = 0; i < this->objects[newId].renderText.letters.size(); i++)
+	{
+		currentScene->add2DScreenShape(this->objects[newId].renderText.letters[i]);
+	}
+
 	
 
 	return newId;
