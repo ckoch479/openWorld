@@ -312,10 +312,10 @@ Model ResourceManager::loadModelFromFile(std::string filePath)
 
 	// std::cout << "bone count: " << newModel.Skeleton.size() << std::endl;
 
-	/*for(unsigned int i = 0; i < newModel.Skeleton.size(); i++)
+	for(unsigned int i = 0; i < newModel.Skeleton.size(); i++)
 	{
 		std::cout << "bone names: " << newModel.Skeleton[i].name << std::endl;
-	}*/
+	}
 
 	return newModel;
 }

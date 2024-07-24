@@ -30,6 +30,12 @@ struct blendedAnimation
 	float blendFactor;
 };
 
+struct animModifier
+{
+	Bone* bone;
+	glm::mat4 modifier; //position, rotation, scaling added to the end of the calculation step
+};
+
 class animator
 {
 public:
@@ -47,6 +53,10 @@ public:
 	static void stepAnimation(animation* anim);
 
 	static glm::mat4 getFinalBoneMatrix(Model* model, animation* animation, Bone* bone);
+
+	static void animationModifier(Model* model, Bone* bone, glm::mat4 mod); //this is to add things like aiming/moving the character so the animation moves with the character, auto deletes after animation change
+
+	static void checkModifiers(animation* anim, Model* model);
 
 private:
 
@@ -68,6 +78,7 @@ private:
 
 	static	std::unordered_map<Model*, animation*> activeAnimations;
 	static	std::unordered_map<animation*, std::vector <glm::mat4>> animationMatrices;
+	static  std::unordered_map <Model*, animModifier> modifiers; //only supports one modifier per animation as of now
 
 	static std::vector <Model*> activeModels;
 

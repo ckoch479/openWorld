@@ -22,7 +22,7 @@ public:
 
 	void addItem(std::shared_ptr<item> newItem, scene* scene, Shader* shader); //same as equiping the item
 
-	void updatePosition(scene* scene, glm::mat4& handTransform, transform& playerTransform, glm::vec3 boneDirection);
+	void updatePosition(scene* scene, glm::mat4& handTransform, transform& playerTransform);
 
 	void removeItem(); //clear the current item
 
@@ -32,7 +32,7 @@ public:
 
 private:
 
-	glm::mat4 getHandTransform(transform& playerTransform, glm::mat4& boneTransform, glm::vec3 boneDirection);
+	glm::mat4 getHandTransform(transform& playerTransform, glm::mat4& boneTransform);
 
 	std::shared_ptr<item> currentItem;
 	glm::mat4 boneOffsetMat;

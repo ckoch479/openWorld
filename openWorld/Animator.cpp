@@ -42,6 +42,7 @@ void animator::setAnimationMatrices(Model* model, Shader* shader)
 {
 	shader->use();
 	animation* activeAnimation = activeAnimations[model];
+	//checkModifiers(activeAnimation, model);
 	if (activeAnimation)
 	{
 		for (unsigned int i = 0; i < 100; i++) //data gets to here and nothing happens
@@ -94,8 +95,18 @@ void animator::CalculateBoneTransforms(AssimpNodeData* Node, glm::mat4 parentTra
 		//nodeTransform = calculateLocalBoneTransform(anim->currentTime,bone); //problem stepping to the next part of the animation is here
 		nodeTransform = stepAnimations(anim->currentTime, bone);
 		//std::cout << "node: " << bone->name << " transform: " << glm::to_string(nodeTransform) << std::endl;
-		//std::cout << bone->name << std::endl;
+		//std::cout << bone->name << std::endl << std::endl;
 	}
+
+if(bone)
+{
+	if(bone->name == "leftSocket" || bone->name == "rightSocket")
+	{
+		std::cout << "node transform for sockets: " << glm::to_string(nodeTransform) << std::endl;
+	}
+}
+
+	
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
@@ -109,7 +120,7 @@ void animator::CalculateBoneTransforms(AssimpNodeData* Node, glm::mat4 parentTra
 		//model->boneMatrices[index] = globalTransformation * offset;
 	}
 
-	for (int i = 0; i < Node->childrenCount; i++)
+	for (int i = 0; i < Node->childrenCount; ++i)
 	{
 		CalculateBoneTransforms(&Node->children[i], globalTransformation, anim, model);
 	}
@@ -278,10 +289,43 @@ glm::mat4 animator::getFinalBoneMatrix(Model* model, animation* animation, Bone*
 	if (activeAnimations[model])
 	{
 		finalMatrix = animationMatrices[activeAnimations[model]][boneId];
+
+		//std::cout << "bone transform: " << glm::to_string(finalMatrix) << std::endl;
 	}
 	if (!activeAnimations[model])
 	{
 		std::cout << "ERROR::MODEL::DOES::NOT::HAVE::CURRENT::ANIMATION\n";
 	}
+
+	if(!bone)
+	{
+		assert(!bone);
+	}
 	return finalMatrix;
+}
+
+void animator::animationModifier(Model* model, Bone* bone, glm::mat4 mod)
+{
+	animModifier newMod;
+	newMod.bone = bone;
+	newMod.modifier = mod;
+
+	//modifiers[model] = newMod;
+
+}
+
+void animator::checkModifiers(animation* anim, Model* model)
+{
+	//animModifier* mod = &modifiers[model];
+	
+	//if(!mod || !mod->bone)
+	//{
+	//	return;
+	//}
+
+	//if(mod)
+	//{
+	//	//int boneID = mod->bone->id;
+	//	//animationMatrices[anim][boneID] += mod->modifier;
+	//}
 }

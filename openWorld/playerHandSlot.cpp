@@ -29,7 +29,7 @@ void playerHandSlot::addItem(std::shared_ptr<item> newItem, scene* scene, Shader
 	}
 }
 
-void playerHandSlot::updatePosition(scene* scene, glm::mat4& handTransform, transform& playerTransform, glm::vec3 boneDirection)
+void playerHandSlot::updatePosition(scene* scene, glm::mat4& handTransform, transform& playerTransform)
 {
 	if(this->currentItem) //if there is a current item update its position
 	{
@@ -38,36 +38,13 @@ void playerHandSlot::updatePosition(scene* scene, glm::mat4& handTransform, tran
 			transform newTransform;
 			transform objectTransform = weapon->getTransform();
 
-			glm::mat4 bonePos = getHandTransform(playerTransform, handTransform, boneDirection);
+			glm::mat4 bonePos = getHandTransform(playerTransform, handTransform);
 
 			glm::vec4 objectBonePosition = glm::inverse(bonePos) * glm::vec4(playerTransform.position, 1.0);
 
-			glm::vec3 correctionTranslate(0.0f);
-			correctionTranslate = 0.1f * boneDirection;
+			newTransform.position = objectBonePosition + glm::vec4(playerTransform.position, 1.0f);
 
-			newTransform.position = objectBonePosition + glm::vec4(playerTransform.position, 1.0f) + glm::vec4(correctionTranslate,1.0f);
-
-			glm::vec3 front = glm::normalize(boneDirection);
-			//glm::vec3 right =  glm::normalize(glm::cross(front, glm::vec3(0, 1, 0)));
-			glm::vec3 right = glm::normalize(glm::vec4(1, 0, 0, 0.0) * playerTransform.orientation);
-			glm::vec3 up = glm::normalize(glm::cross(front, right));
-
-			glm::mat4 localRot(1.0f);
-			//localRot[0][0] = front.x; localRot[0][1] = front.y; localRot[0][2] = front.z;
-			//localRot[1][0] = up.x;    localRot[1][1] = up.y;    localRot[1][2] = up.z;
-			//localRot[2][0] = right.x; localRot[2][1] = right.y; localRot[2][2] = right.z;
-
-
-			glm::quat correctionQuat(1.0f, 0.0, 0.0, 0.0);
-
-			glm::mat4 rotateMat(1.0f);
-			rotateMat = glm::rotate(rotateMat, 1.5f, glm::vec3(1, 0, 0));//x 1.5 worked without localRot
-			rotateMat = glm::rotate(rotateMat, 0.0f, glm::vec3(0, 1, 0)); //y
-			rotateMat = glm::rotate(rotateMat, 0.0f, glm::vec3(0, 0, 1));//z 
-			correctionQuat = glm::toQuat(rotateMat);
-			correctionQuat = glm::normalize(correctionQuat);
-
-			newTransform.orientation = glm::mat4(1.0)  * glm::toMat4(playerTransform.orientation) * localRot * glm::toMat4(correctionQuat);
+			newTransform.orientation = glm::mat4(1.0) * glm::toMat4(playerTransform.orientation);
 			newTransform.scale = glm::vec3(1.0f);
 
 			weapon->updateTransform(scene, newTransform);
@@ -76,7 +53,7 @@ void playerHandSlot::updatePosition(scene* scene, glm::mat4& handTransform, tran
 }
 
 //this returns the position of the hand bones in world space of the hand bone, not a rotation or scaling
-glm::mat4 playerHandSlot::getHandTransform(transform& playerTransform, glm::mat4& boneTransform, glm::vec3 boneDirection)
+glm::mat4 playerHandSlot::getHandTransform(transform& playerTransform, glm::mat4& boneTransform)
 {
 	glm::mat4 handMat(1.0f);
 

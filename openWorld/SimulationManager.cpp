@@ -57,10 +57,10 @@ void SimulationManager::run()
 
 	//item testing:
 	gameObjectManager newManager;
-	unsigned int gunId = newManager.createHandGun("resources/Assets/1911Modified.gltf","handGun",10,10);
+	unsigned int gunId = newManager.createHandGun("resources/Assets/1911Edit.gltf","handGun",10,10);
 
 	//player manager:
-	playerManager newPlayer(this->sceneObj,this->world,this->WindowManager,animationShader, lightShader,"resources/player/player.gltf",&newCamera);
+	playerManager newPlayer(this->sceneObj,this->world,this->WindowManager,animationShader, lightShader,"resources/player/playerEdit.gltf",&newCamera);
 	newPlayer.testItemSlots(newManager.getItemPTR(gunId));
 	//newPlayer.testItemSlots(newManager.getItemPTR(gunId));
 

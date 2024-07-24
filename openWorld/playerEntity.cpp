@@ -331,6 +331,7 @@ glm::mat4 playerEntity::getLeftHandTransform()
 	glm::mat4 handTransform(1.0f);
 
 	Bone* bone = &this->playerModel->boneMap["mixamorig:LeftHand"];
+	//Bone* bone = &this->playerModel->boneMap["leftSocket"];
 	
 
 	handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
@@ -343,6 +344,7 @@ glm::mat4 playerEntity::getRightHandTransform()
 	glm::mat4 handTransform(1.0f);
 
 	Bone* bone = &this->playerModel->boneMap["mixamorig:RightHand"];
+	//Bone* bone = &this->playerModel->boneMap["rightSocket"];
 	
 
 	handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
@@ -354,7 +356,8 @@ glm::mat4 playerEntity::getRightHandOffsetMatrix()
 {
 	glm::mat4 handOffset(1.0f);
 
-	handOffset = this->playerModel->boneMap["mixamorig:RightHand"].offsetMatrix;
+	//handOffset = this->playerModel->boneMap["mixamorig:RightHand"].offsetMatrix;
+	handOffset = this->playerModel->boneMap["rightSocket"].offsetMatrix;
 
 	return handOffset;
 }
@@ -363,56 +366,8 @@ glm::mat4 playerEntity::getLeftHandOffsetMatrix()
 {
 	glm::mat4 handOffset(1.0f);
 
-	handOffset = this->playerModel->boneMap["mixamorig:LeftHand"].offsetMatrix;
+	//handOffset = this->playerModel->boneMap["mixamorig:LeftHand"].offsetMatrix;
+	handOffset = this->playerModel->boneMap["leftSocket"].offsetMatrix;
 
 	return handOffset;
-}
-
-glm::vec3 playerEntity::getLeftHandDireciton()
-{
-	glm::vec3 handDirection(1.0f);
-	Bone* handBone = &this->playerModel->boneMap["mixamorig:LeftHand"];
-	Bone* foreArmBone = &this->playerModel->boneMap["mixamorig:LeftForeArm"];
-
-	glm::mat4 handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, handBone);
-	glm::mat4 armTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, foreArmBone);
-
-	glm::mat4 handOffset = handBone->offsetMatrix;
-	glm::mat4 armOffset = foreArmBone->offsetMatrix;
-
-	glm::mat4 playerMat(1.0f);
-
-	glm::vec4 handBonePos(1.0f);
-	handBonePos = handBonePos * playerMat * handOffset * handTransform;
-
-	glm::vec4 armBonePos(1.0f);
-	armBonePos = armBonePos * playerMat * armOffset * armTransform;
-
-	handDirection = armBonePos - handBonePos;
-
-	return handDirection;
-}
-
-glm::vec3 playerEntity::getRightHandDirection()
-{
-	glm::vec3 handDirection(1.0f);
-	Bone* handBone = &this->playerModel->boneMap["mixamorig:RightHand"];
-	Bone* foreArmBone = &this->playerModel->boneMap["mixamorig:RightShoulder"];
-
-	glm::mat4 handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, handBone);
-	glm::mat4 armTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, foreArmBone);
-
-	glm::mat4 handOffset = handBone->offsetMatrix;
-	glm::mat4 armOffset = foreArmBone->offsetMatrix;
-
-	glm::mat4 playerMat(1.0f);
-
-	glm::vec4 handBonePos(1.0f);
-	handBonePos = handBonePos * playerMat * handOffset * handTransform;
-
-	glm::vec4 armBonePos(1.0f);
-	armBonePos = armBonePos * playerMat * armOffset * armTransform;
-
-	handDirection = armBonePos - handBonePos;
-	return glm::normalize(handDirection);
 }
