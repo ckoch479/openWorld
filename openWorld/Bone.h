@@ -2,76 +2,49 @@
 
 #include <iostream>
 #include <vector>
-#include <list>
 
-#include <assimp/scene.h>
-
-#include "Includes/glm/glm.hpp"
-#define GLM_ENABLE_EXPERIMENTAL
-#include "Includes/glm/gtx/quaternion.hpp"
-
-#include "assimp_glm_helpers.h"
+#include "includes/glm/glm.hpp"
+#include "Includes/glm/gtc/type_ptr.hpp"
 
 #ifndef BONE_H
 #define BONE_H
 
-struct KeyPosition
-{
-	glm::vec3 position;
-	float timestamp;
-};
-
-struct KeyRotation
-{
-	glm::quat rotation;
-	float timestamp;
-};
-
-struct KeyScale
-{
-	glm::vec3 scale;
-	float timestamp;
-};
-
-//Animation data for each bone is stored in this class 
 class Bone
 {
 public:
+	
+	Bone();
 
-	Bone(const std::string& name, int ID, const aiNodeAnim* channel);
+	Bone(int id, std::string name, glm::mat4 offset);
 
-	~Bone();
+	Bone(int id, std::string name, glm::mat4 offset, int parent, std::vector <int> children);
 
-	glm::mat4 getLocalTransform();
+	int getId();
 
-	std::string getBoneName() const;
+	int getParent();
 
-	int getBoneID();
+	std::vector <int> getChildren();
 
-	int getNumPositions();
+	glm::mat4 getOffsetMat();
 
-	int getNumRotations();
+	int getNumChildren();
 
-	int getNumScalings();
+	std::string getName();
 
-	std::vector <KeyPosition> getPositions();
+	void addChild(int bone);
 
-	std::vector <KeyRotation> getRotations();
-
-	std::vector <KeyScale> getScalings();
+	void setParent(int bone);
 
 private:
-	std::vector <KeyPosition> Positions;
-	std::vector <KeyRotation> Rotations;
-	std::vector <KeyScale> Scalings;
 
-	int numPositions;
-	int numRotations;
-	int numScalings;
+	int id = -1;
+	glm::mat4 offsetMatrix = glm::mat4(1.0f);
+	std::string name = "NO::BONE";
 
-	glm::mat4 localTransform;
-	std::string name;
-	int boneID;
+	int numChildren = 0;
+	std::vector <int> childrenIds; //children Ids
+
+	int parentBoneId; //parent id
 
 };
 

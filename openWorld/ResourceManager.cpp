@@ -1,14 +1,15 @@
 #include "ResourceManager.h"
 
-std::unordered_map<std::string, Texture>      ResourceManager::textures;
-std::unordered_map<std::string, Shader>       ResourceManager::shaders;
-std::unordered_map<std::string, Mesh>		  ResourceManager::meshes;
-std::unordered_map<std::string, Model>        ResourceManager::models;
-std::unordered_map <std::string, animation>   ResourceManager::animations;
+std::unordered_map <std::string, Texture>      ResourceManager::textures;
+std::unordered_map <std::string, Shader>       ResourceManager::shaders;
+std::unordered_map <std::string, Mesh>		   ResourceManager::meshes;
+std::unordered_map <std::string, Model>        ResourceManager::models;
+std::unordered_map <std::string, animation>    ResourceManager::animations;
+std::unordered_map <std::string, skeleton>     ResourceManager::skeletons;
 
-std::vector <std::string>                     ResourceManager::loadedTextures; //makes sure we do not load textures multiple times into memory
-std::vector <std::string>					  ResourceManager::loadedModels;
-std::vector <std::string>					  ResourceManager::loadedAnimations;
+std::vector <std::string>                      ResourceManager::loadedTextures; //makes sure we do not load textures multiple times into memory
+std::vector <std::string>					   ResourceManager::loadedModels;
+std::vector <std::string>					   ResourceManager::loadedAnimations;
 
 Mesh* ResourceManager::loadMesh(std::string filePath, std::string name)
 {
@@ -310,12 +311,6 @@ Model ResourceManager::loadModelFromFile(std::string filePath)
 		}
 	}
 
-	// std::cout << "bone count: " << newModel.Skeleton.size() << std::endl;
-
-	for(unsigned int i = 0; i < newModel.Skeleton.size(); i++)
-	{
-		std::cout << "bone names: " << newModel.Skeleton[i].name << std::endl;
-	}
 
 	return newModel;
 }

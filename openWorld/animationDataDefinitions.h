@@ -39,6 +39,7 @@ struct animBone
 	std::vector <keyRotation> rotations;
 	std::vector <keyScale> scales;
 
+	// bellow was added due to issues with timesteps in animation hopefully will be resolved
 	int currentPosition = 0;
 	int currentRotation = 0;
 	int currentScale = 0;
@@ -87,5 +88,11 @@ struct animation
 	std::vector <animBone> bones;
 	std::unordered_map <std::string, animBone*> animBones;
 	float currentTime = 0.0;
+};
 
+struct inverseKinematicChain
+{
+	std::vector <Bone*> bones;
+	Bone* endEffector;
+	glm::vec3 targetPosition;
 };

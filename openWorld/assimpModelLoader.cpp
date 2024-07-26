@@ -2,7 +2,7 @@
 assimpModelLoader::assimpModelLoader(std::string filePath)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_PopulateArmatureData);
 
 	if (nullptr == scene)
 	{
@@ -43,8 +43,7 @@ Model assimpModelLoader::getModel()
 {
 	Model newModel;
 	newModel.meshes = this->meshes;
-	newModel.Skeleton = this->skeleton;
-	newModel.boneMap = this->boneMap;
+	
 
 	return newModel;
 }
@@ -204,6 +203,7 @@ void assimpModelLoader::setVertexBoneData(Vertex& vertex, int boneID, float weig
 	}
 }
 
+//this whole thing here really needs to be redone to ensure bone relationships are correct and data is properly transferred over 
 void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
 	std::map <std::string, Bone>& boneInfoMap = this->boneMap;
@@ -211,14 +211,16 @@ void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& verti
 
 	for (int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++)
 	{
+		mesh->mBones[boneIndex]->mNode; //node has parent and child data
+
 		int boneID = -1;
 		std::string boneName = mesh->mBones[boneIndex]->mName.C_Str(); //this top code block gets the bone info from assimp like its name offset and sets an id for it
 		if (boneInfoMap.find(boneName) == boneInfoMap.end())
 		{
-			Bone newBone;
-			newBone.id = boneCount;
-			newBone.offsetMatrix = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
-			newBone.name = boneName;
+			Bone newBone(boneCount, boneName, AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix));
+			//newBone.id = boneCount;
+			//newBone.offsetMatrix = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
+			//newBone.name = boneName;
 			boneInfoMap[boneName] = newBone;
 			boneID = boneCount;
 			boneCount++;
@@ -226,7 +228,7 @@ void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& verti
 		}
 		else
 		{
-			boneID = boneInfoMap[boneName].id;
+			boneID = boneInfoMap[boneName].getId();
 		}
 		assert(boneID != -1);
 		auto weights = mesh->mBones[boneIndex]->mWeights;

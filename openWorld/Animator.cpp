@@ -80,6 +80,8 @@ void animator::updateAnimation(animation* animation, float dt, Model* model)
 	animation->currentTime += animation->ticksPerSecond * dt;
 	animation->currentTime = fmod(animation->currentTime, animation->duration);
 
+	std::cout << "current animation time: " << animation->currentTime << std::endl << std::endl;
+
 	CalculateBoneTransforms(&animation->rootNode, glm::mat4(1.0f), animation, model);
 }
 
@@ -92,7 +94,7 @@ void animator::CalculateBoneTransforms(AssimpNodeData* Node, glm::mat4 parentTra
 	animBone* bone = anim->animBones[nodeName];
 	if (bone)
 	{
-		//nodeTransform = calculateLocalBoneTransform(anim->currentTime,bone); //problem stepping to the next part of the animation is here
+		//calculateLocalBoneTransform(anim->currentTime,bone); //problem stepping to the next part of the animation is here
 		nodeTransform = stepAnimations(anim->currentTime, bone);
 		//std::cout << "node: " << bone->name << " transform: " << glm::to_string(nodeTransform) << std::endl;
 		//std::cout << bone->name << std::endl << std::endl;
@@ -186,13 +188,40 @@ glm::mat4 animator::calculateLocalBoneTransform(float currentTime, animBone* bon
 {
 	glm::mat4 localMatrix(1.0f);
 
-	glm::mat4 translation = interpolatePosition(currentTime, bone);
+	//glm::mat4 translation = interpolatePosition(currentTime, bone);
 
-	glm::mat4 rotation = interpolateRotation(currentTime, bone);
+	//glm::mat4 rotation = interpolateRotation(currentTime, bone);
 
-	glm::mat4 scale = interpolateScale(currentTime, bone);
+	//glm::mat4 scale = interpolateScale(currentTime, bone);
 
-	localMatrix = translation * rotation * scale;
+	//massive timing problem, timestamps are attached to the animations and are in ticks (8366.67 is a lot of seconds if not)
+	if(bone)
+	{
+		std::cout << "bone: " << bone->name;
+
+		if(bone->currentPosition < bone->numPositions)
+		{
+			std::cout << " translate timestamp: " << bone->positions[bone->currentPosition].timeStamp;
+		}
+		else
+		{
+			std::cout << "only one translate timestamp found! " << "current translation index: " << bone->currentPosition;
+		}
+
+		if (bone->currentRotation < bone->numRotations)
+		{
+			std::cout << " rotation time stamp: " << bone->rotations[bone->currentRotation].timeStamp;
+		}
+		else
+		{
+			std::cout << " only one rotation timestamp found! " << "current rotation index: " << bone->currentRotation;
+		}
+
+		std::cout << std::endl;
+
+	}
+	
+	//localMatrix = translation * rotation * scale;
 	return localMatrix;
 }
 //doesnt work right

@@ -58,6 +58,12 @@
     <Filter Include="Header Files\2Drendering">
       <UniqueIdentifier>{be3ff272-44d5-43ac-9915-e37c7ac06107}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RenderingandSceneBody\Animation">
+      <UniqueIdentifier>{ebe1ef02-f157-4354-b762-93486e5906a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RenderingandSceneHeaders\Animation">
+      <UniqueIdentifier>{32bd2a1b-d741-4c97-8bd5-9dbcee251a1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -71,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Animator.cpp">
-      <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\RenderingandSceneBody</Filter>
@@ -168,6 +171,18 @@
     <ClCompile Include="guiManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Source Files\RenderingandSceneBody\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="objAnimator.cpp">
+      <Filter>Source Files\RenderingandSceneBody\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="skeleton.cpp">
+      <Filter>Source Files\RenderingandSceneBody\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>Source Files\RenderingandSceneBody\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -188,9 +203,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="Bone.h">
-      <Filter>Header Files\RenderingandSceneHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
@@ -198,12 +210,6 @@
       <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Header Files\RenderingandSceneHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationDebug.h">
-      <Filter>Header Files\RenderingandSceneHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Animator.h">
       <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
@@ -295,6 +301,21 @@
     </ClInclude>
     <ClInclude Include="guiManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="objAnimator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationDebug.h">
+      <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="skeleton.h">
+      <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,8 @@
 
 #include "Texture.h"
 #include "Shader.h"
+#include "skeleton.h"
+#include "Bone.h"
 
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
@@ -77,6 +79,7 @@ private:
 	static std::unordered_map <std::string, Texture> textures;
 	static std::unordered_map <std::string, Shader> shaders;
 	static std::unordered_map <std::string, animation> animations;
+	static std::unordered_map <std::string, skeleton> skeletons;
 	//animations
 
 	static std::vector <std::string> loadedTextures;

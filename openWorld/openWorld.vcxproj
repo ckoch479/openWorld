@@ -158,6 +158,7 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="assimpAnimationLoader.cpp" />
     <ClCompile Include="assimpModelLoader.cpp" />
+    <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="characterController.cpp" />
     <ClCompile Include="Collider.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="item.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="lookup_table.cpp" />
+    <ClCompile Include="objAnimator.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerEntity.cpp" />
@@ -185,6 +187,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeGenerator.cpp" />
     <ClCompile Include="SimulationManager.cpp" />
+    <ClCompile Include="skeleton.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -213,6 +216,7 @@
     <ClInclude Include="keyDefinitions.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="lookup_table.h" />
+    <ClInclude Include="objAnimator.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerActionDefinitions.h" />
@@ -230,6 +234,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeGenerator.h" />
     <ClInclude Include="SimulationManager.h" />
+    <ClInclude Include="skeleton.h" />
     <ClInclude Include="testingBoxMeshFunctions.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="thirdPersonCamera.h" />

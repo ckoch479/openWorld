@@ -3,6 +3,7 @@
 #include "Includes/glm/gtc/type_ptr.hpp"
 
 #include "Texture.h"
+#include "skeleton.h"
 
 #include <vector>
 #include <string>
@@ -50,18 +51,19 @@ struct Mesh
 	unsigned int EBO;
 };
 
-struct Bone
-{
-	int id;
-	glm::mat4 offsetMatrix;
-	std::string name;
-};
+//struct Bone
+//{
+//	int id;
+//	glm::mat4 offsetMatrix;
+//	std::string name;
+//};
 
 struct Model
 {
 	std::vector <Mesh> meshes;
-	std::vector <Bone> Skeleton;
-	std::map<std::string, Bone> boneMap;
+	skeleton* skeleton;
+	//std::vector <Bone> Skeleton;
+	//std::map<std::string, Bone> boneMap;
 	//glm::mat4 boneMatrices[100];
 };
 
@@ -141,6 +143,7 @@ struct Vertex2D
 		this->color = RGBA;
 	}
 };
+
 struct shape2D
 {
 	std::vector <Vertex2D> vertices;

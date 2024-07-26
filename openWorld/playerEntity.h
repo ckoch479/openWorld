@@ -66,7 +66,7 @@ public:
 
 	glm::mat4 getRightHandOffsetMatrix();
 	glm::mat4 getLeftHandOffsetMatrix();
-
+	 
 private:
 
 	void updateEntity();
@@ -76,7 +76,7 @@ private:
 	void updateActions();
 
 	//data:
-	playerActions currentAction;
+	
 	
 	//animation names should exactly match player action name as well key word is should it is me making this thing
 	//also animations is only handled by the class you cannot manually change the animations only player actions
@@ -84,7 +84,7 @@ private:
 	animation* currentAnimation; //current animation being used by the player
 
 	//transforms and movement
-	transform currentTransform; //this is position, orientation, and scaling for renderer
+	//this is position, orientation, and scaling for renderer
 	relTransform relativeTransf; //this is front, up, and right
 
 	//players mesh (changing clothing/gear and such), actual data is stored in resource manager
@@ -93,21 +93,33 @@ private:
 	//player file path from .player file format
 	std::string playerFilePath;
 
-	Model* playerModel; //this is just a little thing to make rendering easier for myself
-
-
-
 	std::string playerName; //this one should be pretty self explanatory
-	std::string sceneID;
-
+	
 	//helper bools for updating the player on the fly
+	bool leftHandWeapon = false;
+	bool rightHandWeapon = false;
+	bool bothHandWeapon = false;
+
+	//object states/state changes
+
 	bool meshChange = false;
 	bool animationChange = false;
 	bool actionChange = false;
 
-	bool leftHandWeapon = false;
-	bool rightHandWeapon = false;
-	bool bothHandWeapon = false;
+	bool isAiming = false;
+	bool isInjured = false;
+
+	std::string activeAnim;//current active animation
+
+	playerActions currentAction;
+
+	//rendering data
+	Model* playerModel;
+
+	std::string sceneID;
+
+	transform currentTransform;
+
 
 	//debug data delete later
 	int stepper = 0;
