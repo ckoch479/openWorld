@@ -80,8 +80,6 @@ void animator::updateAnimation(animation* animation, float dt, Model* model)
 	animation->currentTime += animation->ticksPerSecond * dt;
 	animation->currentTime = fmod(animation->currentTime, animation->duration);
 
-	std::cout << "current animation time: " << animation->currentTime << std::endl << std::endl;
-
 	CalculateBoneTransforms(&animation->rootNode, glm::mat4(1.0f), animation, model);
 }
 
@@ -94,32 +92,19 @@ void animator::CalculateBoneTransforms(AssimpNodeData* Node, glm::mat4 parentTra
 	animBone* bone = anim->animBones[nodeName];
 	if (bone)
 	{
-		//calculateLocalBoneTransform(anim->currentTime,bone); //problem stepping to the next part of the animation is here
+		//calculateLocalBoneTransform(anim->currentTime,bone); //problem with timings here
 		nodeTransform = stepAnimations(anim->currentTime, bone);
-		//std::cout << "node: " << bone->name << " transform: " << glm::to_string(nodeTransform) << std::endl;
-		//std::cout << bone->name << std::endl << std::endl;
-	}
 
-if(bone)
-{
-	if(bone->name == "leftSocket" || bone->name == "rightSocket")
-	{
-		std::cout << "node transform for sockets: " << glm::to_string(nodeTransform) << std::endl;
 	}
-}
-
-	
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-	auto boneInfoMap = model->boneMap;
-	if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+	Bone* tempBone = model->skeleton->getBone(nodeName);
+	if(bone)
 	{
-		int index = boneInfoMap[nodeName].id;
-		glm::mat4 offset = boneInfoMap[nodeName].offsetMatrix;
-		//std::cout << index << std::endl;
+		int index = tempBone->getId();
+		glm::mat4 offset = tempBone->getOffsetMat();
 		animationMatrices[anim][index] = globalTransformation * offset;
-		//model->boneMatrices[index] = globalTransformation * offset;
 	}
 
 	for (int i = 0; i < Node->childrenCount; ++i)
@@ -311,7 +296,7 @@ float animator::calculateScaleFactor(float lastTimeStamp, float nextTimeStamp, f
 
 glm::mat4 animator::getFinalBoneMatrix(Model* model, animation* animation, Bone* bone)
 {
-	int boneId = bone->id;
+	int boneId = bone->getId();
 	//std::cout << bone->name << std::endl;
 	glm::mat4 finalMatrix(1.0f);
 

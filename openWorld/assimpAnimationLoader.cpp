@@ -46,33 +46,34 @@ void assimpAnimationLoader::readMissingBones(const aiAnimation* animation, Model
 {
 	int size = animation->mNumChannels;
 
-
-	auto& boneMap = model->boneMap;
-	int boneCount = model->Skeleton.size();
-	//std::cout << "skeleton size before loading in: " << boneCount << std::endl;
+	//auto& boneMap = model->boneMap;
+	int boneCount = model->skeleton->getBoneCount();
 
 	for (int i = 0; i < size; ++i)
 	{
 		auto channel = animation->mChannels[i];
 		std::string boneName = channel->mNodeName.data;
 
-		if (boneMap.find(boneName) == boneMap.end())
+		/*if (boneMap.find(boneName) == boneMap.end())
 		{
 			boneMap[boneName].id = boneCount;
 			boneCount++;
 			std::cout << "new bone added\n";
-		}
-
-		/*if(channel)
-		{
-			std::cout << "bone channels in animation: " << animation->mName.data << " " << " bone: " << boneName << std::endl;
 		}*/
 
-		bones.push_back(createBoneNode(channel->mNodeName.data, boneMap[channel->mNodeName.data].id, channel));
+		Bone* tempBone = model->skeleton->getBone(boneName);
+		if(tempBone == NULL)
+		{
+			//offset matrix isnt correct but animation really shouldnt be adding in bones to begin with so thatll be gone
+			Bone newBone(boneCount, boneName, glm::mat4(1.0f));
+			model->skeleton->addBone(newBone);
+			std::cout << "new bone added in animation!\n";
+		}
 
+		bones.push_back(createBoneNode(channel->mNodeName.data, model->skeleton->getBone(boneName)->getId(), channel));
 	}
-	this->boneInfoMap = boneMap;
-	//std::cout << "skeleton size after loading in: " << boneCount << std::endl;
+	//this->boneInfoMap = boneMap;
+	
 }
 
 void assimpAnimationLoader::readHierarchyData(AssimpNodeData& dest, const aiNode* src)

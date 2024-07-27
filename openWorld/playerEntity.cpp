@@ -330,7 +330,9 @@ glm::mat4 playerEntity::getLeftHandTransform()
 {
 	glm::mat4 handTransform(1.0f);
 
-	Bone* bone = &this->playerModel->boneMap["mixamorig:LeftHand"];
+	//Bone* bone = &this->playerModel->boneMap["mixamorig:LeftHand"];
+	std::string boneName = "mixamorig:LeftHand";
+	Bone* bone = this->playerModel->skeleton->getBone(boneName);
 	//Bone* bone = &this->playerModel->boneMap["leftSocket"];
 	
 
@@ -343,7 +345,11 @@ glm::mat4 playerEntity::getRightHandTransform()
 {
 	glm::mat4 handTransform(1.0f);
 
-	Bone* bone = &this->playerModel->boneMap["mixamorig:RightHand"];
+	std::string boneName = "mixamorig:RightHand";
+	//std::string boneName = "rightSocket";
+
+
+	Bone* bone = this->playerModel->skeleton->getBone(boneName);
 	//Bone* bone = &this->playerModel->boneMap["rightSocket"];
 	
 
@@ -357,7 +363,10 @@ glm::mat4 playerEntity::getRightHandOffsetMatrix()
 	glm::mat4 handOffset(1.0f);
 
 	//handOffset = this->playerModel->boneMap["mixamorig:RightHand"].offsetMatrix;
-	handOffset = this->playerModel->boneMap["rightSocket"].offsetMatrix;
+	//handOffset = this->playerModel->boneMap["rightSocket"].offsetMatrix;
+
+	std::string boneName = "rightSocket";
+	handOffset = playerModel->skeleton->getBone(boneName)->getOffsetMat();
 
 	return handOffset;
 }
@@ -367,7 +376,10 @@ glm::mat4 playerEntity::getLeftHandOffsetMatrix()
 	glm::mat4 handOffset(1.0f);
 
 	//handOffset = this->playerModel->boneMap["mixamorig:LeftHand"].offsetMatrix;
-	handOffset = this->playerModel->boneMap["leftSocket"].offsetMatrix;
+	//handOffset = this->playerModel->boneMap["leftSocket"].offsetMatrix;
+
+	std::string boneName = "leftSocket";
+	handOffset = playerModel->skeleton->getBone(boneName)->getOffsetMat();
 
 	return handOffset;
 }

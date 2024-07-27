@@ -302,9 +302,6 @@
     <ClInclude Include="guiManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="objAnimator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Animator.h">
       <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
     </ClInclude>
@@ -315,6 +312,9 @@
       <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Bone.h">
+      <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="objAnimator.h">
       <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
     </ClInclude>
   </ItemGroup>

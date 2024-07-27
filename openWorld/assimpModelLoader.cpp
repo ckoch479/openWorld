@@ -209,10 +209,10 @@ void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& verti
 	std::map <std::string, Bone>& boneInfoMap = this->boneMap;
 	int& boneCount = this->boneCounter;
 
+	//this preloads the model bonemap with bones
 	for (int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++)
 	{
-		mesh->mBones[boneIndex]->mNode; //node has parent and child data
-
+	
 		int boneID = -1;
 		std::string boneName = mesh->mBones[boneIndex]->mName.C_Str(); //this top code block gets the bone info from assimp like its name offset and sets an id for it
 		if (boneInfoMap.find(boneName) == boneInfoMap.end())
@@ -240,15 +240,24 @@ void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& verti
 			float weight = weights[weightIndex].mWeight;
 			assert(vertexID <= vertices.size());
 
-			/*if(vertexID == 0)
-			{
-				std::cout << "vertex of: " << vertexID << " weight of: " << weightIndex << " value: " << weight << std::endl;
-			}*/
 			setVertexBoneData(vertices[vertexID], boneID, weight);
 		}
 
 		//std::cout << "end of bone: " << boneIndex << std::endl;
+	}
 
+	//once all the bones have been "sorted through now add their parent/child relationship
+	for(unsigned int i = 0; i < mesh->mNumBones; i++)
+	{
+		std::string boneName = mesh->mBones[i]->mName.C_Str();
+		Bone* currentBone = &boneMap[boneName];
+		aiBone* assimpBone = mesh->mBones[i];
+
+		int parentId;
+
+		parentId = boneMap[assimpBone->mNode->mParent->mName.C_Str()].getId();
+
+		currentBone->setParent(parentId);
 	}
 
 }

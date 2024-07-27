@@ -61,10 +61,11 @@ private:
 
 
 	std::vector <Mesh> meshes;
-	std::vector <Bone> skeleton;
 
+	//after the bones are loaded in from assimp, each bone will have its parent id and the children ids will still need to be added
+	std::vector <Bone> skeleton;
 	std::map <std::string, Bone> boneMap;
-	int boneCounter = 1;
+	int boneCounter = 0;
 
 	std::string filePath;
 	std::string directory;

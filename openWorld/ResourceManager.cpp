@@ -310,8 +310,12 @@ Model ResourceManager::loadModelFromFile(std::string filePath)
 
 		}
 	}
+	std::vector <Bone> modelBones = loader.getSkeleton();
+	skeleton newSkeleton(modelBones);
+	
+	skeletons[filePath] = newSkeleton;
 
-
+	newModel.skeleton = &skeletons[filePath];
 	return newModel;
 }
 

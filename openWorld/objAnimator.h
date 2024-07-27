@@ -9,6 +9,9 @@
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
 
+#include "Bone.h"
+#include "skeleton.h"
+
 #ifndef OBJANIMATOR_H
 #define OBJANIMATOR_H
 
@@ -32,17 +35,28 @@ public:
 
 	void solveIK();
 
-	void setSkeleton();
+	void setSkeleton(skeleton* newSkeleton);
+
 	void addBone(Bone& newBone);
 
 
 private:
 
 	//data
-	//skeleton
+	skeleton* animationSkeleton;
 	std::unordered_map<std::string, animation*> animations;
 	std::map <std::string, glm::quat> forwardKinematicRotations;
+	std::vector <inverseKinematicChain> IKchains;
+
+	//private methods
+
+	void updateForwardKinematics();
+
+	void updateInverseKinematics();
+
+	void blendAnimations();
 	
+	glm::vec3 Lerp(glm::vec3 valueA, glm::vec3 valueB, float factor);
 
 };
 

@@ -44,7 +44,7 @@ private:
 	int numChildren = 0;
 	std::vector <int> childrenIds; //children Ids
 
-	int parentBoneId; //parent id
+	int parentBoneId = NULL; //parent id
 
 };
 

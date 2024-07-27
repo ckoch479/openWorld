@@ -5,6 +5,7 @@ Bone::Bone()
 	this->id = -1;
 	this->name = "NO::BONE";
 	this->offsetMatrix = glm::mat4(1.0f);
+	this->childrenIds.push_back(0);
 }
 
 Bone::Bone(int id, std::string name, glm::mat4 offset)
@@ -12,6 +13,7 @@ Bone::Bone(int id, std::string name, glm::mat4 offset)
 	this->id = id;
 	this->name = name;
 	this->offsetMatrix = offset;
+	this->childrenIds.push_back(0);
 }
 
 Bone::Bone(int id, std::string name, glm::mat4 offset, int parent, std::vector <int> children)
