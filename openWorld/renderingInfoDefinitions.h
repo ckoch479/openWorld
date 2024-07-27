@@ -62,9 +62,8 @@ struct Model
 {
 	std::vector <Mesh> meshes;
 	skeleton* skeleton;
-	//std::vector <Bone> Skeleton;
-	//std::map<std::string, Bone> boneMap;
-	//glm::mat4 boneMatrices[100];
+	std::string name;
+	
 };
 
 struct pointLight

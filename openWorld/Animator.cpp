@@ -16,7 +16,6 @@ void animator::addAnimation(Model* model, animation* animation)
 	for (unsigned int i = 0; i < 100; i++)
 	{
 		animationMatrices[activeAnimations[model]].push_back(glm::mat4(1.0f));
-		//model->boneMatrices[i] = glm::mat4(1.0f);
 	}
 
 	activeModels.push_back(model);
@@ -154,11 +153,7 @@ glm::mat4 animator::stepAnimations(float currentTime, animBone* bone)
 
 void animator::stepAnimation(animation* anim)
 {
-	/*stepper++;
-	if(stepper > 100)
-	{
-		stepper = 0;
-	}*/
+	
 	for (unsigned int i = 0; i < anim->bones.size(); i++)
 	{
 		animBone* bone = &anim->bones[i];
@@ -173,14 +168,14 @@ glm::mat4 animator::calculateLocalBoneTransform(float currentTime, animBone* bon
 {
 	glm::mat4 localMatrix(1.0f);
 
-	//glm::mat4 translation = interpolatePosition(currentTime, bone);
+	glm::mat4 translation = interpolatePosition(currentTime, bone);
 
-	//glm::mat4 rotation = interpolateRotation(currentTime, bone);
+	glm::mat4 rotation = interpolateRotation(currentTime, bone);
 
-	//glm::mat4 scale = interpolateScale(currentTime, bone);
+	glm::mat4 scale = interpolateScale(currentTime, bone);
 
 	//massive timing problem, timestamps are attached to the animations and are in ticks (8366.67 is a lot of seconds if not)
-	if(bone)
+	/*if(bone)
 	{
 		std::cout << "bone: " << bone->name;
 
@@ -204,9 +199,9 @@ glm::mat4 animator::calculateLocalBoneTransform(float currentTime, animBone* bon
 
 		std::cout << std::endl;
 
-	}
+	}*/
 	
-	//localMatrix = translation * rotation * scale;
+	localMatrix = translation * rotation * scale;
 	return localMatrix;
 }
 //doesnt work right

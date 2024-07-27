@@ -25,6 +25,8 @@
 #include "ShapeGenerator.h"
 #include "guiManager.h"
 
+//#include "programTimer.h"
+
 #ifndef SIMULATIONMANAGER_H
 #define SIMULATIONMANAGER_H
 
@@ -68,12 +70,17 @@ public:
 	void setDeltaTime();
 
 	void playerInputTestFunction(playerEntity* player, windowManager* window);
+
+	void updateTimer();
+
 private:
 
 	scene* sceneObj;
 	renderer* gameRenderer;
 	PhysicsWorld* world;
 	windowManager* WindowManager;
+
+
 	//InputManager* inputs;
 	//resource manager
 	//platform detection
@@ -92,6 +99,16 @@ private:
 
 	float timestep = 1.0f / 60;
 	float accumulator = 0.0f;
+
+	float renderFrameRate = 1.0f / 60;
+	float renderAccumulator;
+
+	double currentTime = 0;
+	double lastTime;
+	
+	unsigned int currentTick = 0;
+
+	int ticksPerSecond = 1000;
 
 
 };

@@ -178,6 +178,7 @@
     <ClCompile Include="playerHandSlot.cpp" />
     <ClCompile Include="PlayerInventoryManager.cpp" />
     <ClCompile Include="playerManager.cpp" />
+    <ClCompile Include="programTimer.cpp" />
     <ClCompile Include="rayCastCallBack.cpp" />
     <ClCompile Include="reactPhysicsListener.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="playerHandSlot.h" />
     <ClInclude Include="PlayerInventoryManager.h" />
     <ClInclude Include="playerManager.h" />
+    <ClInclude Include="programTimer.h" />
     <ClInclude Include="rayCastCallBack.h" />
     <ClInclude Include="reactPhysicsListener.h" />
     <ClInclude Include="renderer.h" />

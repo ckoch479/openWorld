@@ -12,6 +12,8 @@
 #include "Bone.h"
 #include "skeleton.h"
 
+#include "ResourceManager.h"
+
 #ifndef OBJANIMATOR_H
 #define OBJANIMATOR_H
 
@@ -21,7 +23,7 @@ class objAnimator
 {
 public:
 
-	objAnimator();
+	objAnimator(Model* model);
 
 	void loadAnimation(std::string& animationName, std::string& animationFilePath);
 
@@ -39,14 +41,23 @@ public:
 
 	void addBone(Bone& newBone);
 
+	void calculateFKTransforms(AssimpNodeData* node, glm::mat4& parentTransform);
+
 
 private:
 
 	//data
+	Model* animModel; //model that uses these animations and animator
 	skeleton* animationSkeleton;
+	animation* activeAnimation;
 	std::unordered_map<std::string, animation*> animations;
 	std::map <std::string, glm::quat> forwardKinematicRotations;
 	std::vector <inverseKinematicChain> IKchains;
+	std::vector <glm::mat4> finalMatricies; //should be exactly 100 due to max bones being 100
+
+	float startTick; //time the active animation started playing
+	int lastTick;    //what the tick counter was on the last update
+	int currentTick; //how many ticks have passed since the animation started
 
 	//private methods
 
@@ -57,6 +68,8 @@ private:
 	void blendAnimations();
 	
 	glm::vec3 Lerp(glm::vec3 valueA, glm::vec3 valueB, float factor);
+
+	glm::quat Slerp(glm::quat rotA, glm::quat rotB, float factor);
 
 };
 

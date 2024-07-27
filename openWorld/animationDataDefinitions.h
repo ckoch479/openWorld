@@ -81,8 +81,8 @@ struct AssimpNodeData
 
 struct animation
 {
-	float duration;
-	int ticksPerSecond;
+	float duration; //in ticks
+	int ticksPerSecond; //should be 1000
 	std::string name;
 	AssimpNodeData rootNode;
 	std::vector <animBone> bones;

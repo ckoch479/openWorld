@@ -16,7 +16,6 @@ void SimulationManager::Init()
 	
 	this->sceneObj = new scene;
 	
-
 	this->world = new PhysicsWorld;
 
 	this->state = active;
@@ -156,6 +155,7 @@ void SimulationManager::run()
 	//jump directly into gameplay with player movement and such
 	while(state == debug)
 	{
+		
 		setDeltaTime(); //update deltaTime for this loop
 
 
@@ -193,8 +193,9 @@ void SimulationManager::run()
 		//draw contents to actual game window
 		animator::updateAnimations(deltaTime);
 
+		
 		this->gameRenderer->drawScene(this->sceneObj);
-
+		
 		//shutdown key check (esc)----------------------------
 		if (this->WindowManager->checkKey(256))
 		{
@@ -203,6 +204,9 @@ void SimulationManager::run()
 
 		//----------------------------------------------------
 		this->WindowManager->pollWindowEvents();
+		updateTimer();
+
+		//std::cout << "game tick: " << this->currentTick << std::endl;
 	}
 
 	//Game/Window shutdown check
@@ -214,12 +218,22 @@ void SimulationManager::run()
 }
 
 
-void SimulationManager::setDeltaTime() 
+void SimulationManager::setDeltaTime() //frame time
 {
 	float currentFrame = glfwGetTime();
 	this->deltaTime = currentFrame - lastFrame;
 	this->lastFrame = currentFrame;
 	
+}
+
+void SimulationManager::updateTimer()
+{
+	this->lastTime = currentTime;
+	this->currentTime = glfwGetTime();
+
+	double timeDiff = currentTime - lastTime;
+	timeDiff = timeDiff * ticksPerSecond; //amount of ticks between last update and this update
+	this->currentTick += (int)timeDiff; //add the difference in ticks to the current tick timer
 }
 
 //script testing function idea

@@ -37,6 +37,7 @@ Model* ResourceManager::loadModel(std::string filePath, std::string name)
 	{
 		std::cout << "loading model: " << filePath << std::endl;
 		models[name] = loadModelFromFile(filePath);
+		models[name].name = name;
 		loadedModels.push_back(filePath);
 	}
 
@@ -230,6 +231,9 @@ animation ResourceManager::loadAnimationFromFile(std::string filePath, Model* mo
 	{
 		newAnimation.animBones[newAnimation.bones[i].name] = &newAnimation.bones[i]; //again makes it easier for me to find the data i need 
 	}
+
+	//std::cout << "animation loaded from: " << filePath << " \nanimation has a duration of: " << newAnimation.duration << " with: " << newAnimation.ticksPerSecond << " ticks per second\n";
+	//this is to make sure that ticks per second is actually being loaded in which it is but im going to keep it for now just in case
 
 	return newAnimation;
 }

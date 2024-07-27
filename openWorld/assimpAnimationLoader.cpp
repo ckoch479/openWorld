@@ -46,20 +46,13 @@ void assimpAnimationLoader::readMissingBones(const aiAnimation* animation, Model
 {
 	int size = animation->mNumChannels;
 
-	//auto& boneMap = model->boneMap;
+	
 	int boneCount = model->skeleton->getBoneCount();
 
 	for (int i = 0; i < size; ++i)
 	{
 		auto channel = animation->mChannels[i];
 		std::string boneName = channel->mNodeName.data;
-
-		/*if (boneMap.find(boneName) == boneMap.end())
-		{
-			boneMap[boneName].id = boneCount;
-			boneCount++;
-			std::cout << "new bone added\n";
-		}*/
 
 		Bone* tempBone = model->skeleton->getBone(boneName);
 		if(tempBone == NULL)
@@ -72,7 +65,7 @@ void assimpAnimationLoader::readMissingBones(const aiAnimation* animation, Model
 
 		bones.push_back(createBoneNode(channel->mNodeName.data, model->skeleton->getBone(boneName)->getId(), channel));
 	}
-	//this->boneInfoMap = boneMap;
+	
 	
 }
 
