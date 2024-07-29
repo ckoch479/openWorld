@@ -29,6 +29,8 @@ public:
 
 	void playAnimation(std::string& animationName);
 
+	void playNonRepeatAnimation(std::string& animationName);
+
 	void update(float deltaTime);
 
 	void applyForwardKinematics(std::string& boneName, glm::quat& rotation);
@@ -44,12 +46,18 @@ public:
 	void calculateFKTransforms(AssimpNodeData* node, glm::mat4& parentTransform);
 
 	std::vector <glm::mat4> getAnimationTransforms();
+
+	glm::mat4 getFinalBoneTransform(std::string boneName);
+
 private:
 
 	//data
 	Model* animModel; //model that uses these animations and animator
 	skeleton* animationSkeleton;
+
 	animation* activeAnimation;
+	animation* returnAnimation; //animation to return to after playing a non looping animation
+
 	std::unordered_map<std::string, animation*> animations;
 	std::map <std::string, glm::quat> forwardKinematicRotations;
 	std::vector <inverseKinematicChain> IKchains;
@@ -64,7 +72,7 @@ private:
 
 	void updateInverseKinematics();
 
-	void blendAnimations();
+	void blendAnimations(animation* animA, animation* animB, float factor); //used for blending 2 entire animations together
 
 	glm::mat4 calculateLocalBoneTransform(AssimpNodeData* node);
 	

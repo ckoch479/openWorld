@@ -3,8 +3,7 @@
 playerEntity::playerEntity(std::string playerFilePath)
 {
 	this->playerModel = ResourceManager::loadModel(playerFilePath,"player");
-	//loadPlayerAnimations(playerFilePath);
-
+	
 	transform newTransform;
 	newTransform.position = glm::vec3(0, 2, 0);
 	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
@@ -22,15 +21,15 @@ playerEntity::playerEntity(std::string playerFilePath)
 	this->meshChange = true;
 	this->actionChange = true;
 	this->animationChange = true;
-	//this->currentAnimation = this->animations["idle"];
-	//animator::addAnimation(this->playerModel, this->currentAnimation);
+
 	this->playerAnimator = new objAnimator(this->playerModel);
 	this->playerAnimator->setSkeleton(this->playerModel->skeleton);
 
-	std::string idleAnimfilePath = "resources/player/animations/idle.gltf";
-	std::string idleName = "idle";
-	this->playerAnimator->loadAnimation(idleName, idleAnimfilePath, true);
-	this->playerAnimator->playAnimation(idleName);
+	loadPlayerAnimations(playerFilePath);
+
+	this->activeAnim = "idle";
+	this->playerAnimator->playAnimation(this->activeAnim);
+
 	updateEntity();
 }
 
@@ -38,22 +37,42 @@ playerEntity::playerEntity(std::string playerFilePath)
 void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 {
 	//idle //found
-	this->animations["idle"] = ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "playerIdle", "player");
+	std::string name = "idle";
+	std::string Path = "resources/player/animations/idle.gltf"; //for some reason i have to do it this way
+
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(idle);
+
 	//idlePistol //found
-	this->animations["idlePistol"] = ResourceManager::loadAnimation("resources/player/animations/pistolIdle.gltf", "playerIdlePistol", "player");
+	name = "idlePistol";
+	Path = "resources/player/animations/pistolIdle.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(idlePistol);
+
 	//idleRifle //found
-	this->animations["idleRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleIdle.gltf", "playerIdleRifle", "player");
+	name = "idleRifle";
+	Path = "resources/player/animations/rifleIdle.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(idleRifle);
+
 	//aimingPistol
-	this->animations["aimingPistol"] = ResourceManager::loadAnimation("resources/player/animations/pistolAim.gltf", "playerAimPistol", "player");
+	name = "aimingPistol";
+	Path = "resources/player/animations/pistolAim.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(aimingPistol);
+
 	//aimingRifle
-	this->animations["aimingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleAim.gltf", "playerAimRifle", "player");
+	//this->animations["aimingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleAim.gltf", "playerAimRifle", "player");
+	name = "aimingRifle";
+	Path = "resources/player/animations/rifleAim.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(aimingRifle);
+
 	//walking //found
-	this->animations["walking"] = ResourceManager::loadAnimation("resources/player/animations/walking.gltf", "playerWalking", "player");
+	//this->animations["walking"] = ResourceManager::loadAnimation("resources/player/animations/walking.gltf", "playerWalking", "player");
+	name = "walking";
+	Path = "resources/player/animations/walking.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(walking);
 	
 	//sideWalkLeft
@@ -63,19 +82,28 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	//walkingPistolLowered
 	
 	//walkingPistolRaised //found
-	this->animations["walkPistolRaised"] = ResourceManager::loadAnimation("resources/player/animations/pistolWalkForward.gltf", "playerWalkPistolRaised", "player");
+	//this->animations["walkPistolRaised"] = ResourceManager::loadAnimation("resources/player/animations/pistolWalkForward.gltf", "playerWalkPistolRaised", "player");
+	name = "walkPistolRaised";
+	Path = "resources/player/animations/pistolWalkForward.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(walkingPistolRaised);
 
 	//walkingRifleLowered
 	
 	//walkingRifleRaise //found
-	this->animations["walkRifleRaised"] = ResourceManager::loadAnimation("resources/player/animations/rifleWalkForward.gltf", "playerWalkRifleRaised", "player");
+	//this->animations["walkRifleRaised"] = ResourceManager::loadAnimation("resources/player/animations/rifleWalkForward.gltf", "playerWalkRifleRaised", "player");
+	name = "walkRifleRaised";
+	Path = "resources/player/animations/rifleWalkForward.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(walkingRifleRaised);
 	//leftTurn
 	//rightTurn
 
 	//jogging //found
-	this->animations["jogging"] = ResourceManager::loadAnimation("resources/player/animations/jogging.gltf", "playerJogging", "player");
+	//this->animations["jogging"] = ResourceManager::loadAnimation("resources/player/animations/jogging.gltf", "playerJogging", "player");
+	name = "jogging";
+	Path = "resources/player/animations/jogging.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(jogging);
 	//sideJogLeft
 	//sideJogRight
@@ -87,7 +115,10 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	//rightJoggingTurn
 
 	//running //found
-	this->animations["running"] = ResourceManager::loadAnimation("resources/player/animations/running.gltf", "playerRunning", "player");
+	//this->animations["running"] = ResourceManager::loadAnimation("resources/player/animations/running.gltf", "playerRunning", "player");
+	name = "running";
+	Path = "resources/player/animations/running.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(running);
 
 	//leftRunninggTurn
@@ -96,7 +127,10 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	//crouching
 	//crouchingPistol
 	//crouchingRifle //found
-	this->animations["crouchingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleCrouchedAiming.gltf", "playerCrouchingRifle", "player");
+	//this->animations["crouchingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleCrouchedAiming.gltf", "playerCrouchingRifle", "player");
+	name = "crouchingRifle";
+	Path = "resources/player/animations/rifleCrouchedAiming.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(crouchingRile);
 
 	//crouchWalking
@@ -106,11 +140,17 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	
 	//crouchWalkingRifleLowered
 	//crouchWalkingRifleRaise //found
-	this->animations["crouchWalkingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleWalkForward.gltf", "playerCrouchWalkingRifle", "player");
+	//this->animations["crouchWalkingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleWalkForward.gltf", "playerCrouchWalkingRifle", "player");
+	name = "crouchWalkingRifle";
+	Path = "resources/player/animations/rifleWalkForward.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 	this->actionDebugger.push_back(crouchWalkingRifleRaise);
 
 	//jumping //found
-	this->animations["jumping"] = ResourceManager::loadAnimation("resources/player/animations/jump.gltf", "playerJumping", "player");
+	//this->animations["jumping"] = ResourceManager::loadAnimation("resources/player/animations/jump.gltf", "playerJumping", "player");
+	name = "jumping";
+	Path = "resources/player/animations/jump.gltf";
+	this->playerAnimator->loadAnimation(name, Path, false);
 	this->actionDebugger.push_back(jumping);
 
 	//diveRight
@@ -124,7 +164,10 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	//falling
 
 	//dying //found
-	this->animations["dying"] = ResourceManager::loadAnimation("resources/player/animations/dying.gltf", "playerDying", "player");
+	//this->animations["dying"] = ResourceManager::loadAnimation("resources/player/animations/dying.gltf", "playerDying", "player");
+	name = "dying";
+	Path = "resources/player/animations/dying.gltf";
+	this->playerAnimator->loadAnimation(name, Path, false);
 	this->actionDebugger.push_back(dying);
 }
 
@@ -182,7 +225,7 @@ void playerEntity::updateEntity()
 	if (animationChange)
 	{
 		//update to the new animation, after action change check because thats what should set new animations and nothing else
-		//animator::changeAnimation(this->playerModel, this->currentAnimation);
+		this->playerAnimator->playAnimation(this->activeAnim);
 		animationChange = false;
 	}
 
@@ -201,75 +244,75 @@ void playerEntity::updateActions()
 	switch(this->currentAction)
 	{
 	case(idle):
-		this->currentAnimation = this->animations["idle"];
+		this->activeAnim = "idle";
 		this->animationChange = true;
 		break;
 
 	case(idlePistol):
-		this->currentAnimation = this->animations["idlePistol"];
+		this->activeAnim = "idlePistol";
 		this->animationChange = true;
 		break;
 
 	case(idleRifle):
-		this->currentAnimation = this->animations["idleRifle"];
+		this->activeAnim = "idleRifle";
 		this->animationChange = true;
 		break;
 
 	case(aimingPistol):
-		this->currentAnimation = this->animations["aimingPistol"];
+		this->activeAnim = "aimingPistol";
 		this->animationChange = true;
 		break;
 
 	case(aimingRifle):
-		this->currentAnimation = this->animations["aimingRifle"];
+		this->activeAnim = "aimingRifle";
 		this->animationChange = true;
 		break;
 
 	case(walking):
-		this->currentAnimation = this->animations["walking"];
+		this->activeAnim = "walking";
 		this->animationChange = true;
 		
 		//move forward as well by however much
 		break;
 
 	case(walkingPistolRaised):
-		this->currentAnimation = this->animations["walkPistolRaised"];
+		this->activeAnim = "walkPistolRaised";
 		this->animationChange = true;
 		//move forward as well by however much
 		break;
 
 	case(walkingRifleRaised):
-		this->currentAnimation = this->animations["walkRifleRaised"];
+		this->activeAnim = "walkRifleRaised";
 		this->animationChange = true;
 		//move forward as well by however much
 		break;
 
 	case(jogging):
-		this->currentAnimation = this->animations["jogging"];
+		this->activeAnim = "jogging";
 		this->animationChange = true;
 		//move forward as well by however much
 		break;
 
 	case(running):
-		this->currentAnimation = this->animations["running"];
+		this->activeAnim = "running";
 		this->animationChange = true;
 		//move forward as well by however much
 		break;
 
 	case(crouchWalkingRifleRaise):
-		this->currentAnimation = this->animations["crouchingRifle"];
+		this->activeAnim = "crouchingRifle";
 		this->animationChange = true;
 		//move forward as well by however much
 		break;
 
 	case(jumping):
-		this->currentAnimation = this->animations["jumping"];
+		this->activeAnim = "jumping";
 		this->animationChange = true;
 		//jump (duh), move up and down a lil bit
 		break;
 
 	case(dying):
-		this->currentAnimation = this->animations["dying"];
+		this->activeAnim = "dying";
 		this->animationChange = true;
 		//die, thats pretty much it
 		break;
@@ -340,12 +383,9 @@ glm::mat4 playerEntity::getLeftHandTransform()
 	glm::mat4 handTransform(1.0f);
 
 	//Bone* bone = &this->playerModel->boneMap["mixamorig:LeftHand"];
-	std::string boneName = "mixamorig:LeftHand";
-	Bone* bone = this->playerModel->skeleton->getBone(boneName);
 	//Bone* bone = &this->playerModel->boneMap["leftSocket"];
 	
-
-	//handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
+	handTransform = this->playerAnimator->getFinalBoneTransform("mixamorig:LeftHand");
 
 	return handTransform;
 }
@@ -354,15 +394,10 @@ glm::mat4 playerEntity::getRightHandTransform()
 {
 	glm::mat4 handTransform(1.0f);
 
-	std::string boneName = "mixamorig:RightHand";
+	//std::string boneName = "mixamorig:RightHand";
 	//std::string boneName = "rightSocket";
-
-
-	Bone* bone = this->playerModel->skeleton->getBone(boneName);
-	//Bone* bone = &this->playerModel->boneMap["rightSocket"];
 	
-
-	//handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
+	handTransform = this->playerAnimator->getFinalBoneTransform("mixamorig:RightHand");
 
 	return handTransform;
 }

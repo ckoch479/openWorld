@@ -68,10 +68,12 @@ public:
 	glm::mat4 getLeftHandOffsetMatrix();
 
 	objAnimator* getPlayerAnimator();
+
+	void updateEntity();
 	 
 private:
 
-	void updateEntity();
+	
 
 	void loadPlayerAnimations(std::string playerFilePath); //directory for player animations will be under the players file path in a file named animations
 
@@ -81,11 +83,8 @@ private:
 
 	//data:
 	
-	
 	//animation names should exactly match player action name as well key word is should it is me making this thing
 	//also animations is only handled by the class you cannot manually change the animations only player actions
-	std::unordered_map<std::string, animation*> animations;
-	animation* currentAnimation; //current animation being used by the player
 
 	//transforms and movement
 	//this is position, orientation, and scaling for renderer

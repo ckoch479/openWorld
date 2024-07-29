@@ -23,12 +23,14 @@ playerManager::~playerManager()
 
 void playerManager::updateManager(float dt, Level* currentLevel)
 {
+	this->player->updateEntity();
+	this->player->getPlayerAnimator()->update(dt);
+
 	this->player->updatePlayerScene(this->currentScene); //had to be ordered this way because hand items would lag behind if didnt and would not be placed correctly
 	this->inventoryManager->updateInventoryStatus();
 
 	this->controller->updateInputs(this->currentManager);
 	this->controller->updateController(dt,*currentLevel);
-	this->player->getPlayerAnimator()->update(dt);
 }
 
 void playerManager::testItemSlots(std::shared_ptr<item> newItem)

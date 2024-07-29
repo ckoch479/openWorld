@@ -6,6 +6,7 @@ assimpAnimationLoader::assimpAnimationLoader(const std::string& filePath, Model*
 	assert(scene && scene->mRootNode);
 	aiAnimation* animation = scene->mAnimations[0];
 	this->name = animation->mName.data;
+	std::cout << "animation loaded: " << this->name << std::endl;
 	this->Duration = animation->mDuration;
 	this->ticksPerSecond = animation->mTicksPerSecond;
 	aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
@@ -76,19 +77,17 @@ void assimpAnimationLoader::readHierarchyData(AssimpNodeData& dest, const aiNode
 
 	dest.name = src->mName.data;
 
-	std::cout << "anim node name: " << dest.name << std::endl;
 	dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
 	dest.childrenCount = src->mNumChildren;
-	std::cout << "number of children: " << dest.childrenCount << std::endl;
 
 	for (int i = 0; i < src->mNumChildren; ++i)
 	{
 		AssimpNodeData newData;
 		readHierarchyData(newData, src->mChildren[i]);
 		dest.children.push_back(newData);
-		std::cout << "node children: " << newData.name << std::endl;
+		//std::cout << "node children: " << newData.name << std::endl;
 	}
-	std::cout << std::endl;
+	
 }
 
 animBone assimpAnimationLoader::createBoneNode(std::string name, int id, const aiNodeAnim* channel)

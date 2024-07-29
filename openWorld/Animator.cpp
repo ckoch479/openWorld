@@ -42,26 +42,28 @@ void animator::setAnimationMatrices(Model* model, Shader* shader)
 	shader->use();
 	animation* activeAnimation = activeAnimations[model];
 	//checkModifiers(activeAnimation, model);
-	if (activeAnimation)
-	{
-		for (unsigned int i = 0; i < 100; i++) //data gets to here and nothing happens
-		{
-			//glm::mat4 transform = model->boneMatrices[i];
-			glm::mat4 transform = animationMatrices[activeAnimation][i];
-			std::string matrixString;
-			matrixString = "finalBoneMatrices[" + std::to_string(i) + "]";
-			shader->SetMatrix4(matrixString.c_str(), transform);
-		}
-	}
-	else
-	{
-		for (unsigned int i = 0; i < 100; i++) //data gets to here and nothing happens
-		{
-			std::string matrixString;
-			matrixString = "finalBoneMatrices[" + std::to_string(i) + "]";
-			shader->SetMatrix4(matrixString.c_str(), glm::mat4(1.0f));
-		}
-	}
+	//if (activeAnimation)
+	//{
+	//	for (unsigned int i = 0; i < 100; i++) //data gets to here and nothing happens
+	//	{
+	//		//glm::mat4 transform = model->boneMatrices[i];
+	//		glm::mat4 transform = animationMatrices[activeAnimation][i];
+	//		std::string matrixString;
+	//		matrixString = "finalBoneMatrices[" + std::to_string(i) + "]";
+	//		shader->SetMatrix4(matrixString.c_str(), transform);
+	//	}
+	//}
+	//else
+	//{
+	//	for (unsigned int i = 0; i < 100; i++) //data gets to here and nothing happens
+	//	{
+	//		std::string matrixString;
+	//		matrixString = "finalBoneMatrices[" + std::to_string(i) + "]";
+	//		shader->SetMatrix4(matrixString.c_str(), glm::mat4(1.0f));
+	//	}
+	//}
+	model->animationMatrices = animationMatrices[activeAnimation];
+
 }
 
 void animator::updateAnimations(float dt)
@@ -93,7 +95,6 @@ void animator::CalculateBoneTransforms(AssimpNodeData* Node, glm::mat4 parentTra
 	{
 		//calculateLocalBoneTransform(anim->currentTime,bone); //problem with timings here
 		nodeTransform = stepAnimations(anim->currentTime, bone);
-
 	}
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransform;
@@ -108,8 +109,10 @@ void animator::CalculateBoneTransforms(AssimpNodeData* Node, glm::mat4 parentTra
 
 	for (int i = 0; i < Node->childrenCount; ++i)
 	{
+		//std::cout << "children names: " << Node->children[i].name << std::endl;
 		CalculateBoneTransforms(&Node->children[i], globalTransformation, anim, model);
 	}
+	//std::cout << std::endl;
 }
 
 glm::mat4 animator::stepAnimations(float currentTime, animBone* bone)
