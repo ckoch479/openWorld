@@ -11,7 +11,7 @@
 #include "playerActionDefinitions.h"
 
 #include "ResourceManager.h"
-#include "Animator.h"
+#include "objAnimator.h"
 #include "Scene.h"
 #include "Shader.h"
 
@@ -66,6 +66,8 @@ public:
 
 	glm::mat4 getRightHandOffsetMatrix();
 	glm::mat4 getLeftHandOffsetMatrix();
+
+	objAnimator* getPlayerAnimator();
 	 
 private:
 
@@ -74,6 +76,8 @@ private:
 	void loadPlayerAnimations(std::string playerFilePath); //directory for player animations will be under the players file path in a file named animations
 
 	void updateActions();
+
+	objAnimator* playerAnimator;
 
 	//data:
 	

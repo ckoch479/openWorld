@@ -63,6 +63,7 @@ void assimpAnimationLoader::readMissingBones(const aiAnimation* animation, Model
 			std::cout << "new bone added in animation!\n";
 		}
 
+		
 		bones.push_back(createBoneNode(channel->mNodeName.data, model->skeleton->getBone(boneName)->getId(), channel));
 	}
 	
@@ -71,18 +72,23 @@ void assimpAnimationLoader::readMissingBones(const aiAnimation* animation, Model
 
 void assimpAnimationLoader::readHierarchyData(AssimpNodeData& dest, const aiNode* src)
 {
-	assert(src);
+	assert(src); //problem in animation heirarchy now children parent mapping isnt working right
 
 	dest.name = src->mName.data;
+
+	std::cout << "anim node name: " << dest.name << std::endl;
 	dest.transformation = AssimpGLMHelpers::ConvertMatrixToGLMFormat(src->mTransformation);
 	dest.childrenCount = src->mNumChildren;
+	std::cout << "number of children: " << dest.childrenCount << std::endl;
 
 	for (int i = 0; i < src->mNumChildren; ++i)
 	{
 		AssimpNodeData newData;
 		readHierarchyData(newData, src->mChildren[i]);
 		dest.children.push_back(newData);
+		std::cout << "node children: " << newData.name << std::endl;
 	}
+	std::cout << std::endl;
 }
 
 animBone assimpAnimationLoader::createBoneNode(std::string name, int id, const aiNodeAnim* channel)

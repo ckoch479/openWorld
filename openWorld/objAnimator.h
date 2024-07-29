@@ -25,7 +25,7 @@ public:
 
 	objAnimator(Model* model);
 
-	void loadAnimation(std::string& animationName, std::string& animationFilePath);
+	void loadAnimation(std::string& animationName, std::string& animationFilePath, bool loopingAnimation);
 
 	void playAnimation(std::string& animationName);
 
@@ -43,7 +43,7 @@ public:
 
 	void calculateFKTransforms(AssimpNodeData* node, glm::mat4& parentTransform);
 
-
+	std::vector <glm::mat4> getAnimationTransforms();
 private:
 
 	//data
@@ -55,10 +55,9 @@ private:
 	std::vector <inverseKinematicChain> IKchains;
 	std::vector <glm::mat4> finalMatricies; //should be exactly 100 due to max bones being 100
 
-	float startTick; //time the active animation started playing
-	int lastTick;    //what the tick counter was on the last update
-	int currentTick; //how many ticks have passed since the animation started
+	float currentTimeStep = 0.0f; //in seconds or technically in fractions of a second since its the amount of time between frames
 
+	float currentAnimationTime = 0.0f; //animation is assumed to have 1000 ticks per second 
 	//private methods
 
 	void updateForwardKinematics();
@@ -66,10 +65,18 @@ private:
 	void updateInverseKinematics();
 
 	void blendAnimations();
+
+	glm::mat4 calculateLocalBoneTransform(AssimpNodeData* node);
 	
 	glm::vec3 Lerp(glm::vec3 valueA, glm::vec3 valueB, float factor);
 
 	glm::quat Slerp(glm::quat rotA, glm::quat rotB, float factor);
+
+	glm::mat4 getLocalTranslation(AssimpNodeData* node);
+
+	glm::mat4 getLocalRotation(AssimpNodeData* node);
+
+	float calculateScaleFactor(float lastTimeStamp, float nextTimeStamp, float currentTime);
 
 };
 

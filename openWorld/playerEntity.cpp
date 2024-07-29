@@ -3,7 +3,7 @@
 playerEntity::playerEntity(std::string playerFilePath)
 {
 	this->playerModel = ResourceManager::loadModel(playerFilePath,"player");
-	loadPlayerAnimations(playerFilePath);
+	//loadPlayerAnimations(playerFilePath);
 
 	transform newTransform;
 	newTransform.position = glm::vec3(0, 2, 0);
@@ -22,8 +22,15 @@ playerEntity::playerEntity(std::string playerFilePath)
 	this->meshChange = true;
 	this->actionChange = true;
 	this->animationChange = true;
-	this->currentAnimation = this->animations["idle"];
-	animator::addAnimation(this->playerModel, this->currentAnimation);
+	//this->currentAnimation = this->animations["idle"];
+	//animator::addAnimation(this->playerModel, this->currentAnimation);
+	this->playerAnimator = new objAnimator(this->playerModel);
+	this->playerAnimator->setSkeleton(this->playerModel->skeleton);
+
+	std::string idleAnimfilePath = "resources/player/animations/idle.gltf";
+	std::string idleName = "idle";
+	this->playerAnimator->loadAnimation(idleName, idleAnimfilePath, true);
+	this->playerAnimator->playAnimation(idleName);
 	updateEntity();
 }
 
@@ -175,9 +182,11 @@ void playerEntity::updateEntity()
 	if (animationChange)
 	{
 		//update to the new animation, after action change check because thats what should set new animations and nothing else
-		animator::changeAnimation(this->playerModel, this->currentAnimation);
+		//animator::changeAnimation(this->playerModel, this->currentAnimation);
 		animationChange = false;
 	}
+
+	this->playerModel->animationMatrices = this->playerAnimator->getAnimationTransforms();
 
 }
 
@@ -336,7 +345,7 @@ glm::mat4 playerEntity::getLeftHandTransform()
 	//Bone* bone = &this->playerModel->boneMap["leftSocket"];
 	
 
-	handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
+	//handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
 
 	return handTransform;
 }
@@ -353,7 +362,7 @@ glm::mat4 playerEntity::getRightHandTransform()
 	//Bone* bone = &this->playerModel->boneMap["rightSocket"];
 	
 
-	handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
+	//handTransform = animator::getFinalBoneMatrix(this->playerModel, this->currentAnimation, bone);
 
 	return handTransform;
 }
@@ -382,4 +391,9 @@ glm::mat4 playerEntity::getLeftHandOffsetMatrix()
 	handOffset = playerModel->skeleton->getBone(boneName)->getOffsetMat();
 
 	return handOffset;
+}
+
+objAnimator* playerEntity::getPlayerAnimator()
+{
+	return this->playerAnimator;
 }

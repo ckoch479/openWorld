@@ -28,6 +28,7 @@ void playerManager::updateManager(float dt, Level* currentLevel)
 
 	this->controller->updateInputs(this->currentManager);
 	this->controller->updateController(dt,*currentLevel);
+	this->player->getPlayerAnimator()->update(dt);
 }
 
 void playerManager::testItemSlots(std::shared_ptr<item> newItem)

@@ -253,7 +253,7 @@ void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& verti
 		Bone* currentBone = &boneMap[boneName];
 		aiBone* assimpBone = mesh->mBones[i];
 
-		int parentId;
+		int parentId = 0;
 
 		parentId = boneMap[assimpBone->mNode->mParent->mName.C_Str()].getId();
 

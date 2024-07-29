@@ -87,7 +87,8 @@ struct animation
 	AssimpNodeData rootNode;
 	std::vector <animBone> bones;
 	std::unordered_map <std::string, animBone*> animBones;
-	float currentTime = 0.0;
+	float currentTime = 0.0; //can get rid of this with the new animator
+	bool looping = true; //if looping is true this animation is continuous (walking, running) if not the animation will end after it's duration
 };
 
 struct inverseKinematicChain

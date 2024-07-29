@@ -62,7 +62,21 @@ void renderer::drawModel(renderInfo* model, scene* currentScene, Shader* shader)
 		}
 
 		shader->SetFloat("Material.shininess", material->shininess);
-		animator::setAnimationMatrices(model->model, shader);
+
+		
+			std::vector <glm::mat4> animMats = model->model->animationMatrices;
+			for(int j = 0; j < model->model->animationMatrices.size(); j++)
+			{
+				glm::mat4 transform = animMats[j];
+				std::string matrixString;
+				matrixString = "finalBoneMatrices[" + std::to_string(j) + "]";
+				shader->SetMatrix4(matrixString.c_str(), transform);
+			}
+		
+		
+			//animator::setAnimationMatrices(model->model, shader);
+		
+		
 
 		glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(model->model->meshes[i].indices.size()), GL_UNSIGNED_INT, 0);
 
