@@ -320,6 +320,7 @@ Model ResourceManager::loadModelFromFile(std::string filePath)
 	skeletons[filePath] = newSkeleton;
 
 	newModel.skeleton = &skeletons[filePath];
+
 	return newModel;
 }
 

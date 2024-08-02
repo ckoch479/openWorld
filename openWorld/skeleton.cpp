@@ -11,6 +11,7 @@ skeleton::skeleton(std::vector <Bone> bones)
 	{
 		addBone(bones[i]);
 	}
+	//std::cout << "setting children:" << std::endl;
 	setChildren();
 
 }
@@ -69,17 +70,25 @@ int skeleton::getNewId()
 
 void skeleton::setChildren()
 {
-
 	for(unsigned int i = 0; i < this->bones.size(); i++)
 	{
 		Bone* currentBone = &this->bones[i];
-		int parentId = currentBone->getParent();
+		int currentBoneId = currentBone->getId();
+		std::vector <int> childrenIds;
 
-		if(parentId > 0 && currentBone)
+		std::cout << "current bone: " << currentBone->getName() << " current bone parent: " << currentBone->getParent() << std::endl;
+
+		for(unsigned int j = 0; j < this->bones.size(); j++)
 		{
-			getBone(parentId)->addChild(currentBone->getId()); //add this bone to its parent as its child bone
+			Bone* iteratorBone = &this->bones[j];
+			if(iteratorBone->getParent() == currentBoneId)
+			{
+				std::cout << "child bone ID: " << iteratorBone->getId() << std::endl;
+				//currentBone->addChild(iteratorBone->getId());
+				childrenIds.push_back(iteratorBone->getId());
+			}
 		}
-		
+		currentBone->setChildren(childrenIds);
 
 	}
 
@@ -88,4 +97,10 @@ void skeleton::setChildren()
 int skeleton::getBoneCount()
 {
 	return this->numBones;
+}
+
+Bone* skeleton::getRootBone()
+{
+	int id = 0;
+	return this->getBone(id);
 }

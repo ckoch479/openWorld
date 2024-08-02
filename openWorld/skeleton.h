@@ -28,14 +28,19 @@ public:
 
 	int getBoneCount();
 
+	Bone* getRootBone();
+
+	void setChildren();
+
 private:
 
 	void insertBone();
 
 	int getNewId();
 
-	void setChildren();
+	
 
+	Bone* rootBone;
 	std::vector <Bone> bones;
 	std::unordered_map<int, Bone> boneMap; //bone map for easier look up uses ids for hopefully better preformance
 	std::unordered_map<std::string, int> boneNameIDMap; //should really only be used if you cannot find or do not know the id of the bone

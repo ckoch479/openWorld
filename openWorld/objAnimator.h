@@ -33,7 +33,7 @@ public:
 
 	void update(float deltaTime);
 
-	void applyForwardKinematics(std::string& boneName, glm::quat& rotation);
+	void applyForwardKinematics(Bone* parentBone, glm::mat4 transform);
 
 	void applyInverseKinematics(std::string& endEffector, glm::vec3& targetPosition);
 
@@ -48,6 +48,8 @@ public:
 	std::vector <glm::mat4> getAnimationTransforms();
 
 	glm::mat4 getFinalBoneTransform(std::string boneName);
+
+	void calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransform, std::vector <glm::mat4>& transforms);
 
 private:
 

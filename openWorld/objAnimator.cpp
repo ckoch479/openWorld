@@ -85,11 +85,36 @@ void objAnimator::update(float deltaTime)
 		calculateFKTransforms(&this->activeAnimation->rootNode, Parent);
 	}
 
+	if(this->animationSkeleton)
+	{
+		//not currently loading in the skeleton heirarchy properly
+		//applyForwardKinematics(this->animationSkeleton->getRootBone(), glm::mat4(1.0f));
+	}
+	
+
 }
 
-void objAnimator::applyForwardKinematics(std::string& boneName, glm::quat& rotation)
+void objAnimator::applyForwardKinematics(Bone* parentBone, glm::mat4 transform)
 {
+	std::string boneName = parentBone->getName();
 
+	std::cout << "boneName: " << boneName << std::endl;
+	int parentID = parentBone->getId();
+
+	std::vector <int> childrenIds = parentBone->getChildren();
+	for(int i = 0; i < parentBone->getChildren().size(); i++)
+	{
+		std::cout << "this is where the children would be ... if i had one\n";
+		int childId = parentBone->getChildren()[i];
+		if(childId != parentID)
+		{
+			Bone* childBone = this->animationSkeleton->getBone(childId);
+			std::cout << "child: " << i << " " << childBone->getName() << std::endl;
+			applyForwardKinematics(childBone, glm::mat4(1.0f));
+		}
+		
+	}
+	std::cout << std::endl;
 }
 
 void objAnimator::applyInverseKinematics(std::string& endEffector, glm::vec3& targetPosition)
@@ -153,11 +178,48 @@ void objAnimator::updateInverseKinematics()
 }
 
 void objAnimator::blendAnimations(animation* animA, animation* animB, float factor)
+{	//bad no no, dont interpolate matrices
+	//std::vector <glm::mat4> animAFinalMats;
+	//std::vector <glm::mat4> animBFinalMats;
+	//for (int i = 0; i < 100; i++) { animAFinalMats.push_back(glm::mat4(1.0f)); animBFinalMats.push_back(glm::mat4(1.0f)); }
+
+	//glm::mat4 Parent = glm::mat4(1.0f); //identity matrix for the root bone
+	//for anim a
+	//calculateFKblend(&animA->rootNode, Parent, animAFinalMats);
+    //for anim b
+	//calculateFKblend(&animB->rootNode, Parent, animBFinalMats);
+
+
+
+}
+
+void objAnimator::calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransform, std::vector <glm::mat4>& transforms)
 {
-	std::vector <glm::mat4> animAFinalMats;
-	std::vector <glm::mat4> animBFinalMats;
+	std::string nodeName = node->name;
+	glm::mat4 nodeTransform = node->transformation;
 
+	animBone* bone = this->activeAnimation->animBones[nodeName];
+	if (bone)
+	{
+		nodeTransform = calculateLocalBoneTransform(node); //problem here (again)
+	}
 
+	glm::mat4 globalTransformation = parentTransform * nodeTransform;
+
+	Bone* tempBone = this->animationSkeleton->getBone(nodeName); //problems here make it so cannot support bones not accounted for in animation
+	//the problem here is the only bones updated in the animation are ones listed in the animation due to the above line of code
+	//to fix this issue eventually the code will need to be changed so we work down the skeleton and not the animation
+	if (tempBone)
+	{
+		int index = tempBone->getId();
+		glm::mat4 offset = tempBone->getOffsetMat();
+		transforms[index] = globalTransformation * offset;
+	}
+
+	for (int i = 0; i < node->childrenCount; ++i)
+	{
+		calculateFKTransforms(&node->children[i], globalTransformation);
+	}
 }
 
 glm::vec3 objAnimator::Lerp(glm::vec3 valueA, glm::vec3 valueB, float factor)

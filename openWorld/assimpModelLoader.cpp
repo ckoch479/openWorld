@@ -212,12 +212,12 @@ void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& verti
 	//this preloads the model bonemap with bones
 	for (int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++)
 	{
-	
 		int boneID = -1;
 		std::string boneName = mesh->mBones[boneIndex]->mName.C_Str(); //this top code block gets the bone info from assimp like its name offset and sets an id for it
 		if (boneInfoMap.find(boneName) == boneInfoMap.end())
 		{
-			Bone newBone(boneCount, boneName, AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix));
+			Bone newBone(boneCount, boneName, AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix)); //this data is correct
+			newBone.setParent(this->boneMap[mesh->mBones[boneCount]->mNode->mParent->mName.data].getId());
 			//newBone.id = boneCount;
 			//newBone.offsetMatrix = AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
 			//newBone.name = boneName;
@@ -247,17 +247,17 @@ void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& verti
 	}
 
 	//once all the bones have been "sorted through now add their parent/child relationship
-	for(unsigned int i = 0; i < mesh->mNumBones; i++)
-	{
-		std::string boneName = mesh->mBones[i]->mName.C_Str();
-		Bone* currentBone = &boneMap[boneName];
-		aiBone* assimpBone = mesh->mBones[i];
+	//for(unsigned int i = 0; i < mesh->mNumBones; i++)
+	//{
+	//	std::string boneName = mesh->mBones[i]->mName.C_Str();
+	//	Bone* currentBone = &boneMap[boneName];
+	//	aiBone* assimpBone = mesh->mBones[i];
 
-		int parentId = 0;
+	//	int parentId = 0;
 
-		parentId = boneMap[assimpBone->mNode->mParent->mName.C_Str()].getId();
+	//	parentId = boneMap[assimpBone->mNode->mParent->mName.C_Str()].getId();
 
-		currentBone->setParent(parentId);
-	}
+	//	currentBone->setParent(parentId);
+	//}
 
 }

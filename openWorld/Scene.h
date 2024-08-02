@@ -43,10 +43,14 @@ public:
 	//add object to scene for rendering
 	std::string addObjectToScene(Model* model, transform transf, Shader* shader);
 
+	std::string addStaticSceneObj(Model* model, transform& transf); //static obj shader baked in to scene object
+
 	std::string add2DScreenShape(shape2D screenShape);
 
 	//remove object from scene when done using it
 	void removeObjectFromScene(std::string id);
+
+	void removeStaticObject(std::string id);
 
 	void remove2DsceenShape(std::string id);
 
@@ -96,6 +100,7 @@ private:
 
 	//map of active models in this scene
 	std::unordered_map <std::string, renderInfo> activeModels;
+	std::unordered_map <std::string, renderInfo> staticModels;
 
 	std::unordered_map <std::string, transform> sceneTransforms;
 
@@ -119,6 +124,8 @@ private:
 	Shader* depthCubeShader;
 
 	int maxBones = 100;
+
+	Shader* staticShader; //either set it from simulation manager or load it into the scene itself, by default will be loaded in with the option to overwrite it
 
 };
 

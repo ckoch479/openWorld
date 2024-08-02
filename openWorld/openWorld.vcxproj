@@ -161,6 +161,7 @@
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="characterController.cpp" />
+    <ClCompile Include="chunk.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="gamePhysicsWorld.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="characterController.h" />
+    <ClInclude Include="chunk.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="gamePhysicsWorld.h" />

@@ -158,12 +158,6 @@ void SimulationManager::run()
 		
 		setDeltaTime(); //update deltaTime for this loop
 
-
-		/*boxTransform.position = world->getBodyPosition(boxId);
-		boxTransform.orientation = world->getBodyRotation(boxId);
-		sceneObj->updateTransform(boxSceneID, boxTransform);*/
-
-
 		if(this->WindowManager->checkKey(342))
 		{
 			//left alt
@@ -177,8 +171,6 @@ void SimulationManager::run()
 
 		double x = 0, y = 0;
 		this->WindowManager->getMousePosition(&x, &y);
-		//std::cout << "mouse pos: " << x << "," << y << std::endl;
-		//mouse position is directly related to window size
 
 		newPlayer.updateManager(deltaTime, &level1);
 
@@ -194,7 +186,6 @@ void SimulationManager::run()
 		animator::updateAnimations(deltaTime);
 
 		this->gameRenderer->drawScene(this->sceneObj);
-		
 		
 		//shutdown key check (esc)----------------------------
 		if (this->WindowManager->checkKey(256))

@@ -64,6 +64,12 @@
     <Filter Include="Header Files\RenderingandSceneHeaders\Animation">
       <UniqueIdentifier>{32bd2a1b-d741-4c97-8bd5-9dbcee251a1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gameWorld">
+      <UniqueIdentifier>{66d59153-a9b9-4545-a20a-aaa1250f5926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gameWorld">
+      <UniqueIdentifier>{4ca370c3-18d2-4974-a567-e54debab9122}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -108,17 +114,11 @@
     <ClCompile Include="player.cpp">
       <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
-    <ClCompile Include="worldMap.cpp">
-      <Filter>Source Files\GameObjectBody</Filter>
-    </ClCompile>
     <ClCompile Include="Includes\glad\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="reactPhysicsListener.cpp">
       <Filter>Source Files\PhysicsandDynamicsBody</Filter>
-    </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Source Files\GameObjectBody</Filter>
     </ClCompile>
     <ClCompile Include="windowManager.cpp">
       <Filter>Source Files\RenderingandSceneBody</Filter>
@@ -186,6 +186,15 @@
     <ClCompile Include="programTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="worldMap.cpp">
+      <Filter>Source Files\gameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files\gameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="chunk.cpp">
+      <Filter>Source Files\gameWorld</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -224,17 +233,11 @@
     <ClInclude Include="player.h">
       <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="worldMap.h">
-      <Filter>Header Files\GameObjectHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="Includes\glad\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="reactPhysicsListener.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
     <ClInclude Include="windowManager.h">
       <Filter>Header Files\RenderingandSceneHeaders</Filter>
@@ -322,6 +325,15 @@
     </ClInclude>
     <ClInclude Include="programTimer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="worldMap.h">
+      <Filter>Header Files\gameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\gameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="chunk.h">
+      <Filter>Header Files\gameWorld</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

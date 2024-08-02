@@ -35,6 +35,8 @@ public:
 
 	void setParent(int bone);
 
+	void setChildren(std::vector <int> children);
+
 private:
 
 	int id = -1;
@@ -44,7 +46,7 @@ private:
 	int numChildren = 0;
 	std::vector <int> childrenIds; //children Ids
 
-	int parentBoneId = NULL; //parent id
+	int parentBoneId = -1; //parent id
 
 };
 

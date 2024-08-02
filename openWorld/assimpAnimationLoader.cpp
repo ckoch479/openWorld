@@ -6,7 +6,7 @@ assimpAnimationLoader::assimpAnimationLoader(const std::string& filePath, Model*
 	assert(scene && scene->mRootNode);
 	aiAnimation* animation = scene->mAnimations[0];
 	this->name = animation->mName.data;
-	std::cout << "animation loaded: " << this->name << std::endl;
+	//std::cout << "animation loaded: " << this->name << std::endl;
 	this->Duration = animation->mDuration;
 	this->ticksPerSecond = animation->mTicksPerSecond;
 	aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
@@ -61,7 +61,7 @@ void assimpAnimationLoader::readMissingBones(const aiAnimation* animation, Model
 			//offset matrix isnt correct but animation really shouldnt be adding in bones to begin with so thatll be gone
 			Bone newBone(boneCount, boneName, glm::mat4(1.0f));
 			model->skeleton->addBone(newBone);
-			std::cout << "new bone added in animation!\n";
+			//std::cout << "new bone added in animation!\n";
 		}
 
 		

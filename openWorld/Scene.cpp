@@ -50,9 +50,43 @@ std::string scene::addObjectToScene(Model* model, transform transf, Shader* shad
 	return Modelid;
 }
 
+std::string scene::addStaticSceneObj(Model* model, transform& transf)
+{
+	std::string Modelid = createUniqueID();
+
+	modelIds.push_back(Modelid);
+
+	transform newTransform;
+	newTransform = transf;
+
+	sceneTransforms[Modelid] = newTransform;
+
+	renderInfo newInfo;
+	newInfo.model = model;
+	newInfo.transf = &sceneTransforms[Modelid];
+	newInfo.shader = this->staticShader; //only difference between this method and normal one is this uses the scene classes generic static object shader and these object wont be update much
+	newInfo.id = Modelid;
+
+	activeModels[Modelid] = newInfo;
+
+	for (unsigned int i = 0; i < activeModels[Modelid].model->meshes.size(); i++)
+	{
+		generateModelRenderData(&activeModels[Modelid].model->meshes[i]); //this function generates a VAO and VBO for each mesh in the model
+	}
+
+	return Modelid;
+}
+
 void scene::removeObjectFromScene(std::string id)
 {
+	this->sceneTransforms.erase(id); //remove the objects transform 
+	this->activeModels.erase(id); //remove the object from active models
+}
 
+void scene::removeStaticObject(std::string id)
+{
+	this->sceneTransforms.erase(id);
+	this->staticModels.erase(id);
 }
 
 void scene::updateTransform(std::string id, transform transform)
