@@ -40,9 +40,9 @@ private:
 
 	int generateNewId(); //creates unique id for each chunk
 
-	std::unordered_map <glm::vec2, int> chunkMap; //each chunk is given a x and y coordinate of it's placement which stores it's id
-	std::unordered_map <int, std::string> chunkPaths; //each chunk is a 10 meter x 10 meter square, each chunk has it's own id (10x10 is arbitrary so bite me)
-	std::unordered_map <int, bool> chunkLoaded; //map of each currently loaded chunk
+	//std::unordered_map <glm::vec2, int> chunkMap; //each chunk is given a x and y coordinate of it's placement which stores it's id
+	//std::unordered_map <int, std::string> chunkPaths; //each chunk is a 10 meter x 10 meter square, each chunk has it's own id (10x10 is arbitrary so bite me)
+	//std::unordered_map <int, bool> chunkLoaded; //map of each currently loaded chunk
 };
 
 #endif

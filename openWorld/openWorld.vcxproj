@@ -172,6 +172,9 @@
     <ClCompile Include="item.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="lookup_table.cpp" />
+    <ClCompile Include="npcController.cpp" />
+    <ClCompile Include="npcEntity.cpp" />
+    <ClCompile Include="npcManager.cpp" />
     <ClCompile Include="objAnimator.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="player.cpp" />
@@ -219,6 +222,9 @@
     <ClInclude Include="keyDefinitions.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="lookup_table.h" />
+    <ClInclude Include="npcController.h" />
+    <ClInclude Include="npcEntity.h" />
+    <ClInclude Include="npcManager.h" />
     <ClInclude Include="objAnimator.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />
