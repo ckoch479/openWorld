@@ -8,7 +8,7 @@
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
 
-//npc action definitions
+#include "npcActions.h"
 
 #include "ResourceManager.h"
 #include "objAnimator.h"
@@ -23,10 +23,14 @@
 class npcEntity
 {
 public:
-	npcEntity(std::string npcFilePath);
+
+	npcEntity(std::string npcFilePath, std::string name);
+
 	~npcEntity();
 
-	void setNPCaction();
+	void setNPCaction(npcActions action);
+
+	npcActions getNPCaction();
 
 	void setNPCtransform(transform newTransform);
 
@@ -48,7 +52,7 @@ public:
 
 private:
 
-	void loadPlayerAnimations(std::string filePath); //directory for player animations will be under the players file path in a file named animations
+	void loadAnimations(std::string filePath); //directory for player animations will be under the players file path in a file named animations
 
 	void updateActions();
 
@@ -67,7 +71,11 @@ private:
 	bool animationChange = false;
 	bool actionChange = false;
 
+	bool isInjured = false;
+
 	std::string activeAnim;//current active animation
+
+	npcActions currentAction;
 
 	//rendering data
 	Model* Model;

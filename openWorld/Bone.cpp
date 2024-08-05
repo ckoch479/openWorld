@@ -37,10 +37,10 @@ int Bone::getParent()
 
 std::vector <int> Bone::getChildren()
 {
-	for(int i = 0; i < this->childrenIds.size(); i++)
+	/*for(int i = 0; i < this->childrenIds.size(); i++)
 	{
 		std::cout << "children ids: " << this->childrenIds[i] << std::endl;
-	}
+	}*/
 	return this->childrenIds;
 }
 

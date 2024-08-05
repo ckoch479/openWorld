@@ -17,6 +17,12 @@
 #include "animator.h"
 #include "PhysicsWorld.h"
 
+struct lineVert
+{
+	glm::vec3 pos;
+	glm::vec3 color;
+};
+
 #ifndef RENDERER_H
 #define RENDERER_H
 

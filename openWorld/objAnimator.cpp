@@ -8,6 +8,41 @@ objAnimator::objAnimator(Model* model)
 	}
 	this->animModel = model;
 	this->animationSkeleton = model->skeleton; //itll be assumed you're using the models skeleton however it can be changed manually afterwards (maybe a modified version of its normal?)
+
+	for(int i = 0; i < model->skeleton->getBoneCount(); i++)
+	{
+		Bone* currentBone = model->skeleton->getBone(i); //iterate through each bone;
+		if(currentBone->getId() > 0) //if the bone has an id greater that 0 add it to its parents
+		{
+			int parentBone = currentBone->getParent();
+			model->skeleton->getBone(parentBone)->addChild(currentBone->getId());
+		}
+	}
+
+	/*for(unsigned int i = 0; i < model->skeleton->getBoneCount(); i++)
+	{
+		int tempId = i;
+		Bone* bone = this->animationSkeleton->getBone(tempId);
+		int boneId = 0;
+		int parentId = 0;
+		int numChildren = 0;
+		std::vector <int> childrenIds;
+		std::string name;
+
+		boneId = bone->getId();
+		name = bone->getName();
+		parentId = bone->getParent();
+		numChildren = bone->getNumChildren();
+		childrenIds = bone->getChildren();
+
+
+		std::cout << "bone: " << name << " id: " << boneId << " parent id: " << parentId << " numChildren: " << numChildren << " children ids: ";
+		for(unsigned int j = 0; j < childrenIds.size(); j++)
+		{
+			std::cout << childrenIds[j] << " ";
+		}
+		std::cout << std::endl;
+	}*/
 }
 
 void objAnimator::loadAnimation(std::string& animationName, std::string& animationFilePath, bool loopingAnimation)
@@ -85,6 +120,9 @@ void objAnimator::update(float deltaTime)
 		calculateFKTransforms(&this->activeAnimation->rootNode, Parent);
 	}
 
+	//idk if itll work yet but we'll find out
+	solveIK();
+
 	if(this->animationSkeleton)
 	{
 		//not currently loading in the skeleton heirarchy properly
@@ -117,13 +155,90 @@ void objAnimator::applyForwardKinematics(Bone* parentBone, glm::mat4 transform)
 	std::cout << std::endl;
 }
 
-void objAnimator::applyInverseKinematics(std::string& endEffector, glm::vec3& targetPosition)
+void objAnimator::applyInverseKinematics(std::string& endEffectorName, glm::vec3& targetPosition)
 {
+	Bone* endEffector = this->animationSkeleton->getBone(endEffectorName);
+	if(endEffector)
+	{
+		inverseKinematicChain chain;
+		chain.endEffector = endEffector;
+		chain.targetPosition = targetPosition; //this needs to be in local coordinates!
+		
+
+		Bone* current = endEffector;
+		for (int i = 0; i < 4; i++)
+		{
+			chain.bones.push_back(current);
+			int parentID = current->getParent();
+			current = this->animationSkeleton->getBone(parentID);
+			if(current->getId() == 0)
+			{
+				break;
+			}
+		}
+		IKchains.push_back(chain);
+	}
+
 
 }
 
 void objAnimator::solveIK()
-{
+{	//iterate through inverse kinematic chains
+	for(auto& chain : IKchains)
+	{
+		for(int iter = 0; iter < 10; ++iter)
+		{
+			for (int i = 0; i < chain.bones.size(); i++) //this in theory should start at the furthest bone and then work its way down until the bone before the endEffector
+			{
+				Bone* bone = chain.bones[i]; std::cout << "bone id: " << bone->getId() << std::endl;
+				glm::vec3 endBonePosition = glm::vec4(1.0f) * (this->finalMatricies[chain.endEffector->getId()]); //in local space
+				glm::vec3 currentBonePosition = glm::vec4(1.0f) * this->finalMatricies[bone->getId()]; std::cout << "current bone position: " << glm::to_string(currentBonePosition) << std::endl;
+				glm::vec3 toEndEffector = glm::normalize(endBonePosition - currentBonePosition); std::cout << "vector to end effector: " << glm::to_string(toEndEffector) << std::endl;
+				glm::vec3 toTarget = glm::normalize(chain.targetPosition - currentBonePosition); std::cout << "to target: " << glm::to_string(toTarget) << std::endl;
+
+				std::cout << "target Position: " << glm::to_string(chain.targetPosition) << std::endl;
+
+				if(bone->getId() == chain.endEffector->getId())
+				{
+					std::cout << "end effector selected error!\n";
+					continue;
+				}
+
+				float angle = 0;
+				glm::vec3 axis(1.0f);
+
+				glm::quat newRotation(1.0,0.0,0.0,0.0);
+
+				float cosTheta = glm::dot(toTarget, toEndEffector);
+				if(cosTheta < 0.999) 
+				{
+					angle = acos(cosTheta);
+					axis = glm::normalize( glm::cross(toEndEffector, toTarget));
+
+					glm::quat rotation = glm::rotate(newRotation, angle, axis);// glm::angleAxis(angle, axis);
+					newRotation = glm::normalize(rotation);
+				}
+
+			
+				updateBones(bone, glm::toMat4(newRotation));
+
+
+				glm::vec3 endEffectorPos = glm::vec4(1.0f) * this->finalMatricies[chain.endEffector->getId()]; //pos of the target bone in world space
+				//break the loop if the end effector has reached close enough to the target point
+				float length = glm::length((endEffectorPos - chain.targetPosition));
+				if (length < 0.1)
+				{
+					break;
+				}
+
+			}
+
+		}
+
+
+	}
+
+	this->IKchains.clear();
 
 }
 
@@ -389,4 +504,17 @@ glm::mat4 objAnimator::getFinalBoneTransform(std::string boneName)
 	}
 
 	return finalMatrix;
+}
+
+void objAnimator::updateBones(Bone* bone, glm::mat4 transform)
+{
+	//apply transform to each bone then to each of its children
+	glm::mat4 globalTransform = this->finalMatricies[bone->getId()] * glm::inverse(bone->getOffsetMat()); //transform in local space
+
+	this->finalMatricies[bone->getId()] = (globalTransform * transform) *bone->getOffsetMat(); //apply transform given by the IK method in local space then transform to world space
+
+	for(unsigned int i = 0; i < bone->getNumChildren(); i++)
+	{
+		updateBones(this->animationSkeleton->getBone(bone->getChildren()[i]), this->finalMatricies[bone->getId()]);
+	}
 }

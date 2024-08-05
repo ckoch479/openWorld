@@ -39,15 +39,17 @@ void characterController::updateInputs(windowManager* manager)
 
 	if(manager->checkKey(69)) //e
 	{
-		if (playerCamera->isThirdPerson())
+		/*if (playerCamera->isThirdPerson())
 		{
 			this->player->setPlayerAction(dying);
-		}
+		}*/
+		this->ikTest = false;
 	}
 
 	if (manager->checkKey(81)) //q
 	{
-		this->player->setPlayerAction(idlePistol);
+		//this->player->setPlayerAction(idlePistol);
+		this->ikTest = true;
 	}
 
 	//idle was the issue because it checked only if w wasnt pressed and really should only work when nothing has been pressed

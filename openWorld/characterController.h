@@ -24,6 +24,8 @@ public:
 
 	void updateController(float dt, Level currentLevel);
 
+	bool ikTest = false;
+
 private:
 
 	void addPlayerToWorld();
@@ -46,5 +48,7 @@ private:
 	bool cameraBackWard = false;
 	bool cameraRight = false;
 	bool cameraLeft = false;
+
+	
 };
 

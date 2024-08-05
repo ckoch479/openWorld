@@ -61,8 +61,18 @@ void SimulationManager::run()
 	//player manager:
 	playerManager newPlayer(this->sceneObj,this->world,this->WindowManager,animationShader, lightShader,"resources/player/playerEdit.gltf",&newCamera);
 	newPlayer.testItemSlots(newManager.getItemPTR(gunId));
-	//newPlayer.testItemSlots(newManager.getItemPTR(gunId));
+	
+	//npc testing no AI yet:
+	npcManager newNPC(this->sceneObj, this->world, animationShader, "resources/NPC/Zombie/zombieHolder.gltf", "swatZombie");
 
+	Model* gunModel = ResourceManager::loadModel("resources/Assets/1911Edit.gltf", "test gun");
+
+	transform newTransform;
+	newTransform.position = glm::vec3(0.0f);
+	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	newTransform.scale = glm::vec3(0.01f);
+
+	std::string sceneGunID = this->sceneObj->addObjectToScene(gunModel, newTransform, lightShader);
 	/*ShapeGenerator newShaper;
 	shape2D newshape = newShaper.generateCharacter('k', 0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.7));
 	newshape.position = glm::vec3(0.1,0.1,0.0f);
@@ -112,6 +122,7 @@ void SimulationManager::run()
 		}
 
 		newPlayer.updateManager(deltaTime, &level1);
+		newNPC.updateManager(deltaTime, &level1);
 
 		//update physics
 		accumulator += deltaTime;
@@ -158,21 +169,26 @@ void SimulationManager::run()
 		
 		setDeltaTime(); //update deltaTime for this loop
 
-		if(this->WindowManager->checkKey(342))
-		{
-			//left alt
-			this->WindowManager->enableCursor();
-		}
+		//if(this->WindowManager->checkKey(342))
+		//{
+		//	//left alt
+		//	this->WindowManager->enableCursor();
+		//}
 
-		if (this->WindowManager->checkKey(341)) 
-		{
-			this->WindowManager->disableCursor();
-		}
+		//if (this->WindowManager->checkKey(341)) 
+		//{
+		//	this->WindowManager->disableCursor();
+		//}
 
 		double x = 0, y = 0;
 		this->WindowManager->getMousePosition(&x, &y);
 
 		newPlayer.updateManager(deltaTime, &level1);
+		newNPC.updateManager(deltaTime, &level1);
+
+
+		newTransform.position = newPlayer.player->getPlayerRelativeTransform()->front + newPlayer.player->getPlayersTransform()->position + glm::vec3(0,1.5,0);
+		this->sceneObj->updateTransform(sceneGunID, newTransform);
 
 		//update physics
 		accumulator += deltaTime;

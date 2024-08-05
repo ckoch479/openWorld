@@ -29,6 +29,7 @@ struct renderInfo2D
 	shape2D screenShape;
 };
 
+
 //scene is a database of all objects that need to be drawn. Each object is placed in a table. 
 // All parts of each object are contained within tables as well.
 //VAOS are stored in the Scene class, basic data such as Vertices, indices, and textures/materials are stored in ResourceManager
@@ -94,6 +95,16 @@ public:
 
 	Shader* getDepthCubeShader();
 
+	//for drawing 3D shapes (mainly for debug purposes should all use the same shader)
+	//3D shapes use the normal 3d rendering i.e. they have a model* that will be rendered normally, the shader for 3d shapes is stored in the scene object
+
+	//std::string addBoxToScene(glm::vec3 pos, glm::quat orient, glm::vec3 halfExtents); 
+
+	//std::string addCapsuleToScene(glm::vec3 pos, glm::quat orient, float radius, float height);
+
+	////no orientation due to a sphere being a sphere and ya know being equal in all directions
+	//std::string addSphereToScene(glm::vec3 pos, float radius);
+
 private:
 
 	std::string createUniqueID();
@@ -105,6 +116,7 @@ private:
 	std::unordered_map <std::string, transform> sceneTransforms;
 
 	std::unordered_map <std::string, renderInfo2D> Objects2D;
+
 
 	std::vector <std::string> modelIds;
 	std::vector <std::string> model2Dids;
@@ -122,6 +134,8 @@ private:
 	Camera* sceneCamera;
 	Shader* depthShader;
 	Shader* depthCubeShader;
+
+	Shader* genericShapeShader; //for rendering generic shapes (cube, sphere, capsule)
 
 	int maxBones = 100;
 

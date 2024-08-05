@@ -22,6 +22,8 @@
 #include "Level.h"
 
 #include "playerManager.h"
+#include "npcManager.h"
+
 #include "ShapeGenerator.h"
 #include "guiManager.h"
 

@@ -222,6 +222,7 @@
     <ClInclude Include="keyDefinitions.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="lookup_table.h" />
+    <ClInclude Include="npcActions.h" />
     <ClInclude Include="npcController.h" />
     <ClInclude Include="npcEntity.h" />
     <ClInclude Include="npcManager.h" />
@@ -260,6 +261,8 @@
     <None Include="Shaders\cubeMap.vs" />
     <None Include="Shaders\LightAndAnimationShader.fs" />
     <None Include="Shaders\LightAndAnimationShader.vs" />
+    <None Include="Shaders\lightShader.fs" />
+    <None Include="Shaders\lightShader.vs" />
     <None Include="Shaders\lineShader.fs" />
     <None Include="Shaders\lineshader.vs" />
     <None Include="Shaders\ModelShader.fs" />

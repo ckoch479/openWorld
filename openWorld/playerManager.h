@@ -9,6 +9,7 @@
 #include "Scene.h"
 #include "PhysicsWorld.h"
 #include "Camera.h"
+#include "Level.h"
 
 
 #ifndef PLAYERMANAGER_H
@@ -26,9 +27,11 @@ public:
 
 	void testItemSlots(std::shared_ptr<item> newItem);
 
+	playerEntity* player;
+
 private:
 
-	playerEntity* player;
+	
 	characterController* controller;
 	PlayerInventoryManager* inventoryManager;
 
@@ -41,6 +44,8 @@ private:
 	Camera* playerCamera;
 	PhysicsWorld* currentWorld;
 	windowManager* currentManager;
+
+	bool testSignal = false;
 
 
 };

@@ -24,17 +24,37 @@ playerManager::~playerManager()
 void playerManager::updateManager(float dt, Level* currentLevel)
 {
 	this->player->updateEntity();
+	
+	
+
 	this->player->getPlayerAnimator()->update(dt);
+
+	if (this->testSignal == true)
+	{
+		transform playerTransform = *this->player->getPlayersTransform();
+		glm::vec4 targetPosition = glm::vec4(player->getPlayerRelativeTransform()->front + player->getPlayersTransform()->position + glm::vec3(0, 1.5, 0),1.0f);
+		glm::mat4 inverseModel(1.0f);
+		inverseModel = glm::translate(inverseModel, playerTransform.position);
+		inverseModel *= glm::toMat4(playerTransform.orientation);
+		inverseModel = glm::scale(inverseModel, playerTransform.scale);
+		//inverseModel = glm::inverse(inverseModel);
+
+		//targetPosition = targetPosition * inverseModel;
+		std::string endEffectorName = "mixamorig:RightHand";
+		glm::vec3 target = targetPosition;// *inverseModel;
+		this->player->getPlayerAnimator()->applyInverseKinematics(endEffectorName, target);
+	}
 
 	this->player->updatePlayerScene(this->currentScene); //had to be ordered this way because hand items would lag behind if didnt and would not be placed correctly
 	this->inventoryManager->updateInventoryStatus();
 
 	this->controller->updateInputs(this->currentManager);
 	this->controller->updateController(dt,*currentLevel);
+	this->testSignal = this->controller->ikTest;
 }
 
 void playerManager::testItemSlots(std::shared_ptr<item> newItem)
 {
-	this->inventoryManager->equipSlot(RIGHTHAND, newItem);
+	//this->inventoryManager->equipSlot(RIGHTHAND, newItem);
 	//this->inventoryManager->equipSlot(LEFTHAND, newItem);
 }

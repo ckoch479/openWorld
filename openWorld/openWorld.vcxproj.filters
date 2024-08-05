@@ -70,6 +70,12 @@
     <Filter Include="Source Files\gameWorld">
       <UniqueIdentifier>{4ca370c3-18d2-4974-a567-e54debab9122}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\npc">
+      <UniqueIdentifier>{91f40538-2c5b-485e-a2e5-3f182b228fe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\npc">
+      <UniqueIdentifier>{d3029d32-3637-4535-b5a1-36f21da46f25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -132,12 +138,6 @@
     <ClCompile Include="assimpModelLoader.cpp">
       <Filter>Source Files\loadingUtilites</Filter>
     </ClCompile>
-    <ClCompile Include="rayCastCallBack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gamePhysicsWorld.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="handGun.cpp">
       <Filter>Source Files\GameObjectBody\worldItems</Filter>
     </ClCompile>
@@ -168,9 +168,6 @@
     <ClCompile Include="ShapeGenerator.cpp">
       <Filter>Source Files\2Drendering</Filter>
     </ClCompile>
-    <ClCompile Include="guiManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Animator.cpp">
       <Filter>Source Files\RenderingandSceneBody\Animation</Filter>
     </ClCompile>
@@ -194,6 +191,24 @@
     </ClCompile>
     <ClCompile Include="chunk.cpp">
       <Filter>Source Files\gameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="npcEntity.cpp">
+      <Filter>Source Files\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="npcController.cpp">
+      <Filter>Source Files\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="npcManager.cpp">
+      <Filter>Source Files\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="gamePhysicsWorld.cpp">
+      <Filter>Source Files\PhysicsandDynamicsBody</Filter>
+    </ClCompile>
+    <ClCompile Include="guiManager.cpp">
+      <Filter>Source Files\RenderingandSceneBody</Filter>
+    </ClCompile>
+    <ClCompile Include="rayCastCallBack.cpp">
+      <Filter>Source Files\PhysicsandDynamicsBody</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +248,6 @@
     <ClInclude Include="player.h">
       <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="Includes\glad\glad.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="reactPhysicsListener.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
     </ClInclude>
@@ -269,12 +281,6 @@
     <ClInclude Include="testingBoxMeshFunctions.h">
       <Filter>Header Files\loadingUtilities</Filter>
     </ClInclude>
-    <ClInclude Include="rayCastCallBack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gamePhysicsWorld.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gameObjectManager.h">
       <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
     </ClInclude>
@@ -305,12 +311,6 @@
     <ClInclude Include="ShapeGenerator.h">
       <Filter>Header Files\2Drendering</Filter>
     </ClInclude>
-    <ClInclude Include="guiManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="objAnimator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Animator.h">
       <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
     </ClInclude>
@@ -334,6 +334,33 @@
     </ClInclude>
     <ClInclude Include="chunk.h">
       <Filter>Header Files\gameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="npcEntity.h">
+      <Filter>Header Files\npc</Filter>
+    </ClInclude>
+    <ClInclude Include="npcController.h">
+      <Filter>Header Files\npc</Filter>
+    </ClInclude>
+    <ClInclude Include="npcManager.h">
+      <Filter>Header Files\npc</Filter>
+    </ClInclude>
+    <ClInclude Include="npcActions.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\glad\glad.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="guiManager.h">
+      <Filter>Header Files\RenderingandSceneHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="gamePhysicsWorld.h">
+      <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="objAnimator.h">
+      <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="rayCastCallBack.h">
+      <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -383,6 +410,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Shaders\lineshader.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\lightShader.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Shaders\lightShader.vs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

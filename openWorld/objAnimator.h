@@ -35,7 +35,7 @@ public:
 
 	void applyForwardKinematics(Bone* parentBone, glm::mat4 transform);
 
-	void applyInverseKinematics(std::string& endEffector, glm::vec3& targetPosition);
+	void applyInverseKinematics(std::string& endEffectorName, glm::vec3& targetPosition);
 
 	void solveIK();
 
@@ -87,6 +87,9 @@ private:
 	glm::mat4 getLocalRotation(AssimpNodeData* node);
 
 	float calculateScaleFactor(float lastTimeStamp, float nextTimeStamp, float currentTime);
+
+	//given a bone update each of this bones children using the transform applied to it
+	void updateBones(Bone* bone, glm::mat4 transform);
 
 };
 

@@ -93,7 +93,7 @@ struct animation
 
 struct inverseKinematicChain
 {
-	std::vector <Bone*> bones;
-	Bone* endEffector;
-	glm::vec3 targetPosition;
+	std::vector <Bone*> bones; //list of bones that need to be modified to achieve the end movement
+	Bone* endEffector; //main bone that needs to be modified
+	glm::vec3 targetPosition; //target point for the bone
 };
