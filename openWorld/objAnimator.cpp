@@ -190,11 +190,16 @@ void objAnimator::solveIK()
 		{
 			for (int i = 0; i < chain.bones.size(); i++) //this in theory should start at the furthest bone and then work its way down until the bone before the endEffector
 			{
-				Bone* bone = chain.bones[i]; std::cout << "bone id: " << bone->getId() << std::endl;
+				Bone* bone = chain.bones[i]; std::cout << "bone id: " << bone->getId() << " name: " << bone->getName() << std::endl;
 				glm::vec3 endBonePosition = glm::vec4(1.0f) * (this->finalMatricies[chain.endEffector->getId()]); //in local space
 				glm::vec3 currentBonePosition = glm::vec4(1.0f) * this->finalMatricies[bone->getId()]; std::cout << "current bone position: " << glm::to_string(currentBonePosition) << std::endl;
 				glm::vec3 toEndEffector = glm::normalize(endBonePosition - currentBonePosition); std::cout << "vector to end effector: " << glm::to_string(toEndEffector) << std::endl;
 				glm::vec3 toTarget = glm::normalize(chain.targetPosition - currentBonePosition); std::cout << "to target: " << glm::to_string(toTarget) << std::endl;
+
+
+				//final mats are in local space
+				//multiplying by inverse boneOffset moves to local space
+				//target pos is not correct either it needs to be move to model pos as well
 
 				std::cout << "target Position: " << glm::to_string(chain.targetPosition) << std::endl;
 
@@ -204,8 +209,8 @@ void objAnimator::solveIK()
 					continue;
 				}
 
-				float angle = 0;
-				glm::vec3 axis(1.0f);
+				float angle = 0.0f;
+				glm::vec3 axis(0,0,0);
 
 				glm::quat newRotation(1.0,0.0,0.0,0.0);
 
@@ -215,7 +220,7 @@ void objAnimator::solveIK()
 					angle = acos(cosTheta);
 					axis = glm::normalize( glm::cross(toEndEffector, toTarget));
 
-					glm::quat rotation = glm::rotate(newRotation, angle, axis);// glm::angleAxis(angle, axis);
+					glm::quat rotation = glm::angleAxis(angle, axis);
 					newRotation = glm::normalize(rotation);
 				}
 
@@ -226,7 +231,7 @@ void objAnimator::solveIK()
 				glm::vec3 endEffectorPos = glm::vec4(1.0f) * this->finalMatricies[chain.endEffector->getId()]; //pos of the target bone in world space
 				//break the loop if the end effector has reached close enough to the target point
 				float length = glm::length((endEffectorPos - chain.targetPosition));
-				if (length < 0.1)
+				if (length < 0.01)
 				{
 					break;
 				}
@@ -272,7 +277,7 @@ void objAnimator::calculateFKTransforms(AssimpNodeData* node, glm::mat4& parentT
 	{
 		int index = tempBone->getId();
 		glm::mat4 offset = tempBone->getOffsetMat();
-		this->finalMatricies[index] = globalTransformation * offset;
+		this->finalMatricies[index] = globalTransformation * offset; //should be from bone space to local space
 	}
 
 	for (int i = 0; i < node->childrenCount; ++i)
@@ -511,7 +516,7 @@ void objAnimator::updateBones(Bone* bone, glm::mat4 transform)
 	//apply transform to each bone then to each of its children
 	glm::mat4 globalTransform = this->finalMatricies[bone->getId()] * glm::inverse(bone->getOffsetMat()); //transform in local space
 
-	this->finalMatricies[bone->getId()] = (globalTransform * transform) *bone->getOffsetMat(); //apply transform given by the IK method in local space then transform to world space
+	this->finalMatricies[bone->getId()] = (globalTransform * transform) * bone->getOffsetMat(); //apply transform given by the IK method in local space then transform to world space
 
 	for(unsigned int i = 0; i < bone->getNumChildren(); i++)
 	{

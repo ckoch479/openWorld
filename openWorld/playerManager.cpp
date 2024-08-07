@@ -32,16 +32,10 @@ void playerManager::updateManager(float dt, Level* currentLevel)
 	if (this->testSignal == true)
 	{
 		transform playerTransform = *this->player->getPlayersTransform();
-		glm::vec4 targetPosition = glm::vec4(player->getPlayerRelativeTransform()->front + player->getPlayersTransform()->position + glm::vec3(0, 1.5, 0),1.0f);
-		glm::mat4 inverseModel(1.0f);
-		inverseModel = glm::translate(inverseModel, playerTransform.position);
-		inverseModel *= glm::toMat4(playerTransform.orientation);
-		inverseModel = glm::scale(inverseModel, playerTransform.scale);
-		//inverseModel = glm::inverse(inverseModel);
+		glm::vec3 targetPosition = player->getPlayerRelativeTransform()->front;
 
-		//targetPosition = targetPosition * inverseModel;
 		std::string endEffectorName = "mixamorig:RightHand";
-		glm::vec3 target = targetPosition;// *inverseModel;
+		glm::vec3 target = targetPosition;
 		this->player->getPlayerAnimator()->applyInverseKinematics(endEffectorName, target);
 	}
 

@@ -186,8 +186,7 @@ void SimulationManager::run()
 		newPlayer.updateManager(deltaTime, &level1);
 		newNPC.updateManager(deltaTime, &level1);
 
-
-		newTransform.position = newPlayer.player->getPlayerRelativeTransform()->front + newPlayer.player->getPlayersTransform()->position + glm::vec3(0,1.5,0);
+		newTransform.position = newPlayer.player->getPlayerRelativeTransform()->front + newPlayer.player->getPlayersTransform()->position + glm::vec3(0, 1.5, 0);
 		this->sceneObj->updateTransform(sceneGunID, newTransform);
 
 		//update physics
