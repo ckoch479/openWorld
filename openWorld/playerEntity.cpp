@@ -385,7 +385,7 @@ glm::mat4 playerEntity::getLeftHandTransform()
 	//Bone* bone = &this->playerModel->boneMap["mixamorig:LeftHand"];
 	//Bone* bone = &this->playerModel->boneMap["leftSocket"];
 	
-	handTransform = this->playerAnimator->getFinalBoneTransform("mixamorig:LeftHand");
+	handTransform = this->playerAnimator->getFinalBoneTransform("leftSocket");
 
 	return handTransform;
 }
@@ -397,7 +397,8 @@ glm::mat4 playerEntity::getRightHandTransform()
 	//std::string boneName = "mixamorig:RightHand";
 	//std::string boneName = "rightSocket";
 	
-	handTransform = this->playerAnimator->getFinalBoneTransform("mixamorig:RightHand");
+	//handTransform = this->playerAnimator->getFinalBoneTransform("mixamorig:RightHand");
+	handTransform = this->playerAnimator->getFinalBoneTransform("rightSocket");
 
 	return handTransform;
 }

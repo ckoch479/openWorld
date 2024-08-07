@@ -223,6 +223,7 @@ void assimpModelLoader::extractBoneWeightForVertices(std::vector <Vertex>& verti
 			//newBone.name = boneName;
 			boneInfoMap[boneName] = newBone;
 			boneID = boneCount;
+			newBone.setBindPose(AssimpGLMHelpers::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mNode->mTransformation));
 			boneCount++;
 			this->skeleton.push_back(newBone);
 		}

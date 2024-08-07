@@ -8,12 +8,22 @@ handGun::handGun(std::string filePath, std::string name, float mass, float volum
 	this->mass = mass;
 	this->volume = volume;
 
-	transform newTransform;
-	newTransform.position = glm::vec3(0.0f);
-	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	newTransform.scale = glm::vec3(0.01f);
+	this->objectTransform = glm::mat4(1.0f);
+	this->objectTransform = glm::translate(this->objectTransform, glm::vec3(0, 0, 0));
+	this->objectTransform = glm::rotate(this->objectTransform, 0.0f, glm::vec3(0,0,0));
+	this->objectTransform = glm::scale(this->objectTransform, glm::vec3(0.01, 0.01, 0.01));
 
-	this->sceneTransform = newTransform;
+	//transform newTransform;
+	//newTransform.position = glm::vec3(0.0f);
+	//newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	//newTransform.scale = glm::vec3(0.01f);
+
+	//glm::vec3 skew;
+	//glm::vec4 perspective;
+
+	//glm::decompose(this->objectTransform, newTransform.scale, newTransform.orientation, newTransform.position, skew, perspective);
+
+	//this->sceneTransform = newTransform;
 }
 
 handGun::~handGun()
@@ -23,15 +33,30 @@ handGun::~handGun()
 
 void handGun::addToScene(scene* scene, Shader* shader)
 {
-	this->sceneID = scene->addObjectToScene(this->model, this->sceneTransform, shader);
+	transform newTransform;
+	glm::vec3 skew;
+	glm::vec4 perspective;
+
+	glm::decompose(this->objectTransform, newTransform.scale, newTransform.orientation, newTransform.position, skew, perspective);
+
+
+	this->sceneID = scene->addObjectToScene(this->model, newTransform, shader);
 
 	std::cout << "handgun being added to scene\n";
 }
 
-void handGun::updateTransform(scene* scene, transform newTransform)
+void handGun::updateTransform(scene* scene, glm::mat4 newTransform)
 {
-	this->sceneTransform = newTransform; //+ this->localTransform;
-	sceneTransform.scale = glm::vec3(0.01f);
-	scene->updateTransform(this->sceneID, this->sceneTransform);
+	glm::mat4 totalTransform = newTransform;// *this->objectTransform;
+
+	transform decompTransform;
+	glm::vec3 skew;
+	glm::vec4 perspective;
+
+	glm::decompose(totalTransform, decompTransform.scale, decompTransform.orientation, decompTransform.position, skew, perspective);
+
+
+	decompTransform.scale = glm::vec3(0.01);
+	scene->updateTransform(this->sceneID, decompTransform);
 }
 

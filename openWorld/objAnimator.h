@@ -65,6 +65,9 @@ private:
 	std::vector <inverseKinematicChain> IKchains;
 	std::vector <glm::mat4> finalMatricies; //should be exactly 100 due to max bones being 100
 
+	//i know this isnt a very "good" solution dont judge me please
+	bool updateBone[100]; //an array of bools used to determine if the bone at this id has been updated if not update it using it's parent transform
+
 	float currentTimeStep = 0.0f; //in seconds or technically in fractions of a second since its the amount of time between frames
 
 	float currentAnimationTime = 0.0f; //animation is assumed to have 1000 ticks per second 
@@ -89,7 +92,7 @@ private:
 	float calculateScaleFactor(float lastTimeStamp, float nextTimeStamp, float currentTime);
 
 	//given a bone update each of this bones children using the transform applied to it
-	void updateBones(Bone* bone, glm::mat4 transform);
+	void updateBones(Bone* bone, glm::vec3 axis, float angle);
 
 };
 

@@ -36,9 +36,14 @@ public:
 	void setParent(int bone);
 
 	void setChildren(std::vector <int> children);
+	//sets the bone transform relative to it's parent
+	void setBindPose(glm::mat4 transform);
+
+	glm::mat4 getBindPose();
 
 private:
 
+	glm::mat4 bindPos; //in model space
 	int id = -1;
 	glm::mat4 offsetMatrix = glm::mat4(1.0f);
 	std::string name = "NO::BONE";

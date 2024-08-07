@@ -3,6 +3,7 @@
 
 #include "Includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
+#include "Includes/glm/gtx/matrix_decompose.hpp"
 
 #include "renderingInfoDefinitions.h"
 #include "item.h"
@@ -32,8 +33,8 @@ public:
 	float getVolume() const override { return this->volume; }
 
 	void addToScene(scene* scene, Shader* shader); 
-	void updateTransform(scene* scene, transform newTransform);
-	transform getTransform() { return this->sceneTransform; }
+	void updateTransform(scene* scene, glm::mat4 newTransform);
+	glm::mat4 getTransform() { return this->objectTransform; }
 
 	void shoot(); //create projectile in the world
 
@@ -41,12 +42,14 @@ private:
 	//local points on the object that is used for player/entity animations
 	Model* model;
 	std::string sceneID;
-	transform sceneTransform;
+	//transform sceneTransform;
 
 	//temporary use these to create the final orientation
-	glm::vec3 front = glm::vec3(0,0,-1);
-	glm::vec3 up = glm::vec3(0,1,0);
-	glm::vec3 right = glm::vec3(1,0,0);
+	//glm::vec3 front = glm::vec3(0,0,1);
+	//glm::vec3 up = glm::vec3(0,1,0);
+	//glm::vec3 right = glm::vec3(1,0,0);
+
+	glm::mat4 objectTransform; //local transform
 
 	float mass; //mass/volume used for inventory management 
 	float volume;

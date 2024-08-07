@@ -74,3 +74,13 @@ void Bone::setChildren(std::vector <int> children)
 {
 	this->childrenIds = children;
 }
+
+void Bone::setBindPose(glm::mat4 transform)
+{
+	this->bindPos = transform;
+}
+
+glm::mat4 Bone::getBindPose()
+{
+	return this->bindPos;
+}

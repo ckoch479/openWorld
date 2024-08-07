@@ -5,6 +5,8 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "includes/glm/gtx/quaternion.hpp"
+#include "Includes/glm/gtx/matrix_decompose.hpp"
+
 
 #include "item.h"
 #include "gameObjectManager.h"

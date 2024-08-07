@@ -65,14 +65,14 @@ void SimulationManager::run()
 	//npc testing no AI yet:
 	npcManager newNPC(this->sceneObj, this->world, animationShader, "resources/NPC/Zombie/zombieHolder.gltf", "swatZombie");
 
-	Model* gunModel = ResourceManager::loadModel("resources/Assets/1911Edit.gltf", "test gun");
+	//Model* gunModel = ResourceManager::loadModel("resources/Assets/1911Edit.gltf", "test gun");
 
-	transform newTransform;
-	newTransform.position = glm::vec3(0.0f);
-	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	newTransform.scale = glm::vec3(0.01f);
+	//transform newTransform;
+	//newTransform.position = glm::vec3(0.0f);
+	//newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+	//newTransform.scale = glm::vec3(0.01f);
 
-	std::string sceneGunID = this->sceneObj->addObjectToScene(gunModel, newTransform, lightShader);
+	//std::string sceneGunID = this->sceneObj->addObjectToScene(gunModel, newTransform, lightShader);
 	/*ShapeGenerator newShaper;
 	shape2D newshape = newShaper.generateCharacter('k', 0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.7));
 	newshape.position = glm::vec3(0.1,0.1,0.0f);
@@ -186,8 +186,8 @@ void SimulationManager::run()
 		newPlayer.updateManager(deltaTime, &level1);
 		newNPC.updateManager(deltaTime, &level1);
 
-		newTransform.position = newPlayer.player->getPlayerRelativeTransform()->front + newPlayer.player->getPlayersTransform()->position + glm::vec3(0, 1.5, 0);
-		this->sceneObj->updateTransform(sceneGunID, newTransform);
+		//newTransform.position = newPlayer.player->getPlayerRelativeTransform()->front + newPlayer.player->getPlayersTransform()->position + glm::vec3(0, 1.5, 0);
+		//this->sceneObj->updateTransform(sceneGunID, newTransform);
 
 		//update physics
 		accumulator += deltaTime;

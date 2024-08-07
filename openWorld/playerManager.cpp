@@ -49,6 +49,6 @@ void playerManager::updateManager(float dt, Level* currentLevel)
 
 void playerManager::testItemSlots(std::shared_ptr<item> newItem)
 {
-	//this->inventoryManager->equipSlot(RIGHTHAND, newItem);
+	this->inventoryManager->equipSlot(RIGHTHAND, newItem);
 	//this->inventoryManager->equipSlot(LEFTHAND, newItem);
 }
