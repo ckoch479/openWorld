@@ -32,7 +32,7 @@ public:
 	//this checks the state of a particular key
 	bool checkKey(int key);
 	//this returns the entire keyVector if the simulation manager wants it
-	std::vector <int>* getKeyVector();
+	std::vector <int> getKeyVector();
 
 	void enableCursor();
 

@@ -16,108 +16,86 @@ characterController::~characterController()
 
 void characterController::updateInputs(windowManager* manager)
 {
-	if (manager->checkKey(87)) //w
+	//if player is in the third person camera view (free cam is for debugging)
+	if(this->playerCamera->isThirdPerson())
 	{
-		if (playerCamera->isThirdPerson())
+		//check for walking, jogging or sprinting and set that action
+		if(manager->checkKey(this->forward)) //W
 		{
-			if (manager->checkKey(340))//left shift
+			if(manager->checkKey(this->sprint)) //if shift is being pressed
 			{
-				this->player->setPlayerAction(jogging);
+				this->player->setPlayerAction(sprinting);
 			}
-			else
+			//if walking toggle is true
+			else if(this->walkT)
 			{
 				this->player->setPlayerAction(walking);
 			}
+			else //if player isnt walking or sprinting the gotta be jogging
+			{
+				this->player->setPlayerAction(jogging);
+			}
 		}
 		
-		if (!playerCamera->isThirdPerson()) 
+		//check for action modifiers (crawling, crouching, aiming, shooting)
+		if(manager->checkKey(togWalk)) //check for walking toggle button is pressed (capsLock)
 		{
-			this->cameraForward = true;
+			if(walkT == false)
+			{
+				this->walkT = true;
+			}
+			else
+			{
+				this->walkT = false;
+			}
+			this->player->setActionModifier(walkToggle, this->walkT);
 		}
 
-	};
-
-	if(manager->checkKey(69)) //e
-	{
-		if (playerCamera->isThirdPerson())
+		if(manager->checkKey(crouchT))
 		{
-			this->player->setPlayerAction(dying);
+			if(crouchToggle == false)
+			{
+				crouchToggle = true;
+			}
+			else
+			{
+				crouchToggle = false;
+			}
+			this->player->setActionModifier(crouch, this->crouchToggle);
+			std::cout << "crouch toggle is: " << this->crouchToggle << std::endl;
 		}
-		//this->ikTest = false;
-	}
+		/*if (manager->checkKey(69)) //E
+		{
+			this->player->setActionModifier(aim, true);
+		}
+		if (manager->checkKey(81)) Q
+		{
+			this->player->setActionModifier(aim, false);
+		}*/
 
-	if (manager->checkKey(81)) //q
-	{
-		this->player->setPlayerAction(idlePistol);
-		//this->ikTest = true;
+		if(manager->rightClick()) //found the issue with aiming, animation modifiers do not update animations
+		{
+				this->aiming = true;
+				this->player->setActionModifier(aim, true);
+				this->playerCamera->Zoom = 25.0f;
+		}
+		if(!manager->rightClick())
+		{
+				this->aiming = false;
+				this->player->setActionModifier(aim, false);
+				this->playerCamera->Zoom = 45.0f;
+		}
+		if (manager->checkKey(32)) //space
+		{
+			this->player->setPlayerAction(jumping);
+		}
+
 	}
 
 	//idle was the issue because it checked only if w wasnt pressed and really should only work when nothing has been pressed
 	if (!manager->checkKey(87) && !manager->checkKey(69) && !manager->checkKey(65) && !manager->checkKey(83) && !manager->checkKey(68) && !manager->checkKey(32) && !manager->checkKey(81) && !manager->rightClick() && !manager->leftClick()) //w
 	{
 		this->player->setPlayerAction(idle);
-	}
-
-	if (manager->checkKey(65)) //a
-	{
-		if (playerCamera->isThirdPerson())
-		{
-			this->player->setPlayerAction(sideWalkLeft);
-		}
-
-		if (!playerCamera->isThirdPerson())
-		{
-			this->cameraLeft = true;
-		}
-	};
-
-	if (manager->checkKey(83)) //s
-	{
-		if (playerCamera->isThirdPerson())
-		{
-			this->player->setPlayerAction(walkingBack);
-		}
-
-		if (!playerCamera->isThirdPerson())
-		{
-			this->cameraBackWard = true;
-		}
-	};
-
-	if (manager->checkKey(68)) //d
-	{
-		if (playerCamera->isThirdPerson())
-		{
-			this->player->setPlayerAction(sideWalkRight);
-		}
-
-		if (!playerCamera->isThirdPerson())
-		{
-			this->cameraRight = true;
-		}
-	};
-
-	if (manager->checkKey(32)) //space
-	{
-		if (playerCamera->isThirdPerson())
-		{
-			this->player->setPlayerAction(jumping);
-		}
-	}
-
-	if(manager->leftClick())
-	{
-		this->player->setPlayerAction(aimingRifle); //needs to be changed to use weapon
-	}
-
-	if(manager->rightClick())
-	{	//needs to be determined what kind of item is equiped so proper aiming will take place
-		this->player->setPlayerAction(aimingPistol);
-		this->playerCamera->Zoom = 25.0f;
-	}
-	if(!manager->rightClick())
-	{
-		this->playerCamera->Zoom = 45.0f;
 	}
 
 	//camera control
@@ -130,9 +108,29 @@ void characterController::updateInputs(windowManager* manager)
 		playerCamera->setCameraThirdPerson(2.6);
 	}
 
-	
+	if (!playerCamera->isThirdPerson())
+	{
+		if (manager->checkKey(65)) //a
+		{
+			this->cameraLeft = true;
+		}
 
-	
+		if (manager->checkKey(83)) //s
+		{
+				this->cameraBackWard = true;
+		};
+
+		if (manager->checkKey(68)) //d
+		{
+			this->cameraRight = true;
+		};
+
+		if (manager->checkKey(87)) //w
+		{
+				this->cameraForward = true;
+		};
+	}
+
 	//third person camera controls---------------------------------------------------------
 	//mouse position;
 	float lastx = cursorX;
@@ -151,25 +149,6 @@ void characterController::updateInputs(windowManager* manager)
 		this->player->setPlayerTransform(*newTransform);
 	}
 
-	//this is for testing using this to make the player arms move and and down with aiming
-	if(playerCamera->isThirdPerson())
-	{
-		float maxPitch = 7.0f;
-		float minPitch = 5.8f;
-
-		this->pitch += yOffset * 0.01;
-
-		if (pitch > maxPitch)
-		{
-			pitch = maxPitch;
-		}
-
-		if (pitch < minPitch)
-		{
-			pitch = minPitch;
-		}
-		
-	}
 }
 
 
@@ -208,12 +187,19 @@ void characterController::updateController(float dt, Level currentLevel)
 	if(this->player->getPlayerAction() == walking)
 	{
 		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
-		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x,0, relativeFront.z) * (float)4.0 * dt;
+		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x,0, relativeFront.z) * (float)3.0 * dt;
 	}
+
 	if(this->player->getPlayerAction() == jogging)
 	{
 		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
-		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)4.0 * 2.0f * dt;
+		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)4.0 * 1.5f * dt;
+	}
+
+	if(this->player->getPlayerAction() == sprinting)
+	{
+		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
+		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)5.0 * 1.5f * dt;
 	}
 	
 	if (this->player->getPlayerAction() == jumping) //not working quite yet
@@ -224,20 +210,7 @@ void characterController::updateController(float dt, Level currentLevel)
 		}
 	} 
 
-	if(this->player->getPlayerAction() == aimingPistol)
-	{
-		glm::quat modRot(1.0,0.0,0.0,0.0);
-		glm::vec3 playerOrient = this->player->getPlayerRelativeTransform()->right;
-
-		glm::mat4 rotateMat = glm::rotate(rotateMat, this->pitch * 0.001f, playerOrient);
-		modRot = glm::toQuat(rotateMat);
-
-		this->player->getPlayerAnimator()->addModifier("mixamorig:Spine1", modRot);
-		//mixamorig:Hips
-		//mixamorig:Spine1
-	}
 	
-
 	this->world->setBodyPosition(this->physicsId, playerTransform->position);
 	this->player->setPlayerTransform(*playerTransform);
 	player->calculateRelTransform();

@@ -58,7 +58,7 @@ void objAnimator::playAnimation(std::string& animationName)
 {	//its ugly but it works :D
 	//still need to fix when two animations are attempting to play at once (decide who wins and is shown)
 	if(this->activeAnimation != animations[animationName])
-	{	//if the current animation is a non looping animation it cannont be changed until it is done playing
+	{	//if the current animation is a non looping animation it can not be changed until it is done playing
 		if (this->activeAnimation)
 		{
 			if (this->activeAnimation->looping == true)
@@ -272,7 +272,7 @@ void objAnimator::calculateFKTransforms(AssimpNodeData* node, glm::mat4& parentT
 			if(this->modifiers[i].boneName == nodeName)
 			{
 				//apply modifer that matches this bone name
-				nodeTransform = nodeTransform * glm::toMat4(modifiers[i].rotation);
+				nodeTransform = nodeTransform;// *glm::toMat4(modifiers[i].rotation);
 			}
 		}
 	}

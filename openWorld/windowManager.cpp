@@ -103,9 +103,9 @@ bool windowManager::checkKey(int key)
 	return keys[key];
 }
 
-std::vector <int>* windowManager::getKeyVector()
+std::vector <int> windowManager::getKeyVector()
 {
-	return &this->keyboardInputString;
+	return this->keyboardInputString;
 }
 
 void windowManager::enableCursor()

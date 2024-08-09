@@ -41,52 +41,39 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	std::string Path = "resources/player/animations/idle.gltf"; //for some reason i have to do it this way
 
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(idle);
 
 	//idlePistol //found
 	name = "idlePistol";
 	Path = "resources/player/animations/pistolIdle.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(idlePistol);
 
 	//idleRifle //found
 	name = "idleRifle";
 	Path = "resources/player/animations/rifleIdle.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(idleRifle);
 
 	//aimingPistol
 	name = "aimingPistol";
 	Path = "resources/player/animations/pistolAim.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(aimingPistol);
 
 	//aimingRifle
 	//this->animations["aimingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleAim.gltf", "playerAimRifle", "player");
 	name = "aimingRifle";
 	Path = "resources/player/animations/rifleAim.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(aimingRifle);
 
 	//walking //found
 	//this->animations["walking"] = ResourceManager::loadAnimation("resources/player/animations/walking.gltf", "playerWalking", "player");
 	name = "walking";
 	Path = "resources/player/animations/walking.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(walking);
-	
-	//sideWalkLeft
-	//sideWalkRight
-	//walkingBack
-	
-	//walkingPistolLowered
-	
+
 	//walkingPistolRaised //found
 	//this->animations["walkPistolRaised"] = ResourceManager::loadAnimation("resources/player/animations/pistolWalkForward.gltf", "playerWalkPistolRaised", "player");
 	name = "walkPistolRaised";
 	Path = "resources/player/animations/pistolWalkForward.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(walkingPistolRaised);
 
 	//walkingRifleLowered
 	
@@ -95,7 +82,6 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	name = "walkRifleRaised";
 	Path = "resources/player/animations/rifleWalkForward.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(walkingRifleRaised);
 	//leftTurn
 	//rightTurn
 
@@ -104,7 +90,6 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	name = "jogging";
 	Path = "resources/player/animations/jogging.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(jogging);
 	//sideJogLeft
 	//sideJogRight
 	
@@ -119,7 +104,6 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	name = "running";
 	Path = "resources/player/animations/running.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(running);
 
 	//leftRunninggTurn
 	//rightRunningTurn
@@ -128,10 +112,9 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	//crouchingPistol
 	//crouchingRifle //found
 	//this->animations["crouchingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleCrouchedAiming.gltf", "playerCrouchingRifle", "player");
-	name = "crouchingRifle";
+	name = "crouchingRifleAim";
 	Path = "resources/player/animations/rifleCrouchedAiming.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(crouchingRile);
 
 	//crouchWalking
 	 
@@ -144,14 +127,12 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	name = "crouchWalkingRifle";
 	Path = "resources/player/animations/rifleWalkForward.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	this->actionDebugger.push_back(crouchWalkingRifleRaise);
 
 	//jumping //found
 	//this->animations["jumping"] = ResourceManager::loadAnimation("resources/player/animations/jump.gltf", "playerJumping", "player");
 	name = "jumping";
 	Path = "resources/player/animations/jump.gltf";
 	this->playerAnimator->loadAnimation(name, Path, false);
-	this->actionDebugger.push_back(jumping);
 
 	//diveRight
 	//diveLeft
@@ -168,7 +149,6 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	name = "dying";
 	Path = "resources/player/animations/dying.gltf";
 	this->playerAnimator->loadAnimation(name, Path, false);
-	this->actionDebugger.push_back(dying);
 }
 
 playerEntity::~playerEntity()
@@ -197,15 +177,6 @@ void playerEntity::setPlayerMeshes(playerParts part, Mesh* newMesh)
 	this->playersParts[part] = newMesh;
 	this->meshChange = true;
 	updateEntity();
-}
-
-void playerEntity::debugAnimations()
-{
-	if (stepper >= actionDebugger.size()) { stepper = 0; }
-	setPlayerAction(actionDebugger[stepper]);
-	updateEntity();
-	stepper++;
-
 }
 
 void playerEntity::updateEntity()
@@ -240,85 +211,36 @@ Model* playerEntity::getPlayerModel()
 
 void playerEntity::updateActions()
 {
-	
-	switch(this->currentAction)
+	if(this->currentAction == idle) //all idle animations
 	{
-	case(idle):
-		this->activeAnim = "idle";
-		this->animationChange = true;
-		break;
-
-	case(idlePistol):
-		this->activeAnim = "idlePistol";
-		this->animationChange = true;
-		break;
-
-	case(idleRifle):
-		this->activeAnim = "idleRifle";
-		this->animationChange = true;
-		break;
-
-	case(aimingPistol):
-		this->activeAnim = "aimingPistol";
-		this->animationChange = true;
-		break;
-
-	case(aimingRifle):
-		this->activeAnim = "aimingRifle";
-		this->animationChange = true;
-		break;
-
-	case(walking):
-		this->activeAnim = "walking";
-		this->animationChange = true;
-		
-		//move forward as well by however much
-		break;
-
-	case(walkingPistolRaised):
-		this->activeAnim = "walkPistolRaised";
-		this->animationChange = true;
-		//move forward as well by however much
-		break;
-
-	case(walkingRifleRaised):
-		this->activeAnim = "walkRifleRaised";
-		this->animationChange = true;
-		//move forward as well by however much
-		break;
-
-	case(jogging):
-		this->activeAnim = "jogging";
-		this->animationChange = true;
-		//move forward as well by however much
-		break;
-
-	case(running):
-		this->activeAnim = "running";
-		this->animationChange = true;
-		//move forward as well by however much
-		break;
-
-	case(crouchWalkingRifleRaise):
-		this->activeAnim = "crouchingRifle";
-		this->animationChange = true;
-		//move forward as well by however much
-		break;
-
-	case(jumping):
-		this->activeAnim = "jumping";
-		this->animationChange = true;
-		//jump (duh), move up and down a lil bit
-		break;
-
-	case(dying):
-		this->activeAnim = "dying";
-		this->animationChange = true;
-		//die, thats pretty much it
-		break;
-
-
+		setIdleAnimation();
+		std::cout << "idle animation playing\n";
 	}
+
+	if (this->currentAction == walking) //all walking animations
+	{
+		setWalkingAnimation();
+		std::cout << "walking animation playing\n";
+	}
+	if(this->currentAction == jogging) //all jogging animations
+	{
+		setJoggingAnimation();
+		std::cout << "jogging animation playing\n";
+	}
+	if(this->currentAction == turning) //turning animations
+	{
+		setTurningAnimation();
+	}
+	if(this->currentAction == sprinting) //sprinting animations
+	{
+		setSprintingAnimation();
+		std::cout << "sprinting animation playing\n";
+	}
+	if(this->currentAction == jumping)
+	{
+		setJumpingAnimation();
+	}
+
 }
 
 void playerEntity::addPlayerToScene(scene* scene, Shader* shader)
@@ -432,4 +354,469 @@ glm::mat4 playerEntity::getLeftHandOffsetMatrix()
 objAnimator* playerEntity::getPlayerAnimator()
 {
 	return this->playerAnimator;
+}
+
+void playerEntity::setActionModifier(actionModifiers mod, bool setter)
+{
+	this->animationChange = true;
+	updateActions();
+	switch(mod)
+	{
+	case(walkToggle):
+		this->walkToggled = setter;
+		break;
+
+	case(sprintToggle):
+		this->sprintToggled = setter;
+		break;
+
+	case(crouch):
+		this->crouching = setter;
+		break;
+
+	case(crawl):
+		this->crawling = setter;
+		break;
+
+	case(aim):
+		this->aiming = setter;
+		//std::cout << "aiming being set to: " << setter << std::endl;
+		break;
+
+	case(shoot):
+		this->shooting = setter;
+		break;
+
+	case(left):
+		this->leftward = setter;
+		break;
+
+	case(right):
+		this->rightward = setter;
+		break;
+
+	case(forward):
+		this->front = setter;
+		break;
+
+	case(backward):
+		this->back = setter;
+		break;
+
+	case(oneHandEquiped):
+		this->oneHanded = setter;
+		break;
+
+	case(twoHandEquiped):
+		this->twoHanded = setter;
+		break;
+
+	}
+	
+}
+
+bool playerEntity::getActionModifier(actionModifiers mod)
+{
+	bool modif = false; //default to false in case there are any errors
+	switch (mod)
+	{
+	case(walkToggle):
+		modif = this->walkToggled;
+		break;
+
+	case(sprintToggle):
+		modif = this->sprintToggled;
+		break;
+
+	case(crouch):
+		modif = this->crouching;
+		break;
+
+	case(crawl):
+		modif = this->crawling;
+		break;
+
+	case(aim):
+		modif = this->aiming;
+		break;
+
+	case(shoot):
+		modif = this->shooting;
+		break;
+
+	case(left):
+		modif = this->leftward;
+		break;
+
+	case(right):
+		modif = this->rightward;
+		break;
+
+	case(forward):
+		modif = this->front;
+		break;
+
+	case(backward):
+		modif = this->back;
+		break;
+
+	case(oneHandEquiped):
+		modif = this->oneHanded;
+		break;
+
+	case(twoHandEquiped):
+		modif = this->twoHanded;
+		break;
+
+	}
+	return modif;
+}
+
+void playerEntity::setIdleAnimation()
+{
+	if(crouching) //crouching idle animation
+	{
+		if (oneHanded) //if one handed item is equiped
+		{
+			if (aiming)
+			{
+				if (shooting)
+				{
+
+				}
+				else
+				{
+
+				}
+			}
+			else
+			{
+			
+			}
+		}
+		else if (twoHanded) //if two handed item is equiped
+		{
+			if (aiming)
+			{
+				if (shooting)
+				{
+
+				}
+				else
+				{
+					//crouching aiming two handed
+					this->activeAnim = "crouchingRifleAim";
+					this->animationChange = true;
+				}
+			}
+			else
+			{
+
+			}
+		}
+
+		else //unarmed
+		{
+
+		}
+	}
+	//no crawling animations are currently loaded
+	else if(crawling) //crawling idle animation
+	{
+		if (oneHanded) //if one handed item is equiped
+		{
+			if (aiming)
+			{
+				if (shooting)
+				{
+
+				}
+				else
+				{
+
+				}
+			}
+			else
+			{
+
+			}
+		}
+		else if (twoHanded) //if two handed item is equiped
+		{
+			if (aiming)
+			{
+				if (shooting)
+				{
+
+				}
+				else
+				{
+
+				}
+			}
+			else
+			{
+
+			}
+		}
+		else //unarmed
+		{
+
+		}
+	}
+
+	else //normal idle animation
+	{
+		
+		if (oneHanded) //if one handed item is equiped
+		{
+			if (aiming)
+			{
+				if (shooting)
+				{
+					//one handed shooting animation
+				}
+				else
+				{
+					//one handed aiming animation
+					this->activeAnim = "aimingPistol";
+					this->animationChange = true;
+					std::cout << "aiming pistol!\n";
+				}
+			}
+			else
+			{
+			//one handed weapon lowered animation
+				this->activeAnim = "idlePistol";
+				this->animationChange = true;
+			}
+		}
+		else if (twoHanded) //if two handed item is equiped
+		{
+			if (aiming)
+			{
+				if(shooting)
+				{
+					//two handed shooting animation
+				}
+				else
+				{
+					//two handed aiming animation
+					this->activeAnim = "aimingRifle";
+					this->animationChange = true;
+				}
+			}
+			else
+			{
+			//two handed weapon lowered animation
+				this->activeAnim = "idleRifle";
+				this->animationChange = true;
+			}
+		}
+		else //unarmed idle animation
+		{
+			this->activeAnim = "idle";
+			this->animationChange = true;
+		}
+	}
+	
+}
+
+void playerEntity::setWalkingAnimation()
+{
+	//if w is pressed
+	if (this->front)
+	{
+		if (this->walkToggled) //if walking is toggled this is your tree friend
+		{
+			if (this->crouching) //if crouching we branch off here
+			{	
+				//one handed weapon
+				if(this->oneHanded)
+				{
+					if(aiming)
+					{
+						if(shooting)
+						{
+							//one handed crouch walking shoot animation
+						}
+						else
+						{
+							//one handed crouch walking aim animation
+						}
+					}
+					//if weapon is not raised
+					else
+					{
+					
+					}
+				}
+				//two handed weapon
+				else if(this->twoHanded)
+				{
+					if(aiming)
+					{
+						if (shooting)
+						{
+							//two handed crouch, walking shoot animation
+						}
+						else
+						{
+							//two handed crouch walking aim animation
+						}
+					}
+					//if weapon is not raised
+					else
+					{
+						this->activeAnim = "crouchWalkingRifle";
+						this->animationChange = true;
+					}
+				}
+				//unarmed
+				else
+				{
+				//crouch walking unarmed
+				}
+				
+			}
+
+			else if (this->crawling) //crawling branches off here, crawling is a modifier to walking and not it's own action, you cannot move and aim while crawling
+			{
+				if(this->oneHanded)
+				{
+				//one handed crawling animation
+				}
+				else if(this->twoHanded)
+				{
+				//two handed crawling animation
+				}
+				else
+				{
+				//unarmed crawling animation
+				}
+			}
+
+			else //regular walking
+			{
+				if (oneHanded)
+				{
+					if (aiming)
+					{
+						if (shooting)
+						{
+							//shoot one handed animation
+						}
+						else
+						{
+							//aim one handed animation
+							this->activeAnim = "walkPistolRaised";
+							this->animationChange = true;
+						}
+					}
+					else
+					{
+						//one handed walking animation
+					}
+				}
+				else if (twoHanded)
+				{
+					if (aiming)
+					{
+						if (shooting)
+						{
+							//two handed shooting animation
+						}
+						else
+						{
+							//aim two handed walking animation
+							this->activeAnim = "walkRifleRaised";
+							this->animationChange = true;
+						}
+					}
+					else
+					{
+						//two handed walk animation
+					}
+				}
+				else
+				{
+					this->activeAnim = "walking";
+					this->animationChange = true;
+				}
+			}
+
+
+		}
+
+	}
+	//if a is pressed
+	if (this->leftward)
+	{
+
+	}
+	//if d is pressed
+	if (this->rightward)
+	{
+
+	}
+	//if s is pressed
+	if (this->back)
+	{
+
+	}
+}
+
+void playerEntity::setJoggingAnimation()
+{
+	if(crouching)
+	{
+		if (oneHanded)
+		{
+
+		}
+		else if (twoHanded)
+		{
+
+		}
+		//unarmed
+		else
+		{
+
+		}
+	}
+	else //standard jogging
+	{
+		if (oneHanded)
+		{
+
+		}
+		else if (twoHanded)
+		{
+
+		}
+		//unarmed
+		else
+		{
+			this->activeAnim = "jogging";
+			this->animationChange = true;
+		}
+	}
+	
+}
+
+void playerEntity::setTurningAnimation()
+{
+	// to do
+}
+
+void playerEntity::setSprintingAnimation()
+{
+	this->activeAnim = "running";
+	this->animationChange = true;
+}
+
+void playerEntity::setJumpingAnimation()
+{
+	this->activeAnim = "jumping";
+	this->animationChange = true;
 }

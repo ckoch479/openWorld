@@ -44,11 +44,34 @@ private:
 	glm::vec3 playerVelocity = glm::vec3(0.0f);
 	float playerMass = 60;
 
+	//user input keys set like this so they can be remapped as needed
+	int forward = 87; //W
+	int left = 65; //A
+	int right = 68; //D
+	int back = 83; //S
+
+	int jump = 32; //Space
+
+	int crouchT = 341; //Lctrl
+	int sprint = 340; //Lshift
+
+	int togWalk = 280;//capsLock
+	int inventory = 258; //Tab
+
+	//map that uses the input keys above as the key and a bool to determine it has been pressed or not
+
+	std::unordered_map<int, bool> playerKeys;
+
 	bool cameraForward = false;
 	bool cameraBackWard = false;
 	bool cameraRight = false;
 	bool cameraLeft = false;
 
-	
+	bool walkT = false;
+	bool crouchToggle = false;
+	bool crawlToggle = false;
+
+	bool aiming = false;
+	bool shooting = false;
 };
 

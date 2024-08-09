@@ -37,6 +37,10 @@ public:
 
 	void setPlayerAction(playerActions action);
 
+	void setActionModifier(actionModifiers mod, bool setter); //use this to update which modifiers are set to or false
+
+	bool getActionModifier(actionModifiers mod); //used to fetch what state the modifiers are in
+
 	//change player looks/resistances
 	void setPlayerMeshes(playerParts part, Mesh* newMesh); //allows on the fly update to a player mesh for each body part
 
@@ -47,9 +51,6 @@ public:
 	transform* getPlayersTransform();
 
 	relTransform* getPlayerRelativeTransform(); //this cannot be set manually and is only updated by the class based on render transform parameters
-
-	//calling this will step through all loaded animations one by one to check if they work
-	void debugAnimations(); 
 
 	Model* getPlayerModel();
 
@@ -70,10 +71,20 @@ public:
 	objAnimator* getPlayerAnimator();
 
 	void updateEntity();
-	 
+
 private:
 
-	
+	void setIdleAnimation();
+
+	void setWalkingAnimation();
+
+	void setJoggingAnimation();
+
+	void setTurningAnimation();
+
+	void setSprintingAnimation();
+
+	void setJumpingAnimation();
 
 	void loadPlayerAnimations(std::string playerFilePath); //directory for player animations will be under the players file path in a file named animations
 
@@ -99,17 +110,30 @@ private:
 	std::string playerName; //this one should be pretty self explanatory
 	
 	//helper bools for updating the player on the fly
-	bool leftHandWeapon = false;
-	bool rightHandWeapon = false;
-	bool bothHandWeapon = false;
+	//bool leftHandWeapon = false;
+	//bool rightHandWeapon = false;
+	//bool bothHandWeapon = false;
+
+	//Action modifiers:
+	bool walkToggled = false;
+	bool sprintToggled = false;
+	bool crouching = false;
+	bool crawling = false;
+	bool aiming = false;
+	bool shooting = false;
+	bool leftward = false;
+	bool rightward = false;
+	bool front = false;
+	bool back = false;
+	bool oneHanded = true;
+	bool twoHanded = false;
+
 
 	//object states/state changes
-
 	bool meshChange = false;
 	bool animationChange = false;
 	bool actionChange = false;
 
-	bool isAiming = false;
 	bool isInjured = false;
 
 	std::string activeAnim;//current active animation
@@ -123,10 +147,6 @@ private:
 
 	transform currentTransform;
 
-
-	//debug data delete later
-	int stepper = 0;
-	std::vector <playerActions> actionDebugger;
 };
 
 #endif

@@ -2,62 +2,32 @@
 enum playerActions
 {
 	idle,
-	idlePistol,
-	idleRifle,
-
-	aimingPistol,
-	aimingRifle,
-
 	walking,
-	sideWalkLeft,
-	sideWalkRight,
-	walkingBack,
-	walkingPistolLowered,
-	walkingPistolRaised,
-	walkingRifleLowered,
-	walkingRifleRaised,
-
-	leftTurn,
-	rightTurn,
-
+	turning,
 	jogging,
-	sideJogLeft,
-	sideJogRight,
-	joggingPistolLowered,
-	joggingRifleLowered,
-
-	leftJoggingTurn,
-	rightJoggingTurn,
-	
-	running,
-
-	leftRunninggTurn,
-	rightRunningTurn,
-
-	crouching,
-	crouchingPistol,
-	crouchingRile,
-
-	crouchWalking,
-	crouchWalkingPistolLowered,
-	crouchWalkingPistolRaised,
-	crouchWalkingRifleLowered,
-	crouchWalkingRifleRaise,
-	
+	sprinting,
 	jumping,
-
-	diveRight,
-	diveLeft,
-	jumpBack,
-	diveForward,
-
-	climbingSmall,
-	climingTall,
-
+	climbing,
+	evading,
 	falling,
-
 	dying,
+};
 
+enum actionModifiers
+{
+walkToggle,
+sprintToggle,
+crouch,
+crawl,
+aim,
+shoot,
+left,
+right,
+forward,
+backward,
+oneHandEquiped,
+twoHandEquiped,
+none,
 };
 
 //this enum below is to define the players "parts" (legs,feet,hands,arms,torso)
