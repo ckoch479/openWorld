@@ -39,17 +39,17 @@ void characterController::updateInputs(windowManager* manager)
 
 	if(manager->checkKey(69)) //e
 	{
-		/*if (playerCamera->isThirdPerson())
+		if (playerCamera->isThirdPerson())
 		{
 			this->player->setPlayerAction(dying);
-		}*/
-		this->ikTest = false;
+		}
+		//this->ikTest = false;
 	}
 
 	if (manager->checkKey(81)) //q
 	{
-		//this->player->setPlayerAction(idlePistol);
-		this->ikTest = true;
+		this->player->setPlayerAction(idlePistol);
+		//this->ikTest = true;
 	}
 
 	//idle was the issue because it checked only if w wasnt pressed and really should only work when nothing has been pressed
@@ -107,11 +107,11 @@ void characterController::updateInputs(windowManager* manager)
 
 	if(manager->leftClick())
 	{
-		this->player->setPlayerAction(aimingRifle);
+		this->player->setPlayerAction(aimingRifle); //needs to be changed to use weapon
 	}
 
 	if(manager->rightClick())
-	{
+	{	//needs to be determined what kind of item is equiped so proper aiming will take place
 		this->player->setPlayerAction(aimingPistol);
 		this->playerCamera->Zoom = 25.0f;
 	}
@@ -149,6 +149,26 @@ void characterController::updateInputs(windowManager* manager)
 		transform* newTransform = this->player->getPlayersTransform();
 		newTransform->orientation = glm::rotate(glm::toMat4(newTransform->orientation), xOffset * 0.01f, glm::vec3(0, 1, 0));
 		this->player->setPlayerTransform(*newTransform);
+	}
+
+	//this is for testing using this to make the player arms move and and down with aiming
+	if(playerCamera->isThirdPerson())
+	{
+		float maxPitch = 7.0f;
+		float minPitch = 5.8f;
+
+		this->pitch += yOffset * 0.01;
+
+		if (pitch > maxPitch)
+		{
+			pitch = maxPitch;
+		}
+
+		if (pitch < minPitch)
+		{
+			pitch = minPitch;
+		}
+		
 	}
 }
 
@@ -203,6 +223,19 @@ void characterController::updateController(float dt, Level currentLevel)
 			
 		}
 	} 
+
+	if(this->player->getPlayerAction() == aimingPistol)
+	{
+		glm::quat modRot(1.0,0.0,0.0,0.0);
+		glm::vec3 playerOrient = this->player->getPlayerRelativeTransform()->right;
+
+		glm::mat4 rotateMat = glm::rotate(rotateMat, this->pitch * 0.001f, playerOrient);
+		modRot = glm::toQuat(rotateMat);
+
+		this->player->getPlayerAnimator()->addModifier("mixamorig:Spine1", modRot);
+		//mixamorig:Hips
+		//mixamorig:Spine1
+	}
 	
 
 	this->world->setBodyPosition(this->physicsId, playerTransform->position);

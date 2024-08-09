@@ -33,16 +33,18 @@ public:
 	float getVolume() const override { return this->volume; }
 
 	void addToScene(scene* scene, Shader* shader); 
-	void updateTransform(scene* scene, glm::mat4 newTransform);
+	void updateTransform(scene* scene, transform newTransform);
 	glm::mat4 getTransform() { return this->objectTransform; }
 
 	void shoot(); //create projectile in the world
+
+	void setLocalTransform(glm::mat4 newTransform) { this->objectTransform = newTransform; }
 
 private:
 	//local points on the object that is used for player/entity animations
 	Model* model;
 	std::string sceneID;
-	//transform sceneTransform;
+	//transform localTransform;
 
 	//temporary use these to create the final orientation
 	//glm::vec3 front = glm::vec3(0,0,1);

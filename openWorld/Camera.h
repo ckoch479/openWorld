@@ -127,9 +127,9 @@ public:
                 Pitch = 7.0f;
             }
 
-            if (Pitch < 5.5f)
+            if (Pitch < 5.8f)
             {
-                Pitch = 5.5f;
+                Pitch = 5.8f;
             }
 
             updateThirdPersonCamera(playerPos, playerRot);

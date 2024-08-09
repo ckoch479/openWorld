@@ -38,6 +38,8 @@ void PlayerInventoryManager::updateInventoryStatus()
 	glm::mat4 rightHandMat = this->currentPlayer->getRightHandTransform();
 	transform* playerTransform = this->currentPlayer->getPlayersTransform();
 
+	rightHandMat = rightHandMat * glm::inverse(this->currentPlayer->getRightHandOffsetMatrix());
+
 	this->leftHand->updatePosition(this->currentScene, leftHandMat, *playerTransform);
 	this->rightHand->updatePosition(this->currentScene, rightHandMat, *playerTransform);
 }

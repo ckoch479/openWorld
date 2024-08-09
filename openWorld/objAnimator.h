@@ -17,7 +17,11 @@
 #ifndef OBJANIMATOR_H
 #define OBJANIMATOR_H
 
-
+struct animationModifier
+{
+	std::string boneName;
+	glm::quat rotation;
+};
 
 class objAnimator
 {
@@ -29,11 +33,7 @@ public:
 
 	void playAnimation(std::string& animationName);
 
-	void playNonRepeatAnimation(std::string& animationName);
-
 	void update(float deltaTime);
-
-	void applyForwardKinematics(Bone* parentBone, glm::mat4 transform);
 
 	void applyInverseKinematics(std::string& endEffectorName, glm::vec3& targetPosition);
 
@@ -51,6 +51,8 @@ public:
 
 	void calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransform, std::vector <glm::mat4>& transforms);
 
+	void addModifier(std::string boneName, glm::quat rotation);
+
 private:
 
 	//data
@@ -65,6 +67,8 @@ private:
 	std::vector <inverseKinematicChain> IKchains;
 	std::vector <glm::mat4> finalMatricies; //should be exactly 100 due to max bones being 100
 
+	std::vector <animationModifier> modifiers;
+
 	//i know this isnt a very "good" solution dont judge me please
 	bool updateBone[100]; //an array of bools used to determine if the bone at this id has been updated if not update it using it's parent transform
 
@@ -72,10 +76,6 @@ private:
 
 	float currentAnimationTime = 0.0f; //animation is assumed to have 1000 ticks per second 
 	//private methods
-
-	void updateForwardKinematics();
-
-	void updateInverseKinematics();
 
 	void blendAnimations(animation* animA, animation* animB, float factor); //used for blending 2 entire animations together
 

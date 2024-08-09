@@ -35,7 +35,7 @@ private:
 
 
 	Camera* playerCamera; //in the character controller cause the camera should usually follow the player unless in free cam
-	float pitch = 0, yaw = 0;
+	float pitch = 0.0f, yaw = 0;
 	double cursorX = 0, cursorY = 0;
 
 	//for referencing the physicsWorld Object

@@ -87,11 +87,6 @@ void objAnimator::playAnimation(std::string& animationName)
 	}
 }
 
-void objAnimator::playNonRepeatAnimation(std::string& animationName)
-{
-
-}
-
 void objAnimator::update(float deltaTime)
 {
 	for(int i = 0; i < 100; i++)
@@ -128,7 +123,7 @@ void objAnimator::update(float deltaTime)
 	//idk if itll work yet but we'll find out
 	//solveIK();
 	this->IKchains.clear(); //doesnt work so act as if it doesnt exsist for now
-
+	this->modifiers.clear();//clear the modifer list after applying them
 	//iterate through all non updated bones
 	for(int i = 0; i < 100; i++)
 	{
@@ -159,36 +154,6 @@ void objAnimator::update(float deltaTime)
 	}
 	
 
-}
-
-//this is my attempt at doing FK using the bone hierarchy instead of the animation bone hierarchy
-void objAnimator::applyForwardKinematics(Bone* parentBone, glm::mat4 transform)
-{
-	//std::string nodeName = node->name;
-	//glm::mat4 nodeTransform = node->transformation;
-
-	//animBone* bone = this->activeAnimation->animBones[nodeName];
-	//if (bone)
-	//{
-	//	nodeTransform = calculateLocalBoneTransform(node); //problem here (again)
-	//}
-
-	//glm::mat4 globalTransformation = parentTransform * nodeTransform;
-
-	//Bone* tempBone = this->animationSkeleton->getBone(nodeName); //problems here make it so cannot support bones not accounted for in animation
-	//the problem here is the only bones updated in the animation are ones listed in the animation due to the above line of code
-	//to fix this issue eventually the code will need to be changed so we work down the skeleton and not the animation
-	//if (tempBone)
-	//{
-	//	int index = tempBone->getId();
-	//	glm::mat4 offset = tempBone->getOffsetMat();
-	//	this->finalMatricies[index] = globalTransformation * offset; //should be from bone space to local space
-	//}
-
-	//for (int i = 0; i < node->childrenCount; ++i)
-	//{
-	//	calculateFKTransforms(&node->children[i], globalTransformation);
-	//}
 }
 
 void objAnimator::applyInverseKinematics(std::string& endEffectorName, glm::vec3& targetPosition)
@@ -302,6 +267,14 @@ void objAnimator::calculateFKTransforms(AssimpNodeData* node, glm::mat4& parentT
 	if (bone)
 	{
 		nodeTransform = calculateLocalBoneTransform(node); //problem here (again)
+		for(int i = 0; i < this->modifiers.size(); i++)
+		{
+			if(this->modifiers[i].boneName == nodeName)
+			{
+				//apply modifer that matches this bone name
+				nodeTransform = nodeTransform * glm::toMat4(modifiers[i].rotation);
+			}
+		}
 	}
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransform;
@@ -321,16 +294,6 @@ void objAnimator::calculateFKTransforms(AssimpNodeData* node, glm::mat4& parentT
 	{
 		calculateFKTransforms(&node->children[i],globalTransformation);
 	}
-
-}
-
-void objAnimator::updateForwardKinematics()
-{
-
-}
-
-void objAnimator::updateInverseKinematics()
-{
 
 }
 
@@ -561,6 +524,15 @@ void objAnimator::updateBones(Bone* bone, glm::vec3 axis, float angle)
 	{
 		updateBones(this->animationSkeleton->getBone(bone->getChildren()[i]), axis,angle);
 	}
+}
+
+void objAnimator::addModifier(std::string boneName, glm::quat rotation)
+{
+	animationModifier newModifier;
+	newModifier.rotation = rotation;
+	newModifier.boneName = boneName;
+
+	this->modifiers.push_back(newModifier);
 }
 
 //final matrices are in local space, initial transforms are in bone space, target point is usually going to be in world space
