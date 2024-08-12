@@ -123,10 +123,10 @@ private:
 	bool shooting = false;
 	bool leftward = false;
 	bool rightward = false;
-	bool front = false;
+	bool front = true;
 	bool back = false;
-	bool oneHanded = true;
-	bool twoHanded = false;
+	bool oneHanded = false;
+	bool twoHanded = true;
 
 
 	//object states/state changes

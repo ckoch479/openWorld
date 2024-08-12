@@ -76,14 +76,14 @@ void skeleton::setChildren()
 		int currentBoneId = currentBone->getId();
 		std::vector <int> childrenIds;
 
-		std::cout << "current bone: " << currentBone->getName() << " current bone parent: " << currentBone->getParent() << std::endl;
+		//std::cout << "current bone: " << currentBone->getName() << " current bone parent: " << currentBone->getParent() << std::endl;
 
 		for(unsigned int j = 0; j < this->bones.size(); j++)
 		{
 			Bone* iteratorBone = &this->bones[j];
 			if(iteratorBone->getParent() == currentBoneId)
 			{
-				std::cout << "child bone ID: " << iteratorBone->getId() << std::endl;
+				//std::cout << "child bone ID: " << iteratorBone->getId() << std::endl;
 				//currentBone->addChild(iteratorBone->getId());
 				childrenIds.push_back(iteratorBone->getId());
 			}

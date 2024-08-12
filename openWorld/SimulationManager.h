@@ -27,6 +27,8 @@
 #include "ShapeGenerator.h"
 #include "guiManager.h"
 
+#include "debugger.h"
+
 //#include "programTimer.h"
 
 #ifndef SIMULATIONMANAGER_H
@@ -79,6 +81,7 @@ private:
 	renderer* gameRenderer;
 	PhysicsWorld* world;
 	windowManager* WindowManager;
+	debugger* Debug;
 
 
 	//InputManager* inputs;

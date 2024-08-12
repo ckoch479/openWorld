@@ -163,6 +163,7 @@
     <ClCompile Include="characterController.cpp" />
     <ClCompile Include="chunk.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="debugger.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="gamePhysicsWorld.cpp" />
     <ClCompile Include="guiManager.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="characterController.h" />
     <ClInclude Include="chunk.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="debugger.h" />
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="gamePhysicsWorld.h" />
     <ClInclude Include="guiManager.h" />

@@ -12,14 +12,27 @@ void SimulationManager::Init()
 
 	this->WindowManager->setScreenSize(this->SCR_WIDTH,this->SCR_WIDTH);
 
+	this->Debug = new debugger;
+	std::string dString = "Game Initializing";
+	this->Debug->addEventData(dString);
+
 	this->gameRenderer = new renderer;
-	
+	dString = "render initialized!";
+	this->Debug->addEventData(dString);
+
 	this->sceneObj = new scene;
-	
+	dString = "sceneObj initialized!";
+	this->Debug->addEventData(dString);
+
 	this->world = new PhysicsWorld;
+	dString = "physicsWorld initialized!";
+	this->Debug->addEventData(dString);
+	
 
 	this->state = active;
 	this->subState = mainMenu;
+	dString = "gameState changed to active substate changed to mainMenu";
+	this->Debug->addEventData(dString);
 };
 
 void SimulationManager::shutDown()

@@ -37,116 +37,79 @@ playerEntity::playerEntity(std::string playerFilePath)
 void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 {
 	//idle //found
-	std::string name = "idle";
+	std::string name = "idle"; //works
 	std::string Path = "resources/player/animations/idle.gltf"; //for some reason i have to do it this way
-
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//idlePistol //found
-	name = "idlePistol";
+	name = "idlePistol"; //works
 	Path = "resources/player/animations/pistolIdle.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//idleRifle //found
-	name = "idleRifle";
+	name = "idleRifle"; //works
 	Path = "resources/player/animations/rifleIdle.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//aimingPistol
-	name = "aimingPistol";
+	name = "aimingPistol"; //works
 	Path = "resources/player/animations/pistolAim.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//aimingRifle
-	//this->animations["aimingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleAim.gltf", "playerAimRifle", "player");
-	name = "aimingRifle";
+	name = "aimingRifle"; //works
 	Path = "resources/player/animations/rifleAim.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//walking //found
-	//this->animations["walking"] = ResourceManager::loadAnimation("resources/player/animations/walking.gltf", "playerWalking", "player");
-	name = "walking";
+	name = "walking"; //not working
 	Path = "resources/player/animations/walking.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//walkingPistolRaised //found
-	//this->animations["walkPistolRaised"] = ResourceManager::loadAnimation("resources/player/animations/pistolWalkForward.gltf", "playerWalkPistolRaised", "player");
-	name = "walkPistolRaised";
+	name = "walkPistolRaised"; //not working
 	Path = "resources/player/animations/pistolWalkForward.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//walkingRifleLowered
-	
-	//walkingRifleRaise //found
-	//this->animations["walkRifleRaised"] = ResourceManager::loadAnimation("resources/player/animations/rifleWalkForward.gltf", "playerWalkRifleRaised", "player");
-	name = "walkRifleRaised";
+	name = "walkRifleRaised"; //not working
 	Path = "resources/player/animations/rifleWalkForward.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	//leftTurn
-	//rightTurn
 
-	//jogging //found
-	//this->animations["jogging"] = ResourceManager::loadAnimation("resources/player/animations/jogging.gltf", "playerJogging", "player");
-	name = "jogging";
+	name = "jogging"; //unarmed works
 	Path = "resources/player/animations/jogging.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
-	//sideJogLeft
-	//sideJogRight
 	
-	//joggingPistolLowered
-	//joggingRifleLowered
+	name = "pistolWalk"; //problem isnt here walking is not being set
+	Path = "resources/player/animations/walkOneHanded.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//leftJoggingTurn
-	//rightJoggingTurn
+	name = "rifleWalk"; //notWorking
+	Path = "resources/player/animations/rifleWalkForward.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//running //found
-	//this->animations["running"] = ResourceManager::loadAnimation("resources/player/animations/running.gltf", "playerRunning", "player");
-	name = "running";
+	name = "running"; //works
 	Path = "resources/player/animations/running.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//leftRunninggTurn
-	//rightRunningTurn
+	name = "pistolWalkLowered"; //not working
+	Path = "resources/player/animations/walkOneHanded.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//crouching
-	//crouchingPistol
-	//crouchingRifle //found
-	//this->animations["crouchingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleCrouchedAiming.gltf", "playerCrouchingRifle", "player");
-	name = "crouchingRifleAim";
+	name = "pistolIdleCrouched"; //works
+	Path = "resources/player/animations/oneHandedIdleCrouch.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
+
+	name = "crawlingAimPistol"; 
+	Path = "resources/player/animations/oneHandedCrawlIdle_Aiming.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
+
+	name = "crouchingRifleAim";//works
 	Path = "resources/player/animations/rifleCrouchedAiming.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//crouchWalking
-	 
-	//crouchWalkingPistolLowered
-	//crouchWalkingPistolRaised
-	
-	//crouchWalkingRifleLowered
-	//crouchWalkingRifleRaise //found
-	//this->animations["crouchWalkingRifle"] = ResourceManager::loadAnimation("resources/player/animations/rifleWalkForward.gltf", "playerCrouchWalkingRifle", "player");
-	name = "crouchWalkingRifle";
+	name = "crouchWalkingRifle"; //not working
 	Path = "resources/player/animations/rifleWalkForward.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
-	//jumping //found
-	//this->animations["jumping"] = ResourceManager::loadAnimation("resources/player/animations/jump.gltf", "playerJumping", "player");
-	name = "jumping";
+	name = "jumping"; //works
 	Path = "resources/player/animations/jump.gltf";
 	this->playerAnimator->loadAnimation(name, Path, false);
 
-	//diveRight
-	//diveLeft
-	//jumpBack
-	//diveForward
-
-	//climbingSmall
-	//climingTall
-
-	//falling
-
-	//dying //found
-	//this->animations["dying"] = ResourceManager::loadAnimation("resources/player/animations/dying.gltf", "playerDying", "player");
-	name = "dying";
+	name = "dying"; //works
 	Path = "resources/player/animations/dying.gltf";
 	this->playerAnimator->loadAnimation(name, Path, false);
 }
@@ -214,18 +177,18 @@ void playerEntity::updateActions()
 	if(this->currentAction == idle) //all idle animations
 	{
 		setIdleAnimation();
-		std::cout << "idle animation playing\n";
+		//std::cout << "idle animation playing\n";
 	}
 
 	if (this->currentAction == walking) //all walking animations
 	{
 		setWalkingAnimation();
-		std::cout << "walking animation playing\n";
+		//std::cout << "walking animation playing\n";
 	}
 	if(this->currentAction == jogging) //all jogging animations
 	{
 		setJoggingAnimation();
-		std::cout << "jogging animation playing\n";
+		//std::cout << "jogging animation playing\n";
 	}
 	if(this->currentAction == turning) //turning animations
 	{
@@ -234,7 +197,7 @@ void playerEntity::updateActions()
 	if(this->currentAction == sprinting) //sprinting animations
 	{
 		setSprintingAnimation();
-		std::cout << "sprinting animation playing\n";
+		//std::cout << "sprinting animation playing\n";
 	}
 	if(this->currentAction == jumping)
 	{
@@ -491,7 +454,8 @@ void playerEntity::setIdleAnimation()
 			}
 			else
 			{
-			
+				this->activeAnim = "pistolIdleCrouched";
+				this->animationChange = true;
 			}
 		}
 		else if (twoHanded) //if two handed item is equiped
@@ -533,7 +497,8 @@ void playerEntity::setIdleAnimation()
 				}
 				else
 				{
-
+					this->activeAnim = "crawlingAimPistol";
+					this->animationChange = true;
 				}
 			}
 			else
@@ -581,7 +546,7 @@ void playerEntity::setIdleAnimation()
 					//one handed aiming animation
 					this->activeAnim = "aimingPistol";
 					this->animationChange = true;
-					std::cout << "aiming pistol!\n";
+					//std::cout << "aiming pistol!\n";
 				}
 			}
 			else
@@ -627,8 +592,7 @@ void playerEntity::setWalkingAnimation()
 	//if w is pressed
 	if (this->front)
 	{
-		if (this->walkToggled) //if walking is toggled this is your tree friend
-		{
+		
 			if (this->crouching) //if crouching we branch off here
 			{	
 				//one handed weapon
@@ -648,7 +612,7 @@ void playerEntity::setWalkingAnimation()
 					//if weapon is not raised
 					else
 					{
-					
+
 					}
 				}
 				//two handed weapon
@@ -663,6 +627,7 @@ void playerEntity::setWalkingAnimation()
 						else
 						{
 							//two handed crouch walking aim animation
+
 						}
 					}
 					//if weapon is not raised
@@ -709,13 +674,16 @@ void playerEntity::setWalkingAnimation()
 						else
 						{
 							//aim one handed animation
-							this->activeAnim = "walkPistolRaised";
+							this->activeAnim = "walkPistolRaised"; //not working
 							this->animationChange = true;
 						}
 					}
 					else
 					{
 						//one handed walking animation
+						this->activeAnim = "pistolWalk"; //not working
+						this->animationChange = true;
+						//std::cout << "pistol walk should happen here!\n";
 					}
 				}
 				else if (twoHanded)
@@ -736,6 +704,8 @@ void playerEntity::setWalkingAnimation()
 					else
 					{
 						//two handed walk animation
+						this->activeAnim = "rifleWalk";
+						this->animationChange = true;
 					}
 				}
 				else
@@ -744,9 +714,6 @@ void playerEntity::setWalkingAnimation()
 					this->animationChange = true;
 				}
 			}
-
-
-		}
 
 	}
 	//if a is pressed

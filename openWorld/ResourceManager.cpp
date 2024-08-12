@@ -35,7 +35,7 @@ Model* ResourceManager::loadModel(std::string filePath, std::string name)
 
 	if (!hasBeenLoaded)
 	{
-		std::cout << "loading model: " << filePath << std::endl;
+		//std::cout << "loading model: " << filePath << std::endl;
 		models[name] = loadModelFromFile(filePath);
 		models[name].name = name;
 		loadedModels.push_back(filePath);
@@ -63,7 +63,7 @@ Texture* ResourceManager::loadTexture(const char* file, bool sRGB, std::string n
 	if (!hasBeenLoaded)
 	{
 		textures[name] = loadTextureFromFile(file, sRGB);
-		std::cout << file << "\n";
+		//std::cout << file << "\n";
 		loadedTextures.push_back(name);
 	}
 
@@ -101,7 +101,7 @@ animation* ResourceManager::loadAnimation(std::string filePath, std::string name
 	{
 		Model* model = getModel(modelName);
 		animations[name] = loadAnimationFromFile(filePath, model);
-		std::cout << filePath << "\n";
+	//	std::cout << filePath << "\n";
 		loadedAnimations.push_back(name);
 	}
 

@@ -62,7 +62,7 @@ void characterController::updateInputs(windowManager* manager)
 				crouchToggle = false;
 			}
 			this->player->setActionModifier(crouch, this->crouchToggle);
-			std::cout << "crouch toggle is: " << this->crouchToggle << std::endl;
+			//std::cout << "crouch toggle is: " << this->crouchToggle << std::endl;
 		}
 		/*if (manager->checkKey(69)) //E
 		{
@@ -184,7 +184,7 @@ void characterController::updateController(float dt, Level currentLevel)
 	}
 
 	//change velocity if walking
-	if(this->player->getPlayerAction() == walking)
+	if (this->player->getPlayerAction() == walking && this->player->getActionModifier(walkToggle))
 	{
 		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
 		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x,0, relativeFront.z) * (float)3.0 * dt;

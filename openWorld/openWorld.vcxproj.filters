@@ -76,6 +76,12 @@
     <Filter Include="Source Files\npc">
       <UniqueIdentifier>{d3029d32-3637-4535-b5a1-36f21da46f25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Debug">
+      <UniqueIdentifier>{6dd300f3-0490-40d8-9183-41e5d51f9458}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Debug">
+      <UniqueIdentifier>{796b7e65-c3ad-4196-ab7a-5dd92dfe6507}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -209,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="rayCastCallBack.cpp">
       <Filter>Source Files\PhysicsandDynamicsBody</Filter>
+    </ClCompile>
+    <ClCompile Include="debugger.cpp">
+      <Filter>Source Files\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,6 +370,9 @@
     </ClInclude>
     <ClInclude Include="rayCastCallBack.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="debugger.h">
+      <Filter>Header Files\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

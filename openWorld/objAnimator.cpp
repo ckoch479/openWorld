@@ -76,7 +76,7 @@ void objAnimator::playAnimation(std::string& animationName)
 				}
 
 				this->currentAnimationTime = 0.0f; //reset the animation time and start from scratch for the new one
-				std::cout << "animation change! : " << this->activeAnimation->name << std::endl;
+				//std::cout << "animation change! : " << this->activeAnimation->name << std::endl;
 			}
 		}
 		if(!this->activeAnimation)
@@ -202,11 +202,11 @@ void objAnimator::solveIK()
 				//multiplying by inverse boneOffset moves to local space
 				//target pos is not correct either it needs to be move to model pos as well
 
-				std::cout << "target Position: " << glm::to_string(chain.targetPosition) << std::endl;
+				//std::cout << "target Position: " << glm::to_string(chain.targetPosition) << std::endl;
 
 				if(bone->getId() == chain.endEffector->getId())
 				{
-					std::cout << "end effector selected error!\n";
+					//std::cout << "end effector selected error!\n";
 					continue;
 				}
 
