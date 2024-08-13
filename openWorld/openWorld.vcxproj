@@ -261,6 +261,14 @@
     <None Include="Shaders\AnimationShader.vs" />
     <None Include="Shaders\cubeMap.fs" />
     <None Include="Shaders\cubeMap.vs" />
+    <None Include="Shaders\debugDepthQuad.fs" />
+    <None Include="Shaders\debugDepthQuad.vs" />
+    <None Include="Shaders\debugShader.fs" />
+    <None Include="Shaders\debugShader.gs" />
+    <None Include="Shaders\debugShader.vs" />
+    <None Include="Shaders\debugShaderStatic.fs" />
+    <None Include="Shaders\debugShaderStatic.gs" />
+    <None Include="Shaders\debugShaderStatic.vs" />
     <None Include="Shaders\LightAndAnimationShader.fs" />
     <None Include="Shaders\LightAndAnimationShader.vs" />
     <None Include="Shaders\lightShader.fs" />
@@ -273,6 +281,8 @@
     <None Include="Shaders\PhongLightShader.vs" />
     <None Include="Shaders\PhysicsTestShader.fs" />
     <None Include="Shaders\PhysicsTestShader.vs" />
+    <None Include="Shaders\shadowShader.fs" />
+    <None Include="Shaders\shadowShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

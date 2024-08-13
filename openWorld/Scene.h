@@ -44,7 +44,7 @@ public:
 	//add object to scene for rendering
 	std::string addObjectToScene(Model* model, transform transf, Shader* shader);
 
-	std::string addStaticSceneObj(Model* model, transform& transf); //static obj shader baked in to scene object
+	std::string addStaticSceneObj(Model* model, transform& transf, Shader* shader); //static obj shader baked in to scene object
 
 	std::string add2DScreenShape(shape2D screenShape);
 
@@ -63,6 +63,8 @@ public:
 	//dumps all rendering info into a vector to be sent to the renderer
 	std::vector <renderInfo*> getRenderingInfo();
 
+	std::vector <renderInfo*> getStaticRenderingInfo();
+
 	std::vector <shape2D*> getScreenShapes(); //also for renderer
 
 	void generateModelRenderData(Mesh* mesh);
@@ -70,6 +72,8 @@ public:
 	void generate2DShapeData(shape2D* shape);
 
 	std::vector <unsigned int> getModelVAOs(std::string modelID);
+
+	std::vector <unsigned int> getStaticModelVAOs(std::string modelID);
 
 	Camera* getCurrentCamera();
 
@@ -95,6 +99,10 @@ public:
 
 	Shader* getDepthCubeShader();
 
+	void setFocusPos(glm::vec3 pos);
+
+	glm::vec3 getFocusPos();
+
 	//for drawing 3D shapes (mainly for debug purposes should all use the same shader)
 	//3D shapes use the normal 3d rendering i.e. they have a model* that will be rendered normally, the shader for 3d shapes is stored in the scene object
 
@@ -117,8 +125,9 @@ private:
 
 	std::unordered_map <std::string, renderInfo2D> Objects2D;
 
-
 	std::vector <std::string> modelIds;
+	std::vector <std::string> staticModelIds;
+
 	std::vector <std::string> model2Dids;
 
 	unsigned int idCounter = 0; //counter for scene objects allows all objects to be referenced for rendering
@@ -140,6 +149,8 @@ private:
 	int maxBones = 100;
 
 	Shader* staticShader; //either set it from simulation manager or load it into the scene itself, by default will be loaded in with the option to overwrite it
+
+	glm::vec3 sceneFocusPosition = glm::vec3(0,0,0);
 
 };
 

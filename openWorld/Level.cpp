@@ -39,13 +39,14 @@ bool Level::hasTriggerBeenActivated(std::string triggerName)
 
 void Level::renderMap(Shader* shader)
 {
+	
 	transform newTransform;
 	newTransform.position = glm::vec3(0.0f);
 	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	newTransform.scale = glm::vec3(0.4f,0.03,0.4f);
 
 	this->levelShader = shader;
-	this->levelScene->addObjectToScene(this->levelModel, newTransform, shader);
+	this->levelScene->addStaticSceneObj(this->levelModel, newTransform, shader);
 }
 
 //debug only--------------------------------------------
@@ -58,6 +59,7 @@ void Level::setLevelModel(std::string filepath)
 	{
 		this->levelMeshes.push_back(&levelModel->meshes[i]);
 	}
+	
 	//this->rigidBodyId = this->world->CreateRigidBody();
 	//createColliders();
 	generateHeightMapForPlayer();

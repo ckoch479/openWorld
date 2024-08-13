@@ -6,7 +6,14 @@ renderer::renderer()
 	load2DRenderShader();
 	createScreenQuad();
 	generateDepthMap(&depthMap, &depthMapFBO);
+	this->debugLinesShader = ResourceManager::loadShader("Shaders/debugShader.vs","Shaders/debugShader.fs",nullptr,"debugLineShader");
+	debugStaticLinesShader = ResourceManager::loadShader("Shaders/debugShaderStatic.vs", "Shaders/debugShaderStatic.fs", nullptr, "staticDebugLineShader");
+	this->cubeShader = ResourceManager::loadShader("Shaders/PhysicsTestShader.vs", "Shaders/PhysicsTestShader.fs", nullptr, "cubeShader");
+	this->lineDrawShader = ResourceManager::loadShader("Shaders/PhysicsTestShader.vs", "Shaders/PhysicsTestShader.fs", nullptr, "cubeShader");
+	
 	//generateScreenEffectBuffer(&this->hdrFBO,&this->depthBuffer,&this->colorBuffer); // doesnt work as of right now idk why
+	generateCubeVAO();
+	generateLineVAO();
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -85,6 +92,59 @@ void renderer::drawModel(renderInfo* model, scene* currentScene, Shader* shader)
 	}
 }
 
+void renderer::drawStaticModel(renderInfo* model, scene* currentScene, Shader* shader)
+{
+	std::vector <unsigned int> modelVAOs = currentScene->getStaticModelVAOs(model->id);
+
+	for (unsigned int i = 0; i < modelVAOs.size(); i++)
+	{
+		Material* material = &model->model->meshes[i].material;
+		glBindVertexArray(modelVAOs[i]);
+
+		//this is why i couldnt load multiple textures on one object
+		glActiveTexture(GL_TEXTURE1);
+		glUniform1i(glGetUniformLocation(shader->ID, "Material.diffuse_texture0"), 1);
+		glBindTexture(GL_TEXTURE_2D, material->diffuse0->id);
+
+		//check for specular textures and bind them if they exist if not bind the diffuse again
+		if (material->specular0)
+		{
+			glActiveTexture(GL_TEXTURE2);
+			glUniform1i(glGetUniformLocation(shader->ID, "Material.specular_texture0"), 2);
+			glBindTexture(GL_TEXTURE_2D, material->specular0->id);
+		}
+		if (!material->specular0)
+		{
+			glActiveTexture(GL_TEXTURE2);
+			glUniform1i(glGetUniformLocation(shader->ID, "Material.specular_texture0"), 2);
+			glBindTexture(GL_TEXTURE_2D, material->diffuse0->id);
+		}
+		//check for normal texture and bind them if they exist if not bind diffse again (again)
+		if (material->normalMap0)
+		{
+			glActiveTexture(GL_TEXTURE3);
+			glUniform1i(glGetUniformLocation(shader->ID, "Material.normal_texture0;"), 3);
+			glBindTexture(GL_TEXTURE_2D, material->normalMap0->id);
+			shader->SetBool("hasNormalTextures", true);
+
+		}
+		if (!material->normalMap0)
+		{
+			glActiveTexture(GL_TEXTURE3);
+			glUniform1i(glGetUniformLocation(shader->ID, "Material.normal_texture0;"), 3);
+			glBindTexture(GL_TEXTURE_2D, material->diffuse0->id);
+			shader->SetBool("hasNormalTextures", false);
+		}
+
+		shader->SetFloat("Material.shininess", material->shininess);
+
+		glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(model->model->meshes[i].indices.size()), GL_UNSIGNED_INT, 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindVertexArray(0);
+	}
+}
+
 void renderer::generateDepthMap(unsigned int* depthMapTex, unsigned int* depthMapFBO)
 {
 	glGenFramebuffers(1, depthMapFBO);
@@ -117,7 +177,7 @@ glm::mat4 renderer::renderDirectionalShadowMap(scene* scene, unsigned int* depth
 	glm::mat4 lightSpaceMatrix;
 	//float near_plane = 1.0f, far_plane = 100.0f;
 	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, this->near_plane, this->far_plane);
-	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+	lightView = glm::lookAt(lightPos, scene->getFocusPos(), glm::vec3(0.0, 1.0, 0.0));
 	lightSpaceMatrix = lightProjection * lightView;
 
 	simpleDepthShader->use();
@@ -212,6 +272,8 @@ void renderer::drawScene(scene* scene)
 {
 	
 	std::vector <renderInfo*> data = scene->getRenderingInfo();
+	std::vector <renderInfo*> staticData = scene->getStaticRenderingInfo();
+	
 
 	glm::mat4 lightSpaceMatrix = renderDirectionalShadowMap(scene, &this->depthMapFBO);//directional shadow map
 	//rendering shadows causes double the render latency
@@ -221,21 +283,59 @@ void renderer::drawScene(scene* scene)
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	//render everything again
-	for (unsigned int i = 0; i < data.size(); i++)
+	if(!this->debugLines)
 	{
-		glActiveTexture(GL_TEXTURE4);
-		glUniform1i(glGetUniformLocation(data[i]->shader->ID, "shadowMap"), 4);
-	    glBindTexture(GL_TEXTURE_2D, depthMap);
+		//render static geometry first
+		for(unsigned int i = 0; i < staticData.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE4);
+			glUniform1i(glGetUniformLocation(staticData[i]->shader->ID, "shadowMap"), 4);
+			glBindTexture(GL_TEXTURE_2D, depthMap);
 
-		data[i]->shader->SetMatrix4("lightSpaceMatrix", lightSpaceMatrix);
-		data[i]->shader->SetFloat("far_plane", this->far_plane);
+			staticData[i]->shader->SetMatrix4("lightSpaceMatrix", lightSpaceMatrix);
+			staticData[i]->shader->SetFloat("far_plane", this->far_plane);
 
-		addLightUniformsToShader(scene, data[i]->shader);
+			addLightUniformsToShader(scene, staticData[i]->shader);
 
-		setCommonShaderUniforms(*data[i]->shader, scene->getCurrentCamera());
-		setModelUniforms(*data[i]->shader, *data[i]->transf);
-		drawModel(data[i], scene, data[i]->shader);
+			setCommonShaderUniforms(*staticData[i]->shader, scene->getCurrentCamera());
+			setModelUniforms(*staticData[i]->shader, *staticData[i]->transf);
+			drawStaticModel(staticData[i], scene, staticData[i]->shader);
+
+		}
+		//then render dynamic geometry
+		for (unsigned int i = 0; i < data.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE4);
+			glUniform1i(glGetUniformLocation(data[i]->shader->ID, "shadowMap"), 4);
+			glBindTexture(GL_TEXTURE_2D, depthMap);
+
+			data[i]->shader->SetMatrix4("lightSpaceMatrix", lightSpaceMatrix);
+			data[i]->shader->SetFloat("far_plane", this->far_plane);
+
+			addLightUniformsToShader(scene, data[i]->shader);
+
+			setCommonShaderUniforms(*data[i]->shader, scene->getCurrentCamera());
+			setModelUniforms(*data[i]->shader, *data[i]->transf);
+			drawModel(data[i], scene, data[i]->shader);
+		}
+	}
+	
+
+	if (this->debugLines)
+	{
+		renderDebugLines(scene,data,staticData);
+	}
+
+	if(this->debugCubes)
+	{
+		drawCubes(scene->getCurrentCamera());
+	}
+
+	if(this->drawDebugLines)
+	{
+		drawLines(scene->getCurrentCamera());
 	}
 
 
@@ -580,3 +680,220 @@ void renderer::render2DScreenObjects(scene* scene)
 	glBindVertexArray(0);
 }
 
+void renderer::renderDebugLines(scene* scene, std::vector <renderInfo*> data, std::vector <renderInfo*> staticData)
+{
+	//draw all scene objects with gl_lines and change their color to white
+	//debug shader
+	Shader* debug = this->debugLinesShader;
+	Shader* staticDebug = this->debugStaticLinesShader; //for now will be changes shortly
+
+	//render static geometry first
+	for (unsigned int i = 0; i < staticData.size(); i++)
+	{
+
+		setCommonShaderUniforms(*staticDebug, scene->getCurrentCamera());
+		setModelUniforms(*staticDebug, *staticData[i]->transf);
+		drawStaticModelLines(staticData[i], scene, staticDebug);
+
+	}
+
+	for (unsigned int i = 0; i < data.size(); i++)
+	{
+		setCommonShaderUniforms(*debug, scene->getCurrentCamera());
+		setModelUniforms(*debug, *data[i]->transf);
+		drawModelLines(data[i], scene, debug);
+	}
+}
+
+void renderer::drawModelLines(renderInfo* model, scene* currentScene, Shader* shader)
+{
+	std::vector <unsigned int> modelVAOs = currentScene->getModelVAOs(model->id);
+
+	for (unsigned int i = 0; i < modelVAOs.size(); i++)
+	{
+
+		glBindVertexArray(modelVAOs[i]);
+
+		//set animation matrices to the shader
+		std::vector <glm::mat4> animMats = model->model->animationMatrices;
+		for (int j = 0; j < model->model->animationMatrices.size(); j++)
+		{
+			glm::mat4 transform = animMats[j];
+			std::string matrixString;
+			matrixString = "finalBoneMatrices[" + std::to_string(j) + "]";
+			shader->SetMatrix4(matrixString.c_str(), transform);
+		}
+
+		glDrawElements(GL_LINES, static_cast<unsigned int>(model->model->meshes[i].indices.size()), GL_UNSIGNED_INT, 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindVertexArray(0);
+	}
+}
+
+void renderer::drawStaticModelLines(renderInfo* model, scene* currentScene, Shader* shader)
+{
+	std::vector <unsigned int> modelVAOs = currentScene->getStaticModelVAOs(model->id);
+
+	for (unsigned int i = 0; i < modelVAOs.size(); i++)
+	{
+		glBindVertexArray(modelVAOs[i]);
+
+		glDrawElements(GL_LINES, static_cast<unsigned int>(model->model->meshes[i].indices.size()), GL_UNSIGNED_INT, 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindVertexArray(0);
+	}
+}
+
+void renderer::setDebugLines(bool setter)
+{
+	this->debugLines = setter;
+}
+
+void renderer::addCube(glm::vec3 pos, glm::quat rotation, glm::vec3 scale, glm::vec4 color)
+{
+	cube newCube;
+	newCube.pos = pos;
+	newCube.rotation = rotation;
+	newCube.scale = scale;
+	newCube.color = color;
+	this->cubes.push_back(newCube);
+}
+
+void renderer::drawCubes(Camera* camera)
+{
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glDisable(GL_CULL_FACE);
+
+	glBindVertexArray(this->CubeVAO);
+	this->cubeShader->use();
+	
+	glm::mat4 projection(1.0f);
+	glm::mat4 view(1.0f);
+
+	projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	this->cubeShader->SetMatrix4("projection", projection);
+
+	view = camera->GetViewMatrix();
+	this->cubeShader->SetMatrix4("view", view);
+
+	for(unsigned int i = 0; i < this->cubes.size(); i++)
+	{
+		cube* currentCube = &this->cubes[i];
+		
+		//set shader uniforms
+		glm::mat4 model(1.0f);
+		model = glm::translate(model, currentCube->pos);
+		model = model * glm::toMat4(currentCube->rotation);
+		model = glm::scale(model, currentCube->scale);
+
+		this->cubeShader->SetMatrix4("model", model);
+
+		this->cubeShader->SetVector4f("color", currentCube->color);//with alpha
+
+		glDrawArrays(GL_LINES, 0, 36);
+		
+	}
+	glBindVertexArray(0);
+	//glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+
+	this->cubes.clear();
+}
+
+void renderer::generateCubeVAO()
+{
+	// setup cube VAO
+	glGenVertexArrays(1, &this->CubeVAO);
+	glGenBuffers(1, &this->CubeVBO);
+	glBindVertexArray(this->CubeVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, this->CubeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(this->cubeVertices), &this->cubeVertices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+}
+
+void renderer::setDebugCubes(bool setter)
+{
+	this->debugCubes = setter;
+}
+
+void renderer::addLine(glm::vec3 posA, glm::vec3 posB, glm::vec4 color)
+{
+	line newLine;
+	newLine.pointA = posA;
+	newLine.pointB = posB;
+	newLine.color = color;
+
+	this->lines.push_back(newLine);
+}
+
+void renderer::generateLineVAO()
+{
+	glGenVertexArrays(1, &lineVAO);
+	glGenBuffers(1, &LineVBO);
+
+	glBindVertexArray(lineVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, LineVBO);
+	
+	glBufferData(GL_ARRAY_BUFFER, sizeof(lineVertices), lineVertices, GL_DYNAMIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void renderer::drawLines(Camera* camera)
+{
+
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glDisable(GL_CULL_FACE);
+
+	glBindVertexArray(this->lineVAO);
+	this->lineDrawShader->use();
+
+	glm::mat4 projection(1.0f);
+	glm::mat4 view(1.0f);
+
+	projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	this->lineDrawShader->SetMatrix4("projection", projection);
+
+	view = camera->GetViewMatrix();
+	this->lineDrawShader->SetMatrix4("view", view);
+
+	glm::mat4 model(1.0f);
+	this->lineDrawShader->SetMatrix4("model", model);
+
+	for (unsigned int i = 0; i < this->lines.size(); i++)
+	{
+		line* currentLine = &this->lines[i];
+
+		this->lineVertices[0] = currentLine->pointA.x;
+		this->lineVertices[1] = currentLine->pointA.y;
+		this->lineVertices[2] = currentLine->pointA.z;
+
+		this->lineVertices[3] = currentLine->pointB.x;
+		this->lineVertices[4] = currentLine->pointB.y;
+		this->lineVertices[5] = currentLine->pointB.z;
+
+		glBindBuffer(GL_ARRAY_BUFFER, LineVBO);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(lineVertices), lineVertices);
+
+		this->lineDrawShader->SetVector4f("color", currentLine->color);//with alpha
+
+		glDrawArrays(GL_LINES, 0, 36);
+	}
+	glBindVertexArray(0);
+	glDisable(GL_BLEND);
+
+	this->lines.clear();
+}

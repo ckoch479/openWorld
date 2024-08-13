@@ -16,12 +16,14 @@ characterController::~characterController()
 
 void characterController::updateInputs(windowManager* manager)
 {
+	this->player->resetDirectionalActionMods();
 	//if player is in the third person camera view (free cam is for debugging)
 	if(this->playerCamera->isThirdPerson())
 	{
 		//check for walking, jogging or sprinting and set that action
-		if(manager->checkKey(this->forward)) //W
+		if(manager->checkKey(this->forwardMov)) //W
 		{
+			this->player->setActionModifier(forward, true);
 			if(manager->checkKey(this->sprint)) //if shift is being pressed
 			{
 				this->player->setPlayerAction(sprinting);
@@ -37,6 +39,48 @@ void characterController::updateInputs(windowManager* manager)
 			}
 		}
 		
+		if (manager->checkKey(back)) //s
+		{
+			this->player->setActionModifier(backward, true);
+
+			if (this->walkT)
+			{
+				this->player->setPlayerAction(walking);
+			}
+			else //if player isnt walking or sprinting the gotta be jogging
+			{
+				this->player->setPlayerAction(jogging);
+			}
+		};
+
+		if(manager->checkKey(left)) //a
+		{
+			this->player->setActionModifier(leftWards, true);
+
+			if (this->walkT)
+			{
+				this->player->setPlayerAction(walking);
+			}
+			else //if player isnt walking or sprinting the gotta be jogging
+			{
+				this->player->setPlayerAction(jogging);
+			}
+		}
+
+		if(manager->checkKey(right)) //d
+		{
+			this->player->setActionModifier(rightWards, true);
+
+			if (this->walkT)
+			{
+				this->player->setPlayerAction(walking);
+			}
+			else //if player isnt walking or sprinting the gotta be jogging
+			{
+				this->player->setPlayerAction(jogging);
+			}
+		}
+
 		//check for action modifiers (crawling, crouching, aiming, shooting)
 		if(manager->checkKey(togWalk)) //check for walking toggle button is pressed (capsLock)
 		{
@@ -64,6 +108,7 @@ void characterController::updateInputs(windowManager* manager)
 			this->player->setActionModifier(crouch, this->crouchToggle);
 			//std::cout << "crouch toggle is: " << this->crouchToggle << std::endl;
 		}
+
 		/*if (manager->checkKey(69)) //E
 		{
 			this->player->setActionModifier(aim, true);
@@ -154,7 +199,7 @@ void characterController::updateInputs(windowManager* manager)
 
 void characterController::addPlayerToWorld()
 {
-	this->physicsId = this->world->createCapsuleShape(this->player->getPlayersTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.7, 1.5, Kinematic);
+	this->physicsId = this->world->createCapsuleShape(this->player->getPlayersTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.7, 1.3, Kinematic);
 	this->world->changeColliderOrigin(this->physicsId, glm::vec3(0.0, 1.5, 0.0));
 	this->world->lockBodyRotationAxis(this->physicsId, glm::vec3(1, 1, 1));
 }
@@ -184,16 +229,58 @@ void characterController::updateController(float dt, Level currentLevel)
 	}
 
 	//change velocity if walking
-	if (this->player->getPlayerAction() == walking && this->player->getActionModifier(walkToggle))
+	if (this->player->getPlayerAction() == walking)
 	{
-		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
-		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x,0, relativeFront.z) * (float)3.0 * dt;
+		if (this->player->getActionModifier(forward)) //if player is walking and pressing forward
+		{
+			glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
+			playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)3.0 * dt;
+		}; 
+
+		if (this->player->getActionModifier(backward))
+		{
+			glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
+			playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)-3.0 * dt;
+		};
+
+		if (this->player->getActionModifier(rightWards))
+		{
+			glm::vec3 relativeRight = player->getPlayerRelativeTransform()->right;
+			playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeRight.x, 0, relativeRight.z) * (float)-3.0 * dt;
+		};
+
+		if (this->player->getActionModifier(leftWards))
+		{
+			glm::vec3 relativeRight = player->getPlayerRelativeTransform()->right;
+			playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeRight.x, 0, relativeRight.z) * (float)3.0 * dt;
+		};
 	}
 
 	if(this->player->getPlayerAction() == jogging)
 	{
-		glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
-		playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)4.0 * 1.5f * dt;
+		if (this->player->getActionModifier(forward)) //if player is walking and pressing forward
+		{
+			glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
+			playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)4.0 * 1.5f * dt;
+		};
+
+		if (this->player->getActionModifier(backward))
+		{
+			glm::vec3 relativeFront = player->getPlayerRelativeTransform()->front;
+			playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)-4.0 * 1.5f * dt;
+		};
+
+		if (this->player->getActionModifier(rightWards))
+		{
+			glm::vec3 relativeRight = player->getPlayerRelativeTransform()->right;
+			playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeRight.x, 0, relativeRight.z) * (float)-4.0 * 1.5f * dt;
+		};
+
+		if (this->player->getActionModifier(leftWards))
+		{
+			glm::vec3 relativeRight = player->getPlayerRelativeTransform()->right;
+			playerTransform->position = glm::vec3(newPosition.x, playerTransform->position.y, newPosition.z) + glm::vec3(relativeRight.x, 0, relativeRight.z) * (float)4.0 * 1.5f * dt;
+		};
 	}
 
 	if(this->player->getPlayerAction() == sprinting)
@@ -210,7 +297,7 @@ void characterController::updateController(float dt, Level currentLevel)
 		}
 	} 
 
-	
+	//update transforms
 	this->world->setBodyPosition(this->physicsId, playerTransform->position);
 	this->player->setPlayerTransform(*playerTransform);
 	player->calculateRelTransform();

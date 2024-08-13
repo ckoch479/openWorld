@@ -45,7 +45,7 @@ private:
 	float playerMass = 60;
 
 	//user input keys set like this so they can be remapped as needed
-	int forward = 87; //W
+	int forwardMov = 87; //W
 	int left = 65; //A
 	int right = 68; //D
 	int back = 83; //S

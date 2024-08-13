@@ -47,6 +47,7 @@ objAnimator::objAnimator(Model* model)
 
 void objAnimator::loadAnimation(std::string& animationName, std::string& animationFilePath, bool loopingAnimation)
 {
+	std::cout << "loading animation: " << animationName << std::endl;
 	animation* newAnim = ResourceManager::loadAnimation(animationFilePath, animationName, this->animModel->name);
 	newAnim->looping = loopingAnimation;
 	this->animations[animationName] = newAnim;

@@ -28,7 +28,7 @@ void handGun::addToScene(scene* scene, Shader* shader)
 	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	newTransform.scale = glm::vec3(0.01);
 
-	this->sceneID = scene->addObjectToScene(this->model, newTransform, shader);
+	this->sceneID = scene->addStaticSceneObj(this->model, newTransform, shader);
 
 	std::cout << "handgun being added to scene\n";
 }

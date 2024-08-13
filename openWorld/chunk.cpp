@@ -64,8 +64,8 @@ void chunk::addChunktoScene(scene* scene)
 		chunkTransform.orientation = this->rotation + this->terrainModels[i].orient;
 		chunkTransform.scale = this->scale + this->terrainModels[i].scale;
 
-		std::string newId = scene->addStaticSceneObj(this->terrainModels[i].model, chunkTransform);
-		this->sceneIds.push_back(newId);
+		//std::string newId = scene->addStaticSceneObj(this->terrainModels[i].model, chunkTransform);
+		//this->sceneIds.push_back(newId);
 	}
 }
 

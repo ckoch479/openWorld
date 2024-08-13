@@ -58,6 +58,9 @@ void SimulationManager::run()
 	level1.setLevelScene(this->sceneObj);
 	level1.setLevelPhysicsWorld(this->world);
 	level1.setLevelModel("resources/Terrain/citySceneOneModel.gltf");
+
+	
+
 	level1.renderMap(lightShader);
 
 	Camera newCamera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -109,20 +112,7 @@ void SimulationManager::run()
 	{
 		setDeltaTime(); //update deltaTime for this loop
 		
-
-		/*boxTransform.position = world->getBodyPosition(boxId);
-		boxTransform.orientation = world->getBodyRotation(boxId);
-		sceneObj->updateTransform(boxSceneID, boxTransform);*/
-		
-		while(subState == mainMenu)
-		{
-			//draw background scene
-			//draw menu buttons (new,load,settings,credits,exit)
-			//track mouseMovement
-			//changeGamestate/subState as indicated
-
-		}
-
+	
 		if(this->WindowManager->checkKey(342))
 		{
 			//left alt
@@ -182,16 +172,14 @@ void SimulationManager::run()
 		
 		setDeltaTime(); //update deltaTime for this loop
 
-		//if(this->WindowManager->checkKey(342))
-		//{
-		//	//left alt
-		//	this->WindowManager->enableCursor();
-		//}
-
-		//if (this->WindowManager->checkKey(341)) 
-		//{
-		//	this->WindowManager->disableCursor();
-		//}
+		if (this->WindowManager->checkKey(342)) //left alt
+		{
+			this->gameRenderer->setDebugLines(false);
+		}
+		if (this->WindowManager->checkKey(341))//left ctrl
+		{
+			this->gameRenderer->setDebugLines(true);
+		}
 
 		double x = 0, y = 0;
 		this->WindowManager->getMousePosition(&x, &y);
@@ -212,6 +200,20 @@ void SimulationManager::run()
 
 		//draw contents to actual game window
 		animator::updateAnimations(deltaTime);
+
+		glm::vec3 playerPos = newPlayer.player->getPlayersTransform()->position;
+		this->sceneObj->setFocusPos(playerPos);
+
+		this->gameRenderer->addCube(playerPos + glm::vec3(0,1,0), newPlayer.player->getPlayersTransform()->orientation, glm::vec3(0.7, 1.6, 0.7), glm::vec4(1.0, 0.0, 0.0, 0.4));
+		this->gameRenderer->addCube(glm::vec3(4.0f, 2.0f, 2.0f), glm::quat(1.0f, 0.0, 0.0, 0.0), glm::vec3(1.0f), glm::vec4(1.0, 0.0, 1.0, 0.7));
+		this->gameRenderer->addCube(glm::vec3(6.0f, 2.0f, 2.0f), glm::quat(1.0f, 0.0, 0.0, 0.0), glm::vec3(1.0f), glm::vec4(0.0, 0.0, 1.0, 0.7));
+		this->gameRenderer->addCube(glm::vec3(8.0f, 2.0f, 2.0f), glm::quat(1.0f, 0.0, 0.0, 0.0), glm::vec3(1.0f), glm::vec4(0.0, 1.0, 1.0, 0.7));
+		this->gameRenderer->addCube(glm::vec3(10.0f,2.0f, 2.0f), glm::quat(1.0f, 0.0, 0.0, 0.0), glm::vec3(1.0f), glm::vec4(1.0, 0.0, 1.0, 0.7));
+
+
+		this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(15, 1, 0), glm::vec4(1.0, 0.0, 0.0, 1.0));
+		this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(0, 15, 0), glm::vec4(0.0, 1.0, 0.0, 1.0));
+		this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(0, 1, 15), glm::vec4(0.0, 0.0, 1.0, 1.0));
 
 		this->gameRenderer->drawScene(this->sceneObj);
 		

@@ -41,6 +41,8 @@ public:
 
 	bool getActionModifier(actionModifiers mod); //used to fetch what state the modifiers are in
 
+	void resetDirectionalActionMods();
+
 	//change player looks/resistances
 	void setPlayerMeshes(playerParts part, Mesh* newMesh); //allows on the fly update to a player mesh for each body part
 
@@ -123,10 +125,10 @@ private:
 	bool shooting = false;
 	bool leftward = false;
 	bool rightward = false;
-	bool front = true;
+	bool front = false;
 	bool back = false;
-	bool oneHanded = false;
-	bool twoHanded = true;
+	bool oneHanded = true;
+	bool twoHanded = false;
 
 
 	//object states/state changes

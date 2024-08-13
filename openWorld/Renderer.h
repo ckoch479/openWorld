@@ -23,6 +23,21 @@ struct lineVert
 	glm::vec3 color;
 };
 
+struct cube
+{
+	glm::vec3 pos;
+	glm::quat rotation;
+	glm::vec3 scale;
+	glm::vec4 color;
+};
+
+struct line
+{
+	glm::vec3 pointA;
+	glm::vec3 pointB;
+	glm::vec4 color;
+};
+
 #ifndef RENDERER_H
 #define RENDERER_H
 
@@ -39,11 +54,21 @@ public:
 
 	void drawModel(renderInfo* model, scene* currentScene, Shader* shader);
 
+	void drawStaticModel(renderInfo* model, scene* currentScene, Shader* shader);
+
 	void setDebugDepthQuadShader(Shader* shader);
 
 	void setScreenEffectShader(Shader* shader);
 
 	void renderPhysicsWorldDebugger(Shader* shader, PhysicsWorld* world, scene* scene);
+
+	void setDebugLines(bool setter);
+
+	void addCube(glm::vec3 pos, glm::quat rotation, glm::vec3 scale, glm::vec4 color);
+
+	void setDebugCubes(bool setter);
+
+	void addLine(glm::vec3 posA, glm::vec3 posB, glm::vec4 color);
 
 private:
 
@@ -72,6 +97,20 @@ private:
 
 	void generateScreenEffectBuffer(unsigned int* hdrFBO, unsigned int* depthRBO, unsigned int* colorBuffer);
 
+	void renderDebugLines(scene* scene, std::vector <renderInfo*> data, std::vector <renderInfo*> staticData);
+
+	void drawModelLines(renderInfo* model, scene* currentScene, Shader* shader);
+
+	void drawStaticModelLines(renderInfo* model, scene* currentScene, Shader* shader);
+
+	void drawCubes(Camera* camera);
+
+	void generateCubeVAO();
+
+	void generateLineVAO();
+
+	void drawLines(Camera* camera);
+
 	
 
 	//used for rendering hud objects or menu objects
@@ -93,9 +132,89 @@ private:
 		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 	};
 
+
+	std::vector <cube> cubes;
+	unsigned int CubeVAO;
+	unsigned int CubeVBO;
+
+	float cubeVertices[144]
+	{
+	-0.5f, -0.5f, -0.5f,  // Bottom-left
+	 0.5f, -0.5f, -0.5f,  // bottom-right 
+	 0.5f, -0.5f, -0.5f,  // bottom-right 
+	 0.5f,  0.5f, -0.5f,  // top-right
+	 0.5f,  0.5f, -0.5f,  // top-right
+	-0.5f,  0.5f, -0.5f,  // top-left
+	-0.5f,  0.5f, -0.5f,  // top-left
+	-0.5f, -0.5f, -0.5f,  // bottom-left
+	// Front face
+	-0.5f, -0.5f,  0.5f,  // bottom-left
+	 0.5f, -0.5f,  0.5f,  // bottom-right
+	 0.5f, -0.5f,  0.5f,  // bottom-right
+	 0.5f,  0.5f,  0.5f,  // top-right
+	 0.5f,  0.5f,  0.5f,  // top-right
+	-0.5f,  0.5f,  0.5f,  // top-left
+	-0.5f,  0.5f,  0.5f,  // top-left
+	-0.5f, -0.5f,  0.5f,  // bottom-left
+	// Left face
+	-0.5f, -0.5f, -0.5f,  // bottom-left
+	-0.5f, -0.5f,  0.5f,  // bottom-right
+	-0.5f, -0.5f,  0.5f,  // bottom-right
+	-0.5f,  0.5f,  0.5f,  // top-right
+	-0.5f,  0.5f,  0.5f,  // top-right
+	-0.5f,  0.5f, -0.5f,  // top-left
+	-0.5f,  0.5f, -0.5f,  // top-left
+	-0.5f, -0.5f, -0.5f,  // bottom-left
+	// Right face
+	 0.5f, -0.5f,  0.5f,  // bottom-left    
+	 0.5f, -0.5f, -0.5f,  // bottom-right
+	 0.5f, -0.5f, -0.5f,  // bottom-right
+	 0.5f,  0.5f, -0.5f,  // top-right  
+	 0.5f,  0.5f, -0.5f,  // top-right  
+	 0.5f,  0.5f,  0.5f,  // top-left
+	 0.5f,  0.5f,  0.5f,  // top-left
+	 0.5f, -0.5f,  0.5f,  // bottom-left   
+	 // Bottom face
+	  0.5f, -0.5f,  0.5f, // bottom-left
+	 -0.5f, -0.5f,  0.5f, // bottom-right
+	 -0.5f, -0.5f,  0.5f, // bottom-right
+	 -0.5f, -0.5f, -0.5f, // top-right
+	 -0.5f, -0.5f, -0.5f, // top-right
+	  0.5f, -0.5f, -0.5f, // top-left
+	  0.5f, -0.5f, -0.5f, // top-left
+	  0.5f, -0.5f,  0.5f, // bottom-left
+	 // Top face
+	 -0.5f,  0.5f,  0.5f, // bottom-left 
+	  0.5f,  0.5f,  0.5f, // bottom-right
+	  0.5f,  0.5f,  0.5f, // bottom-right
+	  0.5f,  0.5f, -0.5f, // top-right 
+	  0.5f,  0.5f, -0.5f, // top-right 
+	 -0.5f,  0.5f, -0.5f, // top-left
+	 -0.5f,  0.5f, -0.5f, // top-left
+     -0.5f,  0.5f,  0.5f  // bottom-left  
+	};
+
+	//generic cube vertices for instanced cube drawing
+
+	unsigned int lineVAO;
+	unsigned int LineVBO;
+
+	float lineVertices[6]
+	{
+		 0.0, 1.0, 0.0,	//line start point
+		10.0, 1.0, 0.0  //line end point
+	};
+
+	std::vector <line> lines;
+
 	Shader* debugDepthQuad;
 	Shader* screenEffectShader;
 	Shader* screenShapeShader;
+
+	Shader* debugLinesShader;
+	Shader* debugStaticLinesShader;
+	Shader* cubeShader;
+	Shader* lineDrawShader;
 
 	//shadow data:
 
@@ -124,6 +243,10 @@ private:
 	unsigned int hdrFBO;
 	unsigned int depthBuffer;
 	unsigned int colorBuffer;
+
+	bool debugLines = true;
+	bool debugCubes = true;
+	bool drawDebugLines = true;
 };
 
 

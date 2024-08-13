@@ -82,6 +82,15 @@
     <Filter Include="Source Files\Debug">
       <UniqueIdentifier>{796b7e65-c3ad-4196-ab7a-5dd92dfe6507}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\activeShaders">
+      <UniqueIdentifier>{5d6518f7-57c4-41b9-b7d7-42958bd0b9ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\debuggingShaders">
+      <UniqueIdentifier>{c9791549-04fe-40da-9f01-64af82d707bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\miscShaders">
+      <UniqueIdentifier>{b315ff3c-024b-4222-83a9-3840ce15b78d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -376,59 +385,89 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\3.3.shader.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\3.3.shader.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\ModelShader.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\Modelshader.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\AnimationShader.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\AnimationShader.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\PhongLightShader.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\PhongLightShader.vs">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Shaders\LightAndAnimationShader.fs">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\activeShaders</Filter>
     </None>
     <None Include="Shaders\LightAndAnimationShader.vs">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\activeShaders</Filter>
     </None>
-    <None Include="Shaders\PhysicsTestShader.fs">
-      <Filter>Resource Files</Filter>
+    <None Include="Shaders\debugShader.fs">
+      <Filter>Resource Files\debuggingShaders</Filter>
     </None>
-    <None Include="Shaders\PhysicsTestShader.vs">
-      <Filter>Resource Files</Filter>
+    <None Include="Shaders\debugShader.gs">
+      <Filter>Resource Files\debuggingShaders</Filter>
     </None>
-    <None Include="Shaders\cubeMap.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\cubeMap.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\lineShader.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\lineshader.vs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\lightShader.fs">
-      <Filter>Resource Files</Filter>
+    <None Include="Shaders\debugShader.vs">
+      <Filter>Resource Files\debuggingShaders</Filter>
     </None>
     <None Include="Shaders\lightShader.vs">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\activeShaders</Filter>
+    </None>
+    <None Include="Shaders\lightShader.fs">
+      <Filter>Resource Files\activeShaders</Filter>
+    </None>
+    <None Include="Shaders\shadowShader.fs">
+      <Filter>Resource Files\activeShaders</Filter>
+    </None>
+    <None Include="Shaders\shadowShader.vs">
+      <Filter>Resource Files\activeShaders</Filter>
+    </None>
+    <None Include="Shaders\debugDepthQuad.fs">
+      <Filter>Resource Files\debuggingShaders</Filter>
+    </None>
+    <None Include="Shaders\debugDepthQuad.vs">
+      <Filter>Resource Files\debuggingShaders</Filter>
+    </None>
+    <None Include="Shaders\AnimationShader.fs">
+      <Filter>Resource Files\activeShaders</Filter>
+    </None>
+    <None Include="Shaders\AnimationShader.vs">
+      <Filter>Resource Files\activeShaders</Filter>
+    </None>
+    <None Include="Shaders\3.3.shader.fs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\3.3.shader.vs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\cubeMap.fs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\cubeMap.vs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\lineShader.fs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\lineshader.vs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\ModelShader.fs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\Modelshader.vs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\PhongLightShader.fs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\PhongLightShader.vs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\PhysicsTestShader.fs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\PhysicsTestShader.vs">
+      <Filter>Resource Files\miscShaders</Filter>
+    </None>
+    <None Include="Shaders\debugShaderStatic.fs">
+      <Filter>Resource Files\debuggingShaders</Filter>
+    </None>
+    <None Include="Shaders\debugShaderStatic.gs">
+      <Filter>Resource Files\debuggingShaders</Filter>
+    </None>
+    <None Include="Shaders\debugShaderStatic.vs">
+      <Filter>Resource Files\debuggingShaders</Filter>
     </None>
   </ItemGroup>
 </Project>

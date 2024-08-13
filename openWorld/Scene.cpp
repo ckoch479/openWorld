@@ -50,11 +50,11 @@ std::string scene::addObjectToScene(Model* model, transform transf, Shader* shad
 	return Modelid;
 }
 
-std::string scene::addStaticSceneObj(Model* model, transform& transf)
+std::string scene::addStaticSceneObj(Model* model, transform& transf, Shader* shader)
 {
 	std::string Modelid = createUniqueID();
 
-	modelIds.push_back(Modelid);
+	staticModelIds.push_back(Modelid);
 
 	transform newTransform;
 	newTransform = transf;
@@ -64,14 +64,14 @@ std::string scene::addStaticSceneObj(Model* model, transform& transf)
 	renderInfo newInfo;
 	newInfo.model = model;
 	newInfo.transf = &sceneTransforms[Modelid];
-	newInfo.shader = this->staticShader; //only difference between this method and normal one is this uses the scene classes generic static object shader and these object wont be update much
+	newInfo.shader = shader; //only difference between this method and normal one is this uses the scene classes generic static object shader and these object wont be updated much
 	newInfo.id = Modelid;
 
-	activeModels[Modelid] = newInfo;
+	staticModels[Modelid] = newInfo;
 
-	for (unsigned int i = 0; i < activeModels[Modelid].model->meshes.size(); i++)
+	for (unsigned int i = 0; i < staticModels[Modelid].model->meshes.size(); i++)
 	{
-		generateModelRenderData(&activeModels[Modelid].model->meshes[i]); //this function generates a VAO and VBO for each mesh in the model
+		generateModelRenderData(&staticModels[Modelid].model->meshes[i]); //this function generates a VAO and VBO for each mesh in the model
 	}
 
 	return Modelid;
@@ -101,6 +101,18 @@ std::vector <renderInfo*> scene::getRenderingInfo()
 	for (unsigned int i = 0; i < modelIds.size(); i++)
 	{
 		renderDump.push_back(&activeModels[modelIds[i]]);
+	}
+
+	return renderDump;
+}
+
+std::vector <renderInfo*> scene::getStaticRenderingInfo()
+{
+	std::vector <renderInfo*> renderDump;
+
+	for (unsigned int i = 0; i < staticModelIds.size(); i++)
+	{
+		renderDump.push_back(&staticModels[staticModelIds[i]]);
 	}
 
 	return renderDump;
@@ -149,6 +161,19 @@ std::vector <unsigned int> scene::getModelVAOs(std::string modelID)
 	std::vector <unsigned int> VAOs;
 
 	Model* model = activeModels[modelID].model;
+	for (unsigned int i = 0; i < model->meshes.size(); i++)
+	{
+		VAOs.push_back(model->meshes[i].VAO);
+	}
+
+	return VAOs;
+}
+
+std::vector <unsigned int> scene::getStaticModelVAOs(std::string modelID)
+{
+	std::vector <unsigned int> VAOs;
+
+	Model* model = staticModels[modelID].model;
 	for (unsigned int i = 0; i < model->meshes.size(); i++)
 	{
 		VAOs.push_back(model->meshes[i].VAO);
@@ -336,6 +361,16 @@ void scene::generate2DShapeData(shape2D* shape)
 	// vertex colors
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, color));
+}
+
+void scene::setFocusPos(glm::vec3 pos)
+{
+	this->sceneFocusPosition = pos;
+}
+
+glm::vec3 scene::getFocusPos()
+{
+	return this->sceneFocusPosition;
 }
 
 //void Scene::MoveCamera(Camera_Movement direction, float deltaTime) 

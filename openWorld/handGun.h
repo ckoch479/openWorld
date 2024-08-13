@@ -52,6 +52,8 @@ private:
 	//glm::vec3 right = glm::vec3(1,0,0);
 
 	glm::mat4 objectTransform; //local transform
+	glm::vec3 worldPosition;
+	glm::quat worldOrient;
 
 	float mass; //mass/volume used for inventory management 
 	float volume;
