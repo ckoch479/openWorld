@@ -120,6 +120,7 @@ unsigned int PhysicsWorld::CreateRigidBody()
 	Body.type = Static;
 
 	this->RigidBodies[newId] = Body;
+	this->rigidBodies[newId].body->setIsDebugEnabled(true);
 	
 
 	return newId;
@@ -422,26 +423,33 @@ glm::quat PhysicsWorld::getConcaveBodyRotation(unsigned int id)
 	return glm::quat(orient.w, orient.x, orient.y, orient.z);
 }
 
-std::vector <debugTriangles> PhysicsWorld::debugRenderer()
+std::vector <PhysdebugLines> PhysicsWorld::debugRenderer()
 {
 	rp3d::DebugRenderer& debugRenderer = this->world->getDebugRenderer();
-	debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE,true);
-	debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
+	//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE,true);
+	//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_BROADPHASE_AABB, true);
+	//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB,true);
+	//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE_NORMAL, true);
+	debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_NORMAL, true);
+	//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
+	
+	//it gets here
+	uint32_t numlines = debugRenderer.getNbLines(); //number of lines;
+	std::vector <PhysdebugLines> debugData;
 
-	//const int numlines = debugRenderer.getNbLines(); //number of lines;
-	const int numTriangles = debugRenderer.getNbTriangles();
-	//std::vector <debugLines> debugData;
-	std::vector <debugTriangles> triangleData;
+	std::cout << "number of debug lines: " << (int)debugRenderer.getNbLines() << std::endl;
 
-	for(unsigned int i = 0; i < numTriangles; i++)
+	for(unsigned int i = 0; i < numlines; i++)
 	{
-		debugTriangles newTriangle;
-		const rp3d::Array <rp3d::DebugRenderer::DebugTriangle> triangles = debugRenderer.getTriangles();
+		PhysdebugLines newLine;
+		rp3d::Array <rp3d::DebugRenderer::DebugLine> lines = debugRenderer.getLines();
 		
-		newTriangle.vertex = glm::vec3(triangles[i].point1.x, triangles[i].point1.y, triangles[i].point1.z);
-		newTriangle.vertex2 = glm::vec3(triangles[i].point2.x, triangles[i].point2.y, triangles[i].point2.z);;
-		newTriangle.vertex3 = glm::vec3(triangles[i].point3.x, triangles[i].point3.y, triangles[i].point3.z);;
+		newLine.pointA = glm::vec3(lines[i].point1.x, lines[i].point1.y, lines[i].point1.z);
+		newLine.pointB = glm::vec3(lines[i].point2.x, lines[i].point2.y, lines[i].point2.z);
+		newLine.colorA = glm::vec4(1.0, 0.0, 0.0, 0.7);
+		newLine.colorB = glm::vec4(1.0, 0.0, 0.0, 0.7);
 		
+		std::cout << " debug line: " << i << " from: " << glm::to_string(newLine.pointA) << " to " << glm::to_string(newLine.pointB) << std::endl;
 
 		//switch(triangles[i].color1)
 		//{
@@ -471,10 +479,10 @@ std::vector <debugTriangles> PhysicsWorld::debugRenderer()
 		//	break;
 		//}
 		//std::cout << "pushing back new debug triangle!\n";
-		triangleData.push_back(newTriangle);
+		debugData.push_back(newLine);
 	}
 
-	return triangleData;
+	return debugData;
 }
 
 rayCastIntersectInfo PhysicsWorld::rayCast(glm::vec3 startPoint, glm::vec3 endPoint)
@@ -510,8 +518,31 @@ rayCastIntersectInfo PhysicsWorld::rayCast(glm::vec3 startPoint, glm::vec3 endPo
 	//}
 }
 
-
-
-
-
+//unsigned int PhysicsWorld::getNewOBBid()
+//{
+//	this->OBBcount++;
+//	return this->OBBcount;
+//}
+//
+//unsigned int PhysicsWorld::createOBB(glm::vec3 pos, glm::quat orientation, glm::vec3 size)
+//{
+//	unsigned int newId = getNewOBBid();
+//	orientedBoundingBox newBox;
+//	newBox.position = pos;
+//	newBox.orientation = orientation;
+//	newBox.halfExtents = size;
+//
+//	OBBs[newId] = newBox;
+//}
+//
+//void PhysicsWorld::updateOBB(glm::vec3 pos, glm::quat orienation, unsigned int id)
+//{
+//	OBBs[id].position = pos;
+//	OBBs[id].orientation = orienation;
+//}
+//
+//orientedBoundingBox PhysicsWorld::getBoundingBox(unsigned int id)
+//{
+//	return this->OBBs[id];
+//}
 

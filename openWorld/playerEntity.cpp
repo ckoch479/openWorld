@@ -814,3 +814,14 @@ void playerEntity::setJumpingAnimation()
 	this->activeAnim = "jumping";
 	this->animationChange = true;
 }
+
+std::vector <Bone*> playerEntity::getBones()
+{
+	int numBones = this->playerModel->skeleton->getBoneCount();
+	std::vector <Bone*> playerBones;
+	for(int i = 0; i < numBones; i++)
+	{
+		playerBones.push_back(this->playerModel->skeleton->getBone(i));
+	}
+	return playerBones;
+}

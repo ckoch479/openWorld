@@ -202,6 +202,31 @@ void characterController::addPlayerToWorld()
 	this->physicsId = this->world->createCapsuleShape(this->player->getPlayersTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.7, 1.3, Kinematic);
 	this->world->changeColliderOrigin(this->physicsId, glm::vec3(0.0, 1.5, 0.0));
 	this->world->lockBodyRotationAxis(this->physicsId, glm::vec3(1, 1, 1));
+
+	/*std::vector <Bone*> playerSkeleton = this->player->getBones();
+	for(int i = 0 ; i < playerSkeleton.size(); i++)
+	{
+		unsigned int obbID = this->world->createOBB(glm::vec3(0.0f), glm::quat(1.0, 0.0, 0.0, 0.0), glm::vec3(0.2, 0.2, 0.2));
+		this->OBBids.push_back(obbID);
+		this->boneOBBidMap[obbID] = playerSkeleton[i]->getId();
+	}*/
+
+}
+
+void characterController::updateOBBs()
+{
+	//for(unsigned int i = 0; i < this->OBBids.size(); i++)
+	//{
+		//orientedBoundingBox* currentBox = &this->world->getBoundingBox(OBBids[i]);
+		//int boneId = boneOBBidMap[OBBids[i]];
+		//Bone* currentBone = this->player->getPlayerModel()->skeleton->getBone(boneId);
+		
+		//std::string boneName;
+		//glm::mat4 boneTransform = this->player->getPlayerAnimator()->getFinalBoneTransform(currentBone->getName());
+
+		//need to get the player transform then the players bone transform for this bone
+	//}
+
 }
 
 

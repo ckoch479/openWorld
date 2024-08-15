@@ -244,7 +244,7 @@ private:
 	unsigned int depthBuffer;
 	unsigned int colorBuffer;
 
-	bool debugLines = true;
+	bool debugLines = false;
 	bool debugCubes = true;
 	bool drawDebugLines = true;
 };

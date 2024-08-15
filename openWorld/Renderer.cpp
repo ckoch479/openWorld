@@ -603,45 +603,6 @@ void renderer::setScreenEffectShader(Shader* shader)
 	this->screenEffectShader->SetInteger("hdrBuffer", 0);
 }
 
-void renderer::renderPhysicsWorldDebugger(Shader* shader, PhysicsWorld* world, scene* scene)
-{
-	std::vector <debugTriangles> triangles;
-	triangles = world->debugRenderer();
-	if(triangles.size() > 0)
-	{
-
-		unsigned int vao, vbo;
-
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
-
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(triangles), &triangles[0], GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-
-
-		shader->use();
-
-		glBindVertexArray(vao);
-
-		glm::mat4 view(1.0f);
-		glm::mat4 projection(1.0f);
-
-		view = scene->getCurrentCamera()->GetViewMatrix();
-		projection = glm::perspective(glm::radians(scene->getCurrentCamera()->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, near_plane, far_plane);
-
-		shader->SetMatrix4("view", view);
-		shader->SetMatrix4("projection", projection);
-
-		glDrawArrays(GL_TRIANGLES, 0, sizeof(triangles) * 3);
-		glBindVertexArray(0);
-		//std::cout << "triangles drawing:" << std::endl;
-	}
-}
-
 void renderer::load2DRenderShader()
 {
 	this->screenShapeShader = ResourceManager::loadShader("Shaders/3.3.shader.vs","Shaders/3.3.shader.fs",nullptr,"screenShapeShader");

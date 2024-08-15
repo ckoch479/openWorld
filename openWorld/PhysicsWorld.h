@@ -3,11 +3,13 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <unordered_map>
 
 #include "lookup_table.h"
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
+#include <glm/gtx/string_cast.hpp>
 
 
 #include<reactphysics3d/reactphysics3d.h>
@@ -53,7 +55,7 @@ struct WorldSettings //these values are needed prior to world creation
 	int VelocitySolverIterations;
 	bool enableSleeping;
 	glm::vec3 worldGravity;
-	bool debugRendering;
+	bool debugRendering = true;
 };
 
 struct mRigidBody
@@ -73,12 +75,12 @@ enum ColliderTypes
 	Sphere
 };
 
-struct debugLines
+struct PhysdebugLines
 {
 	glm::vec3 pointA;
 	glm::vec3 pointB;
-	glm::vec3 colorA;
-	glm::vec3 colorB;
+	glm::vec4 colorA;
+	glm::vec4 colorB;
 };
 
 struct debugTriangles
@@ -96,6 +98,14 @@ struct rayCastIntersectInfo
 	glm::vec3 hitPointNormal;
 	bool hit;
 };
+
+//struct orientedBoundingBox
+//{
+//	glm::vec3 halfExtents;
+//	glm::vec3 position;
+//	glm::quat orientation;
+//	//glm::vec3 scale;
+//};
 
 class PhysicsWorld
 {
@@ -147,7 +157,7 @@ public:
 
 	glm::quat getConcaveBodyRotation(unsigned int id);
 
-	std::vector <debugTriangles> debugRenderer();
+	std::vector <PhysdebugLines> debugRenderer();
 
 	//bool rayCast(glm::vec3 startPoint,glm::vec3 endPoint);
 
@@ -179,6 +189,12 @@ public:
 	
 	void stepSimulation(float dt);
 
+	/*unsigned int  createOBB(glm::vec3 pos,glm::quat orientation, glm::vec3 size);
+
+	void updateOBB(glm::vec3 pos, glm::quat orienation, unsigned int id);
+
+	orientedBoundingBox getBoundingBox(unsigned int id);*/
+
 private:
 
 	float physicsWorldObjects = 0;
@@ -197,6 +213,13 @@ private:
 
 	reactphysics3d::PhysicsWorld::WorldSettings settings; //current settings for the physics world
 	reactPhysicsListener* worldListener;
+
+	/*unsigned int OBBcount = 0;
+
+	unsigned int getNewOBBid();
+
+	std::unordered_map<unsigned int, orientedBoundingBox> OBBs;*/
+
 	
 };
 

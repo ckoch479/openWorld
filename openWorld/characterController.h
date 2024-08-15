@@ -30,6 +30,8 @@ private:
 
 	void addPlayerToWorld();
 
+	void updateOBBs();
+
 	PhysicsWorld* world;
 	playerEntity* player; //for transforms and current action references
 
@@ -73,5 +75,8 @@ private:
 
 	bool aiming = false;
 	bool shooting = false;
+
+	std::vector <unsigned int> OBBids;
+	std::unordered_map<unsigned int, int> boneOBBidMap;
 };
 

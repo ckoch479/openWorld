@@ -164,6 +164,8 @@
     <ClCompile Include="chunk.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="debugger.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="gameObjectManager.cpp" />
     <ClCompile Include="gamePhysicsWorld.cpp" />
     <ClCompile Include="guiManager.cpp" />
@@ -214,6 +216,8 @@
     <ClInclude Include="chunk.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="debugger.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="gameObjectManager.h" />
     <ClInclude Include="gamePhysicsWorld.h" />
     <ClInclude Include="guiManager.h" />

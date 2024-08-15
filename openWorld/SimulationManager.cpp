@@ -19,6 +19,7 @@ void SimulationManager::Init()
 	this->gameRenderer = new renderer;
 	dString = "render initialized!";
 	this->Debug->addEventData(dString);
+	this->Debug->addRenderer(this->gameRenderer);
 
 	this->sceneObj = new scene;
 	dString = "sceneObj initialized!";
@@ -169,7 +170,8 @@ void SimulationManager::run()
 	//jump directly into gameplay with player movement and such
 	while(state == debug)
 	{
-		
+		this->Debug->updateDebugger();
+
 		setDeltaTime(); //update deltaTime for this loop
 
 		if (this->WindowManager->checkKey(342)) //left alt
@@ -187,9 +189,6 @@ void SimulationManager::run()
 		newPlayer.updateManager(deltaTime, &level1);
 		newNPC.updateManager(deltaTime, &level1);
 
-		//newTransform.position = newPlayer.player->getPlayerRelativeTransform()->front + newPlayer.player->getPlayersTransform()->position + glm::vec3(0, 1.5, 0);
-		//this->sceneObj->updateTransform(sceneGunID, newTransform);
-
 		//update physics
 		accumulator += deltaTime;
 		while (accumulator >= timestep)
@@ -205,15 +204,11 @@ void SimulationManager::run()
 		this->sceneObj->setFocusPos(playerPos);
 
 		this->gameRenderer->addCube(playerPos + glm::vec3(0,1,0), newPlayer.player->getPlayersTransform()->orientation, glm::vec3(0.7, 1.6, 0.7), glm::vec4(1.0, 0.0, 0.0, 0.4));
-		this->gameRenderer->addCube(glm::vec3(4.0f, 2.0f, 2.0f), glm::quat(1.0f, 0.0, 0.0, 0.0), glm::vec3(1.0f), glm::vec4(1.0, 0.0, 1.0, 0.7));
-		this->gameRenderer->addCube(glm::vec3(6.0f, 2.0f, 2.0f), glm::quat(1.0f, 0.0, 0.0, 0.0), glm::vec3(1.0f), glm::vec4(0.0, 0.0, 1.0, 0.7));
-		this->gameRenderer->addCube(glm::vec3(8.0f, 2.0f, 2.0f), glm::quat(1.0f, 0.0, 0.0, 0.0), glm::vec3(1.0f), glm::vec4(0.0, 1.0, 1.0, 0.7));
-		this->gameRenderer->addCube(glm::vec3(10.0f,2.0f, 2.0f), glm::quat(1.0f, 0.0, 0.0, 0.0), glm::vec3(1.0f), glm::vec4(1.0, 0.0, 1.0, 0.7));
+	
 
-
-		this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(15, 1, 0), glm::vec4(1.0, 0.0, 0.0, 1.0));
-		this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(0, 15, 0), glm::vec4(0.0, 1.0, 0.0, 1.0));
-		this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(0, 1, 15), glm::vec4(0.0, 0.0, 1.0, 1.0));
+		//this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(15, 1, 0), glm::vec4(1.0, 0.0, 0.0, 1.0));
+		//this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(0, 15, 0), glm::vec4(0.0, 1.0, 0.0, 1.0));
+		//this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(0, 1, 15), glm::vec4(0.0, 0.0, 1.0, 1.0));
 
 		this->gameRenderer->drawScene(this->sceneObj);
 		

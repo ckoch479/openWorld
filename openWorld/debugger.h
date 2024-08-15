@@ -10,6 +10,8 @@
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
+#include "Renderer.h"
+
 //change to singleton later:
 class debugger
 {
@@ -32,6 +34,10 @@ public:
 
 	void flushDebugger();
 
+	void addRenderer(renderer* gameRenderer);
+
+	void updateDebugger();
+
 private:
 
 	void dumpDatatoFile();
@@ -39,6 +45,8 @@ private:
 	void dumpDatatoConsole();
 
 	float getTimeStamp();
+
+	void drawWorldLines();
 
 	int debugLevel = 0; //how much data will be presented to the programmer 0 = none, 10 = absolutely everything
 
@@ -51,5 +59,7 @@ private:
 	std::string physicsData;
 	std::string entityData;
 	std::string eventData;
+
+	renderer* gameRenderer;
 };
 

@@ -74,6 +74,8 @@ public:
 
 	void updateEntity();
 
+	std::vector <Bone*> getBones();
+
 private:
 
 	void setIdleAnimation();

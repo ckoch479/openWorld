@@ -10,6 +10,34 @@ debugger::~debugger()
 
 }
 
+void debugger::addRenderer(renderer* gameRenderer)
+{
+	this->gameRenderer = gameRenderer;
+}
+
+void debugger::updateDebugger()
+{
+
+	drawWorldLines();
+}
+
+void debugger::drawWorldLines()
+{
+	//draw world grid
+
+	for(int i = 0; i < 100; i++)
+	{
+		
+		this->gameRenderer->addLine(glm::vec3(-100,0,i), glm::vec3(100,0,i), glm::vec4(1.0,0.0,0.0,0.8));	  //x axis
+		this->gameRenderer->addLine(glm::vec3(-100, 0, -1 * i), glm::vec3(100, 0, -1*i), glm::vec4(1.0, 0.0, 0.0, 0.8)); //-x axis
+
+		this->gameRenderer->addLine(glm::vec3(i,0,-100), glm::vec3(i,0,100), glm::vec4(0.0, 1.0, 0.0, 0.8)); //z axis
+		this->gameRenderer->addLine(glm::vec3(-i, 0, -100), glm::vec3(-i, 0, 100), glm::vec4(0.0, 1.0, 0.0, 0.8)); //-z axis
+	
+	}
+	this->gameRenderer->addLine(glm::vec3(0.0f), glm::vec3(0, 100, 0), glm::vec4(0, 0, 1, 0.7));
+}
+
 void debugger::addModelData(std::string data)
 {
 	std::string timeStamp = "\n[" + std::to_string(this->getTimeStamp()) + "] : "; //add timestamp to data input

@@ -55,7 +55,7 @@ void Level::setLevelModel(std::string filepath)
 	this->name = "level1";
 	this->levelModel = ResourceManager::loadModel(filepath,this->name);
 	levelModel->meshes;
-	for(unsigned int i = 0; i <levelModel->meshes.size(); i++)
+	for(unsigned int i = 0; i < levelModel->meshes.size(); i++)
 	{
 		this->levelMeshes.push_back(&levelModel->meshes[i]);
 	}
