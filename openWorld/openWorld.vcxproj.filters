@@ -97,6 +97,12 @@
     <Filter Include="Source Files\Entity">
       <UniqueIdentifier>{61b2edf8-ba26-4fa2-8e57-46982d0de30b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entity\component">
+      <UniqueIdentifier>{dc1f73fd-fadb-4033-b6af-0642c24c7638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entity\component">
+      <UniqueIdentifier>{529a0c1e-39e2-40d9-9dd1-e247ee311f7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -239,6 +245,24 @@
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="animated.cpp">
+      <Filter>Source Files\Entity\component</Filter>
+    </ClCompile>
+    <ClCompile Include="lightEmitter.cpp">
+      <Filter>Source Files\Entity\component</Filter>
+    </ClCompile>
+    <ClCompile Include="renderable.cpp">
+      <Filter>Source Files\Entity\component</Filter>
+    </ClCompile>
+    <ClCompile Include="rangedItem.cpp">
+      <Filter>Source Files\Entity\component</Filter>
+    </ClCompile>
+    <ClCompile Include="wieldable.cpp">
+      <Filter>Source Files\Entity\component</Filter>
+    </ClCompile>
+    <ClCompile Include="melee.cpp">
+      <Filter>Source Files\Entity\component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,6 +424,24 @@
     </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="renderable.h">
+      <Filter>Header Files\Entity\component</Filter>
+    </ClInclude>
+    <ClInclude Include="lightEmitter.h">
+      <Filter>Header Files\Entity\component</Filter>
+    </ClInclude>
+    <ClInclude Include="animated.h">
+      <Filter>Header Files\Entity\component</Filter>
+    </ClInclude>
+    <ClInclude Include="rangedItem.h">
+      <Filter>Header Files\Entity\component</Filter>
+    </ClInclude>
+    <ClInclude Include="wieldable.h">
+      <Filter>Header Files\Entity\component</Filter>
+    </ClInclude>
+    <ClInclude Include="melee.h">
+      <Filter>Header Files\Entity\component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
