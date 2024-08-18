@@ -76,6 +76,10 @@ public:
 
 	std::vector <Bone*> getBones();
 
+	float aimUpDownBlend = 0.0f;
+	bool aimingUp = false;
+	bool aimingDown = false;
+
 private:
 
 	void setIdleAnimation();
@@ -132,6 +136,7 @@ private:
 	bool oneHanded = true;
 	bool twoHanded = false;
 
+	
 
 	//object states/state changes
 	bool meshChange = false;

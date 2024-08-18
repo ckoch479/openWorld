@@ -10,8 +10,9 @@ handGun::handGun(std::string filePath, std::string name, float mass, float volum
 
 	glm::mat4 newTran(1.0f);
 	newTran = glm::translate(newTran, glm::vec3(-1.0f, 0.0f, 0.0f));
-	newTran = glm::rotate(newTran, glm::radians(94.0f), glm::vec3(1, 0, 0));
-	newTran = glm::rotate(newTran, glm::radians(185.0f), glm::vec3(0, 1, 0));
+	newTran = glm::rotate(newTran, glm::radians(90.0f), glm::vec3(1, 0, 0));
+	newTran = glm::rotate(newTran, glm::radians(180.0f), glm::vec3(0, 1, 0));
+	newTran = glm::rotate(newTran, glm::radians(-15.0f), glm::vec3(0, 0, 1));
 
 	this->objectTransform = newTran;
 }

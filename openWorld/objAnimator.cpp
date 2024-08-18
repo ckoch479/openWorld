@@ -86,6 +86,19 @@ void objAnimator::playAnimation(std::string& animationName)
 		}
 
 	}
+	//this->isblendAnimation = false;
+}
+
+void objAnimator::playBlendAnimation(std::string animationA, std::string animationB, float blendFactor)
+{
+	this->blendFactor = blendFactor;
+
+	if (this->activeAnimation != animations[animationA] && this->blendAnimation != animations[animationB])
+	{
+		this->activeAnimation = animations[animationA];
+		this->blendAnimation = animations[animationB];
+		this->isblendAnimation = true;
+	}
 }
 
 void objAnimator::update(float deltaTime)
@@ -154,7 +167,7 @@ void objAnimator::update(float deltaTime)
 		}
 	}
 	
-
+	
 }
 
 void objAnimator::applyInverseKinematics(std::string& endEffectorName, glm::vec3& targetPosition)
@@ -314,15 +327,24 @@ void objAnimator::blendAnimations(animation* animA, animation* animB, float fact
 
 }
 
-void objAnimator::calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransform, std::vector <glm::mat4>& transforms)
+void objAnimator::calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransform)
 {
 	std::string nodeName = node->name;
 	glm::mat4 nodeTransform = node->transformation;
-
+	
 	animBone* bone = this->activeAnimation->animBones[nodeName];
 	if (bone)
 	{
-		//nodeTransform = calculateLocalBoneTransform(node); //problem here (again)
+		nodeTransform = calculateLocalBoneTransform(node); //problem here (again)
+
+		for (int i = 0; i < this->modifiers.size(); i++)
+		{
+			if (this->modifiers[i].boneName == nodeName)
+			{
+				//apply modifer that matches this bone name
+				nodeTransform = nodeTransform;// *glm::toMat4(modifiers[i].rotation);
+			}
+		}
 	}
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransform;
@@ -334,7 +356,8 @@ void objAnimator::calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransf
 	{
 		int index = tempBone->getId();
 		glm::mat4 offset = tempBone->getOffsetMat();
-		transforms[index] = globalTransformation * offset;
+		this->finalMatricies[index] = globalTransformation * offset; //should be from bone space to local space
+		this->updateBone[index] = true;
 	}
 
 	for (int i = 0; i < node->childrenCount; ++i)
@@ -424,6 +447,59 @@ glm::mat4 objAnimator::getLocalTranslation(AssimpNodeData* node)
 	float scaleFactor = calculateScaleFactor(positionKeys[index1].timeStamp,positionKeys[index2].timeStamp, this->currentAnimationTime);
 
 	glm::vec3 finalTranslation = Lerp(positionKeys[index1].position, positionKeys[index2].position, scaleFactor);
+
+	//intercept here if a blend is happening
+	if(this->blendAnimation && this->isblendAnimation)
+	{
+		glm::vec3 animBfinalTranslation(1.0f);
+
+		 positionKeys = this->blendAnimation->animBones[node->name]->positions;
+
+		numPositions = this->blendAnimation->animBones[node->name]->numPositions;
+
+		index1 = 0; //current position keyframe
+		index2 = 0; //current position + 1
+
+		for (int i = 0; i < numPositions; i++)
+		{
+			float indexTime = positionKeys[i].timeStamp;
+			//find closest index to the current time to get index1
+
+			if (this->currentAnimationTime < positionKeys[0].timeStamp)
+			{
+				index1 = 0;
+				if (numPositions > 0)
+				{
+					index2 = 1; //have to check incase there is only 1 single time stamps position
+				}
+				else { index2 = 0; }
+				break; //can break early if it is the first part of the animation
+			}
+
+			if (this->currentAnimationTime > positionKeys[numPositions - 1].timeStamp)
+			{
+				index1 = numPositions - 1; //if the time is greater than the last time stamp it is the last time stamp either reset or hold there
+				index2 = index1;
+				break; //break early it's the last frame
+			}
+
+			if (i + 1 < numPositions)
+			{
+				if (this->currentAnimationTime > indexTime && this->currentAnimationTime < positionKeys[i + 1].timeStamp)
+				{
+					index1 = i; //this will have issues for the first and last index so those two cases will need to be handled
+					index2 = i + 1;
+					break; //break early no need to keep searching
+				}
+			}
+		}
+		//after finding the closest two frames we have to interpolate between the two for that buttery smoothness in the animation
+		float scaleFactor = calculateScaleFactor(positionKeys[index1].timeStamp, positionKeys[index2].timeStamp, this->currentAnimationTime);
+
+		animBfinalTranslation = Lerp(positionKeys[index1].position, positionKeys[index2].position, scaleFactor);
+
+		finalTranslation = Lerp(finalTranslation, animBfinalTranslation, this->blendFactor);
+	}
 	
 	localTransform = glm::translate(localTransform, finalTranslation);
 	return localTransform;
@@ -475,6 +551,57 @@ glm::mat4 objAnimator::getLocalRotation(AssimpNodeData* node)
 	float scaleFactor = calculateScaleFactor(rotationKeys[index1].timeStamp, rotationKeys[index2].timeStamp, this->currentAnimationTime);
 
 	glm::quat finalRotation = Slerp(rotationKeys[index1].orientation, rotationKeys[index2].orientation, scaleFactor);
+
+	if (this->blendAnimation && this->isblendAnimation)
+	{
+		glm::quat finalRotationB(1.0, 0.0, 0.0, 0.0);
+
+		 rotationKeys = this->blendAnimation->animBones[node->name]->rotations;
+		numRotations = this->blendAnimation->animBones[node->name]->numRotations;
+
+		index1 = 0; //current position keyframe
+		index2 = 0; //current position + 1
+
+		for (int i = 0; i < numRotations; i++)
+		{
+			float indexTime = rotationKeys[i].timeStamp;
+			//find closest index to the current time to get index1
+
+			if (this->currentAnimationTime < rotationKeys[0].timeStamp)
+			{
+				index1 = 0;
+				if (numRotations > 1)
+				{
+					index2 = 1; //have to check incase there is only 1 single time stamps position
+				}
+				break; //can break early if it is the first part of the animation
+			}
+
+			if (this->currentAnimationTime > rotationKeys[numRotations - 1].timeStamp)
+			{
+				index1 = numRotations - 1; //if the time is greater than the last time stamp it is the last time stamp either reset or hold there
+				index2 = index1;
+				break; //break early it's the last frame
+			}
+
+			if (i + 1 < numRotations)
+			{
+				if (this->currentAnimationTime > indexTime && this->currentAnimationTime < rotationKeys[i + 1].timeStamp)
+				{
+					index1 = i; //this will have issues for the first and last index so those two cases will need to be handled
+					index2 = i + 1;
+					break; //break early no need to keep searching
+				}
+			}
+		}
+		//after finding the closest two frames we have to interpolate between the two for that buttery smoothness in the animation
+		float scaleFactor = calculateScaleFactor(rotationKeys[index1].timeStamp, rotationKeys[index2].timeStamp, this->currentAnimationTime);
+
+		finalRotationB = Slerp(rotationKeys[index1].orientation, rotationKeys[index2].orientation, scaleFactor);
+	//	std::cout << "final secondary rotation: " << glm::to_string(finalRotationB) << std::endl;
+	//	std::cout << "animation blend value: " << this->blendFactor << std::endl;
+		finalRotation = Slerp(finalRotation, finalRotationB, this->blendFactor);
+	}
 
 	localTransform = localTransform * glm::toMat4(finalRotation);
 

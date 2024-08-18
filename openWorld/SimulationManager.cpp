@@ -57,7 +57,6 @@ void SimulationManager::run()
 
 	Level level1;
 	level1.setLevelScene(this->sceneObj);
-	level1.setLevelPhysicsWorld(this->world);
 	level1.setLevelModel("resources/Terrain/citySceneOneModel.gltf");
 
 	
@@ -81,29 +80,6 @@ void SimulationManager::run()
 	
 	//npc testing no AI yet:
 	npcManager newNPC(this->sceneObj, this->world, animationShader, "resources/NPC/Zombie/zombieHolder.gltf", "swatZombie");
-
-	//Model* gunModel = ResourceManager::loadModel("resources/Assets/1911Edit.gltf", "test gun");
-
-	//transform newTransform;
-	//newTransform.position = glm::vec3(0.0f);
-	//newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	//newTransform.scale = glm::vec3(0.01f);
-
-	//std::string sceneGunID = this->sceneObj->addObjectToScene(gunModel, newTransform, lightShader);
-	/*ShapeGenerator newShaper;
-	shape2D newshape = newShaper.generateCharacter('k', 0.5, 1, glm::vec4(1.0, 1.0, 1.0, 0.7));
-	newshape.position = glm::vec3(0.1,0.1,0.0f);
-	newshape.scale = glm::vec3(0.1f,0.1f,1.0f);
-	this->sceneObj->add2DScreenShape(newshape);*/
-
-	//textBox newBox("continue", glm::vec2(0.0, 0.0), glm::vec2(0.3, 0.05),1.5,1.0, glm::vec4(1.0,1.0,1.0,0.3)); //16:1 ratio
-
-	//newBox.letters;
-
-	//for(unsigned int i = 0; i < newBox.letters.size(); i++)
-	//{
-	//	sceneObj->add2DScreenShape(newBox.letters[i]);
-	//}
 
 	this->state = debug; //game state overwrite for testing
 
@@ -203,12 +179,7 @@ void SimulationManager::run()
 		glm::vec3 playerPos = newPlayer.player->getPlayersTransform()->position;
 		this->sceneObj->setFocusPos(playerPos);
 
-		this->gameRenderer->addCube(playerPos + glm::vec3(0,1,0), newPlayer.player->getPlayersTransform()->orientation, glm::vec3(0.7, 1.6, 0.7), glm::vec4(1.0, 0.0, 0.0, 0.4));
-	
-
-		//this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(15, 1, 0), glm::vec4(1.0, 0.0, 0.0, 1.0));
-		//this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(0, 15, 0), glm::vec4(0.0, 1.0, 0.0, 1.0));
-		//this->gameRenderer->addLine(glm::vec3(0, 1, 0), glm::vec3(0, 1, 15), glm::vec4(0.0, 0.0, 1.0, 1.0));
+		this->world->debugOBBs(this->gameRenderer);
 
 		this->gameRenderer->drawScene(this->sceneObj);
 		

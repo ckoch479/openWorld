@@ -15,7 +15,6 @@
 #include "camera.h"
 #include "resourceManager.h"
 #include "animator.h"
-#include "PhysicsWorld.h"
 
 struct lineVert
 {
@@ -60,7 +59,7 @@ public:
 
 	void setScreenEffectShader(Shader* shader);
 
-	void renderPhysicsWorldDebugger(Shader* shader, PhysicsWorld* world, scene* scene);
+	//void renderPhysicsWorldDebugger(Shader* shader, PhysicsWorld* world, scene* scene);
 
 	void setDebugLines(bool setter);
 

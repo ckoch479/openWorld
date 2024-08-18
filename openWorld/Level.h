@@ -6,7 +6,7 @@
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
-#include "PhysicsWorld.h"
+//#include "PhysicsWorld.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 #include "Shader.h"
@@ -16,7 +16,7 @@ struct levelObject
 {
 	std::string id;
 	Model* model;
-	rigidBody* body;
+	//rigidBody* body;
 
 	ID worldModelID; //for rendering
 	ID instanceID;
@@ -105,8 +105,6 @@ public:
 
 	void setLevelScene(scene* scene);
 
-	void setLevelPhysicsWorld(PhysicsWorld* world);
-
 	float getHeightAtPosition(glm::vec3 position);
 
 	//--------------------------------------
@@ -114,12 +112,8 @@ private:
 
 	std::vector <levelObject> levelObjects; //vector of all objects in the level
 
-	//mRigidBody levelBody;//this is to store all colliders used by this level
-
 	Model* levelModel;
 	std::vector <Mesh*> levelMeshes; //makes it easier to calculate hitboxes and such for the level
-
-	unsigned int rigidBodyId;
 
 	std::map <std::string, LevelTrigger> levelTriggers;
 
@@ -127,7 +121,6 @@ private:
 
 	Shader* levelShader;
 	scene* levelScene;
-	PhysicsWorld* world;
 
 	void parseLevelFile(std::string filePath);
 	

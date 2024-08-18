@@ -163,6 +163,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="characterController.cpp" />
     <ClCompile Include="chunk.cpp" />
+    <ClCompile Include="collidable.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="debugger.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="npcEntity.cpp" />
     <ClCompile Include="npcManager.cpp" />
     <ClCompile Include="objAnimator.cpp" />
+    <ClCompile Include="orientedBoundingBox.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerEntity.cpp" />
@@ -190,6 +192,7 @@
     <ClCompile Include="playerManager.cpp" />
     <ClCompile Include="programTimer.cpp" />
     <ClCompile Include="rangedItem.cpp" />
+    <ClCompile Include="raycast.cpp" />
     <ClCompile Include="rayCastCallBack.cpp" />
     <ClCompile Include="reactPhysicsListener.cpp" />
     <ClCompile Include="renderable.cpp" />
@@ -221,6 +224,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="characterController.h" />
     <ClInclude Include="chunk.h" />
+    <ClInclude Include="collidable.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="debugger.h" />
     <ClInclude Include="Entity.h" />
@@ -242,6 +246,7 @@
     <ClInclude Include="npcEntity.h" />
     <ClInclude Include="npcManager.h" />
     <ClInclude Include="objAnimator.h" />
+    <ClInclude Include="orientedBoundingBox.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerActionDefinitions.h" />
@@ -251,6 +256,7 @@
     <ClInclude Include="playerManager.h" />
     <ClInclude Include="programTimer.h" />
     <ClInclude Include="rangedItem.h" />
+    <ClInclude Include="raycast.h" />
     <ClInclude Include="rayCastCallBack.h" />
     <ClInclude Include="reactPhysicsListener.h" />
     <ClInclude Include="renderable.h" />

@@ -42,7 +42,7 @@ void npcController::updateController(float dt, Level currentLevel)
 		npcTransform->position = glm::vec3(newPosition.x, npcTransform->position.y, newPosition.z) + glm::vec3(relativeFront.x, 0, relativeFront.z) * (float)4.0 * dt;
 	}
 
-	this->world->setBodyPosition(this->physicsId, npcTransform->position);
+
 	this->NPC->setNPCtransform(*npcTransform);
 	NPC->calculateRelTransform();
 
@@ -50,8 +50,6 @@ void npcController::updateController(float dt, Level currentLevel)
 
 void npcController::addNpcToWorld()
 {
-	this->physicsId = this->world->createCapsuleShape(this->NPC->getTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.7, 1.5, Kinematic);
-	//this->world->changeColliderOrigin(this->physicsId, glm::vec3(0.0, 1.5, 0.0));
-	this->world->lockBodyRotationAxis(this->physicsId, glm::vec3(1, 1, 1));
+
 }
 

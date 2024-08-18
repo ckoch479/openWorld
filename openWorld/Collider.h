@@ -31,70 +31,30 @@ private:
 
 };
 
-class orientedBoundingBox : public Collider
-{
-public:
-
-	orientedBoundingBox();
-
-	~orientedBoundingBox();
-
-	void createCollider(glm::mat4 transform, glm::vec3 position, float halfWidth, float halfHeight, float halftDepth);
-
-	void updateTransform(glm::mat4 transform);
-
-	glm::vec3 returnPosition();
-
-	std::vector <glm::vec3> returnVertices();
-
-private:
-
-	glm::mat4 transform;
-
-	float halfWidth;
-	float halfHeight;
-	float halfDepth;
-
-};
-
-class meshCollider : public Collider
-{
-public:
-
-	meshCollider();
-	~meshCollider();
-
-	void createCollider(std::vector <glm::vec3> vertices, std::vector <glm::vec3> vertexNormals);
-
-	glm::vec3 returnPosition();
-
-	std::vector <glm::vec3> returnVertices();
-
-private:
-
-	std::vector <glm::vec3> vertices;
-	std::vector <glm::vec3> vertexNormals;
-
-};
-
-class sphereCollider : public Collider
-{
-public:
-	sphereCollider();
-	~sphereCollider();
-
-	void createCollider(glm::vec3 position, float radius);
-
-	glm::vec3 returnPosition();
-
-	float returnRadius();
-
-	float radius;
-
-private:
-
-	
-
-};
+//class orientedBoundingBox : public Collider
+//{
+//public:
+//
+//	orientedBoundingBox();
+//
+//	~orientedBoundingBox();
+//
+//	void createCollider(glm::mat4 transform, glm::vec3 position, float halfWidth, float halfHeight, float halftDepth);
+//
+//	void updateTransform(glm::mat4 transform);
+//
+//	glm::vec3 returnPosition();
+//
+//	std::vector <glm::vec3> returnVertices();
+//
+//private:
+//
+//	glm::mat4 transform;
+//
+//	float halfWidth;
+//	float halfHeight;
+//	float halfDepth;
+//
+//};
 
 #endif

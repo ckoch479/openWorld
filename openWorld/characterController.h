@@ -10,6 +10,10 @@
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "includes/glm/gtx/quaternion.hpp"
+#include "Includes/glm/gtx/matrix_decompose.hpp"
 
 //class for handling player movement and world collisions, will also automatically update the player transforms in physics world and pass transform to player entity
 class characterController
@@ -78,5 +82,6 @@ private:
 
 	std::vector <unsigned int> OBBids;
 	std::unordered_map<unsigned int, int> boneOBBidMap;
+	unsigned int playerMainColliderID;
 };
 

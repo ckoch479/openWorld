@@ -33,6 +33,8 @@ public:
 
 	void playAnimation(std::string& animationName);
 
+	void playBlendAnimation(std::string animationA, std::string animationB, float blendFactor);
+
 	void update(float deltaTime);
 
 	void applyInverseKinematics(std::string& endEffectorName, glm::vec3& targetPosition);
@@ -49,17 +51,21 @@ public:
 
 	glm::mat4 getFinalBoneTransform(std::string boneName);
 
-	void calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransform, std::vector <glm::mat4>& transforms);
+	void calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransform);
 
 	void addModifier(std::string boneName, glm::quat rotation);
 
 private:
 
+	bool isblendAnimation = false; //will turn true if playBlendAnimation() is called
+	float blendFactor = 0.0f;
 	//data
 	Model* animModel; //model that uses these animations and animator
 	skeleton* animationSkeleton;
 
 	animation* activeAnimation;
+	animation* blendAnimation; //this should be a null pointer unless the blend animation method is called
+
 	animation* returnAnimation; //animation to return to after playing a non looping animation
 
 	std::unordered_map<std::string, animation*> animations;

@@ -70,9 +70,25 @@ void playerEntity::loadPlayerAnimations(std::string playerFilePath)
 	Path = "resources/player/animations/pistolIdle.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
 
+	//aiming blend tests
+
 	name = "aimingPistol";
-	Path = "resources/player/animations/pistolAim.gltf";
+	Path = "resources/player/animations/aimingMod/oneHandedIdleAiming.gltf";
 	this->playerAnimator->loadAnimation(name, Path, true);
+
+	name = "aimingPistolDown";
+	Path = "resources/player/animations/aimingMod/oneHandedIdleAimingDown.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
+
+	name = "aimingPistolUp";
+	Path = "resources/player/animations/aimingMod/oneHandedIdleAimingUp.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);
+
+	//---------------------------------------------------------------------------------------------
+
+	/*name = "aimingPistol";
+	Path = "resources/player/animations/pistolAim.gltf";
+	this->playerAnimator->loadAnimation(name, Path, true);*/
 
 	name = "walkPistolRaised";
 	Path = "resources/player/animations/pistolWalkForward.gltf";
@@ -567,9 +583,24 @@ void playerEntity::setIdleAnimation()
 				}
 				else
 				{
+					if(this->aimingUp == true)
+					{
+						this->playerAnimator->playBlendAnimation("aimingPistol", "aimingPistolUp", this->aimUpDownBlend);
+						//std::cout << "aiming pistol up!\n";
+						//std::cout << "blend factor: " << this->aimUpDownBlend << std::endl;
+					}
+					if (this->aimingDown == true)
+					{
+						this->playerAnimator->playBlendAnimation("aimingPistol", "aimingPistolDown", this->aimUpDownBlend);
+					}
+					else
+					{
+						this->activeAnim = "aimingPistol";
+						this->animationChange = true;
+					}
 					//one handed aiming animation
-					this->activeAnim = "aimingPistol";
-					this->animationChange = true;
+					
+					
 					//std::cout << "aiming pistol!\n";
 				}
 			}

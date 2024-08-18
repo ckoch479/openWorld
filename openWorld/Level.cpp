@@ -63,7 +63,7 @@ void Level::setLevelModel(std::string filepath)
 	//this->rigidBodyId = this->world->CreateRigidBody();
 	//createColliders();
 	generateHeightMapForPlayer();
-	this->rigidBodyId = world->createConcaveRigidbody(glm::vec3(0.0f), glm::quat(1.0, 0.0, 0.0, 0.0), this->vertices, this->indices);
+	//this->rigidBodyId = world->createConcaveRigidbody(glm::vec3(0.0f), glm::quat(1.0, 0.0, 0.0, 0.0), this->vertices, this->indices);
 	
 }
 
@@ -95,10 +95,7 @@ void Level::setLevelScene(scene* scene)
 	this->levelScene = scene;
 }
 
-void Level::setLevelPhysicsWorld(PhysicsWorld* world)
-{
-	this->world = world;
-}
+
 //------------------------------------------------------
 void Level::createColliders()
 {
@@ -113,7 +110,7 @@ void Level::createColliders()
 		}
 		mesh->indices;
 		
-			this->world->attachConcaveColliderToBody(convexMesh, glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), vertices, mesh->indices,this->rigidBodyId);
+			//this->world->attachConcaveColliderToBody(convexMesh, glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), vertices, mesh->indices,this->rigidBodyId);
 		
 	}
 

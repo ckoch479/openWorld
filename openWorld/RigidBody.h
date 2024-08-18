@@ -9,33 +9,21 @@
 
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
+
+enum bodyType
+{
+	STATIC, //doesnt move at all
+	DYNAMIC, //moves based on preset or programmed movements (user controlled)
+	KINEMATIC, //moves based on physics
+};
+
 class RigidBody
 {
 public:
 
-	RigidBody();
+	RigidBody(bodyType newType);
+
 	~RigidBody();
-
-	glm::vec3 position;
-	glm::vec3 velocity;
-	glm::vec3 acceleration;
-
-	glm::quat orientation;
-
-	glm::vec3 angularVelocity;
-	glm::vec3 angularAcceleration;
-	glm::vec3 momentOfInteria;
-
-	float mass;
-
-	float coefficientFriction;
-
-	//intertia tensor?
-	//force accumulator?
-	// torque accumulator?
-	//material properties (friction, restitution)
-	//sleeping
-	//user interface hooks I.E. player controlling movement
 
 	void createRigidBody(glm::vec3 newposition, glm::quat neworientation, float newmass);
 
@@ -45,7 +33,23 @@ public:
 
 	void sleepObject();
 
+	bodyType getBodyType();
+
 private:
+
+	glm::vec3 velocity;
+	glm::vec3 acceleration;
+
+	glm::vec3 position;
+	glm::quat orientation;
+
+	glm::vec3 angularVelocity;
+	glm::vec3 angularAcceleration;
+
+	float mass;
+	float coefficientFriction;
+
+	bodyType type;
 
 };
 

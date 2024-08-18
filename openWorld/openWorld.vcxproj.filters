@@ -264,6 +264,15 @@
     <ClCompile Include="melee.cpp">
       <Filter>Source Files\Entity\component</Filter>
     </ClCompile>
+    <ClCompile Include="collidable.cpp">
+      <Filter>Source Files\Entity\component</Filter>
+    </ClCompile>
+    <ClCompile Include="raycast.cpp">
+      <Filter>Source Files\PhysicsandDynamicsBody</Filter>
+    </ClCompile>
+    <ClCompile Include="orientedBoundingBox.cpp">
+      <Filter>Source Files\PhysicsandDynamicsBody</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -442,6 +451,15 @@
     </ClInclude>
     <ClInclude Include="melee.h">
       <Filter>Header Files\Entity\component</Filter>
+    </ClInclude>
+    <ClInclude Include="collidable.h">
+      <Filter>Header Files\Entity\component</Filter>
+    </ClInclude>
+    <ClInclude Include="raycast.h">
+      <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="orientedBoundingBox.h">
+      <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

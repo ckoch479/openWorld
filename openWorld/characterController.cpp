@@ -135,6 +135,8 @@ void characterController::updateInputs(windowManager* manager)
 			this->player->setPlayerAction(jumping);
 		}
 
+		
+
 	}
 
 	//idle was the issue because it checked only if w wasnt pressed and really should only work when nothing has been pressed
@@ -192,41 +194,162 @@ void characterController::updateInputs(windowManager* manager)
 		transform* newTransform = this->player->getPlayersTransform();
 		newTransform->orientation = glm::rotate(glm::toMat4(newTransform->orientation), xOffset * 0.01f, glm::vec3(0, 1, 0));
 		this->player->setPlayerTransform(*newTransform);
+
+		if (this->aiming == true)
+		{
+			this->pitch += yOffset * -0.001f; //not a good solution but sorta works need to tie it into the camera instead
+			if (this->pitch > 1.0f)
+			{
+				this->pitch = 1.0f;
+			}
+			if (this->pitch < 0.0f)
+			{
+				this->pitch = 0.0f;
+			}
+			
+			this->player->aimUpDownBlend = this->pitch;// *0.1;
+			this->player->aimingUp = true;
+		
+		
+		}
 	}
+
+	
 
 }
 
 
 void characterController::addPlayerToWorld()
 {
-	this->physicsId = this->world->createCapsuleShape(this->player->getPlayersTransform()->position, glm::quat(1.0, 0.0, 0.0, 0.0f), 50, 0.7, 1.3, Kinematic);
-	this->world->changeColliderOrigin(this->physicsId, glm::vec3(0.0, 1.5, 0.0));
-	this->world->lockBodyRotationAxis(this->physicsId, glm::vec3(1, 1, 1));
-
-	/*std::vector <Bone*> playerSkeleton = this->player->getBones();
-	for(int i = 0 ; i < playerSkeleton.size(); i++)
+	this->playerMainColliderID = this->world->createOBB(glm::vec3(0.6, 1.7, 0.6));
+	this->world->updateOBBtransform(this->player->getPlayersTransform()->position, this->player->getPlayersTransform()->orientation, this->playerMainColliderID);
+	std::vector <Bone*> playerBones = this->player->getBones();
+	//create obb of based on the players bones below
+	for(int i = 0; i < playerBones.size(); i++)
 	{
-		unsigned int obbID = this->world->createOBB(glm::vec3(0.0f), glm::quat(1.0, 0.0, 0.0, 0.0), glm::vec3(0.2, 0.2, 0.2));
-		this->OBBids.push_back(obbID);
-		this->boneOBBidMap[obbID] = playerSkeleton[i]->getId();
-	}*/
+		Bone* currentBone = playerBones[i];
+		std::string boneName = currentBone->getName();
+		
+		//std::cout << "bone name: " << boneName << std::endl;
 
+		if (boneName == "mixamorig:LeftHandThumb1"  || boneName == "mixamorig:LeftHandThumb2" || boneName == "mixamorig:LeftHandThumb3" || boneName == "mixamorig:LeftHandThumb4")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:LeftHandIndex1" || boneName == "mixamorig:LeftHandIndex2" || boneName == "mixamorig:LeftHandIndex3" || boneName == "mixamorig:LeftHandIndex4")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:LeftHandMiddle1" || boneName == "mixamorig:LeftHandMiddle2" || boneName == "mixamorig:LeftHandMiddle3" || boneName == "mixamorig:LeftHandMiddle4")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:LeftHandRing1" || boneName == "mixamorig:LeftHandRing2" || boneName == "mixamorig:LeftHandRing3" || boneName == "mixamorig:LeftHandRing4")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:LeftHandPinky1" || boneName == "mixamorig:LeftHandPinky2" || boneName == "mixamorig:LeftHandPinky3" || boneName == "mixamorig:LeftHandPinky4")
+		{
+			continue;
+		}
+		
+		if (boneName == "mixamorig:RightHandThumb1" || boneName == "mixamorig:RightHandThumb2" || boneName == "mixamorig:RightHandThumb3"    || boneName == "mixamorig:RightHandThumb4")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:RightHandIndex1" || boneName == "mixamorig:RightHandIndex2" || boneName == "mixamorig:RightHandIndex3"    || boneName == "mixamorig:RightHandIndex4")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:RightHandMiddle1" || boneName == "mixamorig:RightHandMiddle2" || boneName == "mixamorig:RightHandMiddle3" || boneName == "mixamorig:RightHandMiddle4")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:RightHandRing1" || boneName == "mixamorig:RightHandRing2" || boneName == "mixamorig:RightHandRing3"		 || boneName == "mixamorig:RightHandRing4")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:RightHandPinky1" || boneName == "mixamorig:RightHandPinky2"  || boneName == "mixamorig:RightHandPinky3"   || boneName == "mixamorig:RightHandPinky4")
+		{
+			continue;
+		}
+
+		if (boneName == "rightSocket" || boneName == "leftSocket" || boneName == "mixamorig:LeftToe_End" || boneName == "mixamorig:RightToe_End")
+		{
+			continue;
+		}
+		if (boneName == "mixamorig:RightArm" || boneName == "mixamorig:RightForeArm" || boneName == "mixamorig:LeftArm" || boneName == "mixamorig:LeftForeArm")
+		{
+			unsigned int OBBID = this->world->createOBB(glm::vec3(0.1, 0.3, 0.1));
+			this->OBBids.push_back(OBBID);
+			this->boneOBBidMap[OBBID] = currentBone->getId();
+			continue;
+		}
+	
+		if (boneName == "mixamorig:Hips" || boneName == "mixamorig:Spine" || boneName == "mixamorig:Spine1" || boneName == "mixamorig:Spine2")
+		{
+			unsigned int OBBID = this->world->createOBB(glm::vec3(0.3, 0.4, 0.1));
+			this->OBBids.push_back(OBBID);
+			this->boneOBBidMap[OBBID] = currentBone->getId();
+			continue;
+		}
+
+		if (boneName == "mixamorig:RightHand" || boneName == "mixamorig:LeftHand" || boneName == "mixamorig:HeadTop_End")
+		{
+			unsigned int OBBID = this->world->createOBB(glm::vec3(0.1, 0.1, 0.1));
+			this->OBBids.push_back(OBBID);
+			this->boneOBBidMap[OBBID] = currentBone->getId();
+			continue;
+		}
+
+		if (boneName == "mixamorig:LeftUpLeg" || boneName == "mixamorig:LeftLeg" || boneName == "mixamorig:RightUpLeg" || boneName == "mixamorig:RightLeg")
+		{
+			unsigned int OBBID = this->world->createOBB(glm::vec3(0.15, 0.35, 0.15));
+			this->OBBids.push_back(OBBID);
+			this->boneOBBidMap[OBBID] = currentBone->getId();
+			continue;
+		}
+
+		unsigned int OBBID = this->world->createOBB(glm::vec3(0.2,0.2,0.2));
+		this->OBBids.push_back(OBBID);
+		this->boneOBBidMap[OBBID] = currentBone->getId();
+	}
 }
 
 void characterController::updateOBBs()
 {
-	//for(unsigned int i = 0; i < this->OBBids.size(); i++)
-	//{
-		//orientedBoundingBox* currentBox = &this->world->getBoundingBox(OBBids[i]);
-		//int boneId = boneOBBidMap[OBBids[i]];
-		//Bone* currentBone = this->player->getPlayerModel()->skeleton->getBone(boneId);
+	//update large player collider
+	this->world->updateOBBtransform(this->player->getPlayersTransform()->position + glm::vec3(0,0.85,0), this->player->getPlayersTransform()->orientation, this->playerMainColliderID);
+
+	objAnimator* playerAnimator = this->player->getPlayerAnimator();
+
+	transform playerTransform = *this->player->getPlayersTransform();
+	glm::mat4 playerMat(1.0f); //create player model matrix (model space to world space)
+	playerMat = glm::translate(playerMat, playerTransform.position);
+	playerMat = playerMat * glm::toMat4(playerTransform.orientation);
+	playerMat = glm::scale(playerMat, playerTransform.scale);
+	
+	for(int i = 0; i < this->OBBids.size(); i++)
+	{
+		int boneId = this->boneOBBidMap[OBBids[i]];
+		Bone* currentBone = this->player->getPlayerModel()->skeleton->getBone(boneId);
 		
-		//std::string boneName;
-		//glm::mat4 boneTransform = this->player->getPlayerAnimator()->getFinalBoneTransform(currentBone->getName());
+		glm::mat4 boneTransform(1.0f);
+		boneTransform = playerAnimator->getFinalBoneTransform(currentBone->getName());
+		boneTransform = boneTransform * glm::inverse(currentBone->getOffsetMat());
 
-		//need to get the player transform then the players bone transform for this bone
-	//}
+		glm::mat4 handMat(1.0f);
+		handMat = playerMat * boneTransform; 
+		
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::vec3 position;
+		glm::quat orientation;
+		glm::vec3 scale;
+		glm::decompose(handMat, scale, orientation, position, skew, perspective); //decompose mat4
 
+		this->world->updateOBBtransform(position, orientation, OBBids[i]);
+	}
 }
 
 
@@ -323,7 +446,6 @@ void characterController::updateController(float dt, Level currentLevel)
 	} 
 
 	//update transforms
-	this->world->setBodyPosition(this->physicsId, playerTransform->position);
 	this->player->setPlayerTransform(*playerTransform);
 	player->calculateRelTransform();
 
@@ -351,5 +473,7 @@ void characterController::updateController(float dt, Level currentLevel)
 		this->playerCamera->ProcessKeyboard(BACKWARD, dt);
 		cameraBackWard = false;
 	}
+
+	updateOBBs();
 	
 }

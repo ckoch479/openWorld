@@ -16,7 +16,7 @@ public:
 	~Entity();
 
 	//update will update the entity state (could be rendering, animation, simulation, health, ect)
-	void update();
+	virtual void update(float dt) {};
 
 private:
 
