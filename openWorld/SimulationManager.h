@@ -28,6 +28,7 @@
 #include "guiManager.h"
 
 #include "debugger.h"
+#include "worldObjectManager.h"
 
 //#include "programTimer.h"
 
@@ -82,6 +83,7 @@ private:
 	PhysicsWorld* world;
 	windowManager* WindowManager;
 	debugger* Debug;
+	worldObjectManager* worldManager;
 
 
 	//InputManager* inputs;

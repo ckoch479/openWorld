@@ -13,21 +13,16 @@ class Collider //default collider is an AABB
 {
 public:
 
-	Collider();
-	~Collider();
+	Collider() {};
+	~Collider() {};
 
-	virtual void createCollider(glm::vec3 newPosition, float halfWidth, float halfHeight, float halfDepth);
+	virtual glm::vec3 returnPosition() { return glm::vec3(0.0f); };
 
-	virtual glm::vec3 returnPosition();
+	virtual glm::quat returnOrientation() { return glm::quat(1.0, 0.0, 0.0, 0.0); };
 
-	virtual std::vector <glm::vec3> returnVertices();
-	
-	glm::vec3 position;
+	virtual std::vector <glm::vec3> returnPoints() { return std::vector <glm::vec3> {glm::vec3(0.0f)}; }; //for OBB returns it's vertices, for raycast returns point A and point B
 private:
 
-	float halfWidth;
-	float halfHeight;
-	float halfDepth;
 
 };
 

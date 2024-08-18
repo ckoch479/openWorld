@@ -15,8 +15,18 @@
 #include "orientedBoundingBox.h"
 #include "raycast.h"
 
+#include "Collider.h"
+
 #ifndef PHYSICSWORLD_H
 #define PHYSICSWORLD_H
+
+struct collisionData
+{
+	Collider* collA;
+	Collider* collB;
+	std::vector <glm::vec3> contactPoints;
+	glm::vec3 contactNormal;
+};
 
 class PhysicsWorld
 {
@@ -31,9 +41,15 @@ public:
 
 	void debugRigidBodies(renderer* gameRenderer);
 
-	unsigned int createRigidBody();
+	unsigned int createRigidBody(glm::vec3* newposition, glm::quat* neworientation, float newmass, bodyType newType);
 
-	void updateRigidBodyPosition(glm::vec3 newPos, glm::quat newOrient, unsigned int rigidBodyId);
+	void updateRigidBodyPosition(glm::vec3* newPos, glm::quat* newOrient, unsigned int rigidBodyId);
+
+	void attachOBBtoRigidBody(unsigned int colliderID, unsigned int rigidBodyId);
+
+	unsigned int attachOBBtoRigidBody(glm::vec3 halfExtents, unsigned int rigidBodyId);
+
+	void adjustOBBtoRigidBody(glm::vec3 pos, glm::quat orient, unsigned int colliderID, unsigned int rigidBodyId);
 
 	unsigned int createOBB(glm::vec3 halfExtents);
 
@@ -45,6 +61,14 @@ private:
 
 	void updateCollisions();
 
+	void solveCollisions();
+
+	//check collision between two oriented bounding boxes
+	void checkCollision(orientedBoundingBox* A, orientedBoundingBox* B);
+
+	//check collision between a ray cast and an oriented bounding box
+	void checkCollision(raycast* ray, orientedBoundingBox* box);
+
 	unsigned int physicsWorldObjects = 0; //total number of objects in the world
 
 	int numRigidBodies = 0;
@@ -55,8 +79,13 @@ private:
 	std::map <unsigned int, RigidBody> rigidBodies;
 	std::unordered_map <unsigned int, orientedBoundingBox> OBBs;
 
+	std::vector <collisionData> collisions;
+
 	std::vector <unsigned int> OBBids; //for debugging
 	std::vector <unsigned int> rigidBodyids; //also for debugging
+
+	//rays cast into the world
+	std::vector <raycast> worldRays; 
 	
 };
 #endif

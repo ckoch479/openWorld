@@ -11,19 +11,21 @@
 #include "Camera.h"
 #include "Level.h"
 
+#include "Entity.h"
+
 
 #ifndef PLAYERMANAGER_H
 #define PLAYERMANAGER_H
 
 //this class is used to manage all of the players components such as the players inventory manager, health manager, entity class for rendering and ect
 
-class playerManager
+class playerManager : public Entity
 {
 public:
-	playerManager(scene* newScene, PhysicsWorld* newWorld, windowManager* newManager,Shader* playerShader, Shader* itemShader, std::string modelFilePath, Camera* newCamera);
+	playerManager(scene* newScene, PhysicsWorld* newWorld, windowManager* newManager, Shader* playerShader, Shader* itemShader, std::string modelFilePath, Camera* newCamera, Level* currentLevel);
 	~playerManager();
 
-	void updateManager(float dt, Level* currentLevel);
+	void update(float dt) override;
 
 	void testItemSlots(std::shared_ptr<item> newItem);
 
@@ -31,7 +33,6 @@ public:
 
 private:
 
-	
 	characterController* controller;
 	PlayerInventoryManager* inventoryManager;
 
@@ -44,6 +45,7 @@ private:
 	Camera* playerCamera;
 	PhysicsWorld* currentWorld;
 	windowManager* currentManager;
+	Level* currentLevel;
 
 	bool testSignal = false;
 

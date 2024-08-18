@@ -8,113 +8,42 @@
 #include "Includes/glm/gtc/type_ptr.hpp"
 #include "Includes/glm/gtc/quaternion.hpp"
 
-#include "ResourceManager.h"
-#include "Collider.h"
-#include "RigidBody.h"
-#include "physicsWorld.h"
+#include "Entity.h"
 
-#include "Scene.h"
+#include "ResourceManager.h"
+#include "objAnimator.h"
+
+#include "playerActions.h"
+#include "Model.h"
+#include "skeleton.h"
+
 
 #ifndef PLAYER_H
 #define PLAYER_H
 
-enum playerRelativePosition
-{
-PlayerFront,
-PlayerLeft,
-PlayerUp,
-PlayerRight,
-PlayerBack
-};
-
-class player
+class player : public Entity
 {
 public:
+
 	player();
 	~player();
 
-	glm::vec3 GetCurrentPosition();
-
-	float GetRotationAngle();
-
-	void LoadPlayerModel(const std::string filepath, std::string playername, scene* scene, PhysicsWorld* world, Shader& shader);
-
-	void AddAnimationtoPlayer(animation* animation, std::string name);
-
-	void AddAnimationtoPlayer(std::string filepath, std::string name); 
-
-	std::string getCurrentAnimation();
-
-	void setCurrentAnimation(std::string animationName); //can be used to reference the animation either by the resource manager or the scene
-
-	void setPosition(glm::vec3 position); //if you need to set the character position manually
-
-	void setRotationAngle(float angle); 
-
-	void setRelativePosition(playerRelativePosition relativePosition, float deltaTime);
-
-	void setPlayerFront(glm::vec3 front);
-
-	void setMovementSpeed(float speed);
-
-	void setPlayerYaw(float yaw);
-
-	void renderPlayer(float dt, scene* scene, PhysicsWorld* world);
-
-	glm::vec3 getPlayerFront();
-	
-	glm::vec3 getPlayerRight();
-
-	glm::vec3 getPlayerUp();
+	void update(float dt);
 
 private:
 
-	void calculateVectors();
+	playerActions currentAction;
 
-	void setActiveAnimation(std::string animationName);
+	Model* playerModel; //eventually will be replaced by a vector or array of models for each individual part
+	skeleton* playerSkeleton;
 
-	glm::vec3 position = glm::vec3(0, 10, 0);
-	glm::vec3 rotationAxis = glm::vec3(0,1,0);
-	float rotationAngle = 0;
-	glm::vec3 scale = glm::vec3(1.0f);
+	//these variables are stored in the Entity class under protected but are placed here for clarity (mainly for me because im sorta dumb)
+	glm::vec3* position;
+	glm::quat* orientation;
+	glm::vec3* scale;
 
-	glm::vec3 playerFront = glm::vec3(0,0,1);
-	glm::vec3 playerRight = glm::vec3(1,0,0);
-	glm::vec3 playerUp = glm::vec3(0,1,0);
-
-	float yaw = 0;
-	float pitch = 1;
-
-	float movementSpeed;
+	std::string* name;
 	
-
-	std::vector <std::string> SavedAnimations;
-	std::vector <animation*> Animations;
-	std::string playerName;
-
-	Model* playerModel;
-
-	animation* currentAnimation;
-	std::string currentAnimationName;
-
-	std::map <std::string, animation*> animationMap;
-
-	ID sceneModelID;
-	ID sceneTransformID;
-	ID sceneObjectID;
-	ID rigidBodyID;
-	ID physicsWorldObjectID;
-
-	std::vector <ID> animationIDs;
-	std::map <std::string, ID> animationIDmap;
-
-
-	//utility
-	scene* scenePtr;
-	Shader* shaderPtr;
-	PhysicsWorld* worldPtr;
-
-
 };
 
 #endif // !PLAYER_H

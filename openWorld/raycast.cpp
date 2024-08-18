@@ -17,12 +17,12 @@ void raycast::addCollision(orientedBoundingBox* colliderBox)
 
 orientedBoundingBox* raycast::returnFirstCollision()
 {
-
+	return nullptr;
 }
 
 std::vector <orientedBoundingBox*> raycast::returnAllCollisions()
 {
-
+	return this->collidedBoxes;
 }
 
 bool raycast::checkCollision(orientedBoundingBox* box)

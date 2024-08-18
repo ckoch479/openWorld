@@ -10,46 +10,46 @@
 #include <map>
 #include <unordered_map>
 
-struct Vertex
-{
-	glm::vec3 vertexPosition;
-	glm::vec3 normal;
-	glm::vec2 textureCoordinates;
+//struct Vertex
+//{
+//	glm::vec3 vertexPosition;
+//	glm::vec3 normal;
+//	glm::vec2 textureCoordinates;
+//
+//	glm::vec3 tangent;
+//	glm::vec3 bitTangent;
+//
+//	int boneIDs[4];
+//	float boneWeights[4];
+//};
 
-	glm::vec3 tangent;
-	glm::vec3 bitTangent;
+//struct textureData //named such to differentiate between just the data and an actual texture object
+//{
+//	std::string filePath;	//path to load the texture from
+//	std::string uniqueName; //for resource manager, textures arent attached fully to mesh allows reused textures to only be loaded once
+//};
+//
+//struct Material
+//{
+//	Texture* diffuse0;
+//	textureData diffuseData;
+//	Texture* specular0;
+//	textureData specularData;
+//	Texture* normalMap0;
+//	textureData normalData;
+//
+//	float shininess;
+//};
 
-	int boneIDs[4];
-	float boneWeights[4];
-};
-
-struct textureData //named such to differentiate between just the data and an actual texture object
-{
-	std::string filePath;	//path to load the texture from
-	std::string uniqueName; //for resource manager, textures arent attached fully to mesh allows reused textures to only be loaded once
-};
-
-struct Material
-{
-	Texture* diffuse0;
-	textureData diffuseData;
-	Texture* specular0;
-	textureData specularData;
-	Texture* normalMap0;
-	textureData normalData;
-
-	float shininess;
-};
-
-struct Mesh
-{
-	std::vector <Vertex> vertices;
-	std::vector <unsigned int> indices;
-	Material material; //will replace textureData vector
-	unsigned int VAO;//for rendering
-	unsigned int VBO;
-	unsigned int EBO;
-};
+//struct Mesh
+//{
+//	std::vector <Vertex> vertices;
+//	std::vector <unsigned int> indices;
+//	Material material; //will replace textureData vector
+//	unsigned int VAO;//for rendering
+//	unsigned int VBO;
+//	unsigned int EBO;
+//};
 
 //struct Bone
 //{
@@ -58,14 +58,14 @@ struct Mesh
 //	std::string name;
 //};
 
-struct Model
-{
-	std::vector <Mesh> meshes;
-	skeleton* skeleton;
-	std::string name;
-	std::vector <glm::mat4> animationMatrices; //temporary im thinking
-	
-};
+//struct Model
+//{
+//	std::vector <Mesh> meshes;
+//	skeleton* skeleton;
+//	std::string name;
+//	std::vector <glm::mat4> animationMatrices; //temporary im thinking
+//	
+//};
 
 struct pointLight
 {

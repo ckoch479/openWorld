@@ -28,6 +28,8 @@ void SimulationManager::Init()
 	this->world = new PhysicsWorld;
 	dString = "physicsWorld initialized!";
 	this->Debug->addEventData(dString);
+
+	this->worldManager = new worldObjectManager;
 	
 
 	this->state = active;
@@ -58,9 +60,6 @@ void SimulationManager::run()
 	Level level1;
 	level1.setLevelScene(this->sceneObj);
 	level1.setLevelModel("resources/Terrain/citySceneOneModel.gltf");
-
-	
-
 	level1.renderMap(lightShader);
 
 	Camera newCamera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -75,8 +74,11 @@ void SimulationManager::run()
 	unsigned int gunId = newManager.createHandGun("resources/Assets/1911Edit.gltf","handGun",10,10);
 
 	//player manager:
-	playerManager newPlayer(this->sceneObj,this->world,this->WindowManager,animationShader, lightShader,"resources/player/playerEdit.gltf",&newCamera);
+	playerManager newPlayer(this->sceneObj,this->world,this->WindowManager,animationShader, lightShader,"resources/player/playerEdit.gltf",&newCamera, &level1);
 	newPlayer.testItemSlots(newManager.getItemPTR(gunId));
+
+	Entity* playerEntity = &newPlayer;
+	this->worldManager->addWorldEntity("player", playerEntity);
 	
 	//npc testing no AI yet:
 	npcManager newNPC(this->sceneObj, this->world, animationShader, "resources/NPC/Zombie/zombieHolder.gltf", "swatZombie");
@@ -101,7 +103,7 @@ void SimulationManager::run()
 			this->WindowManager->disableCursor();
 		}
 
-		newPlayer.updateManager(deltaTime, &level1);
+		//newPlayer.updateManager(deltaTime);
 		newNPC.updateManager(deltaTime, &level1);
 
 		//update physics
@@ -162,7 +164,7 @@ void SimulationManager::run()
 		double x = 0, y = 0;
 		this->WindowManager->getMousePosition(&x, &y);
 
-		newPlayer.updateManager(deltaTime, &level1);
+		//newPlayer.updateManager(deltaTime);
 		newNPC.updateManager(deltaTime, &level1);
 
 		//update physics
@@ -182,6 +184,8 @@ void SimulationManager::run()
 		this->world->debugOBBs(this->gameRenderer);
 
 		this->gameRenderer->drawScene(this->sceneObj);
+
+		this->worldManager->update(deltaTime);
 		
 		//shutdown key check (esc)----------------------------
 		if (this->WindowManager->checkKey(256))

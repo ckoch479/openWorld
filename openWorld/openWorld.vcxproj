@@ -211,6 +211,7 @@
     <ClCompile Include="wieldable.cpp" />
     <ClCompile Include="windowManager.cpp" />
     <ClCompile Include="worldMap.cpp" />
+    <ClCompile Include="worldObjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animated.h" />
@@ -240,7 +241,10 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="lightEmitter.h" />
     <ClInclude Include="lookup_table.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="melee.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="npcActions.h" />
     <ClInclude Include="npcController.h" />
     <ClInclude Include="npcEntity.h" />
@@ -250,6 +254,7 @@
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerActionDefinitions.h" />
+    <ClInclude Include="playerActions.h" />
     <ClInclude Include="playerEntity.h" />
     <ClInclude Include="playerHandSlot.h" />
     <ClInclude Include="PlayerInventoryManager.h" />
@@ -272,9 +277,11 @@
     <ClInclude Include="testingBoxMeshFunctions.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="thirdPersonCamera.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="wieldable.h" />
     <ClInclude Include="windowManager.h" />
     <ClInclude Include="worldMap.h" />
+    <ClInclude Include="worldObjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\3.3.shader.fs" />

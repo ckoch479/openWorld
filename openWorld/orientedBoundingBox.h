@@ -7,10 +7,12 @@
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
+#include "Collider.h"
+
 
 #ifndef ORIENTEDBOUNDINGBOX_H
 #define ORIENTEDBOUNDINGBOX_H
-class orientedBoundingBox
+class orientedBoundingBox : public Collider
 {
 	public:
 
@@ -23,9 +25,9 @@ class orientedBoundingBox
 
 	void setHalfExtents(glm::vec3 newExtents);
 
-	glm::vec3 returnPosition();
+	//glm::vec3 returnPosition();
 
-	glm::quat returnOrientation();
+	//glm::quat returnOrientation();
 
 	std::vector <glm::vec3> returnVertices();
 
@@ -33,6 +35,12 @@ class orientedBoundingBox
 
 	//check if another OBB and this one are colliding, if not returns false
 	bool checkCollision(orientedBoundingBox* other);
+
+	glm::vec3 returnPosition() override;
+
+	glm::quat returnOrientation() override;
+
+	std::vector <glm::vec3> returnPoints() override { return this->returnVertices(); };
 
 private:
 

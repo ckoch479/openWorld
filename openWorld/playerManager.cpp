@@ -1,6 +1,6 @@
 #include "playerManager.h"
 
-playerManager::playerManager(scene* newScene, PhysicsWorld* newWorld, windowManager* newManager, Shader* playerShader,Shader* itemShader, std::string modelFilePath, Camera* newCamera)
+playerManager::playerManager(scene* newScene, PhysicsWorld* newWorld, windowManager* newManager, Shader* playerShader,Shader* itemShader, std::string modelFilePath, Camera* newCamera, Level* currentLevel)
 {
 	this->player = new playerEntity(modelFilePath);
 	this->currentScene = newScene;
@@ -13,6 +13,7 @@ playerManager::playerManager(scene* newScene, PhysicsWorld* newWorld, windowMana
 	this->inventoryManager = new PlayerInventoryManager(this->player,this->currentScene,this->itemShader);
 
 	player->addPlayerToScene(this->currentScene, this->playerShader);
+	this->currentLevel = currentLevel;
 
 }
 
@@ -21,7 +22,7 @@ playerManager::~playerManager()
 
 }
 
-void playerManager::updateManager(float dt, Level* currentLevel)
+void playerManager::update(float dt)
 {
 	this->player->updateEntity();
 	
