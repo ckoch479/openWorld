@@ -114,9 +114,6 @@
     <ClCompile Include="lookup_table.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\RenderingandSceneBody</Filter>
     </ClCompile>
@@ -273,15 +270,33 @@
     <ClCompile Include="orientedBoundingBox.cpp">
       <Filter>Source Files\PhysicsandDynamicsBody</Filter>
     </ClCompile>
+    <ClCompile Include="playerRenderer.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerCollider.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerAnimationController.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerMotionController.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files\loadingUtilites</Filter>
+    </ClCompile>
+    <ClCompile Include="worldObjectManager.cpp">
+      <Filter>Source Files\gameWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="playerCameraController.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lookup_table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsWorld.h">
@@ -460,6 +475,42 @@
     </ClInclude>
     <ClInclude Include="orientedBoundingBox.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="playerActions.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="playerRenderer.h">
+      <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="playerCollider.h">
+      <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="playerMotionController.h">
+      <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="playerAnimationController.h">
+      <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files\loadingUtilities</Filter>
+    </ClInclude>
+    <ClInclude Include="worldObjectManager.h">
+      <Filter>Header Files\gameWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="playerCameraController.h">
+      <Filter>Header Files\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

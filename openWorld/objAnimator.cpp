@@ -55,7 +55,7 @@ void objAnimator::loadAnimation(std::string& animationName, std::string& animati
 }
 
 //repeating animation
-void objAnimator::playAnimation(std::string& animationName)
+void objAnimator::playAnimation(std::string animationName)
 {	//its ugly but it works :D
 	//still need to fix when two animations are attempting to play at once (decide who wins and is shown)
 	if(this->activeAnimation != animations[animationName])
@@ -661,6 +661,11 @@ void objAnimator::addModifier(std::string boneName, glm::quat rotation)
 	newModifier.boneName = boneName;
 
 	this->modifiers.push_back(newModifier);
+}
+
+void objAnimator::useBlendAnimations(bool setter)
+{
+	this->isblendAnimation = setter;
 }
 
 //final matrices are in local space, initial transforms are in bone space, target point is usually going to be in world space

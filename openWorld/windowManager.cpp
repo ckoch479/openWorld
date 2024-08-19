@@ -108,6 +108,11 @@ std::vector <int> windowManager::getKeyVector()
 	return this->keyboardInputString;
 }
 
+std::unordered_map<int, bool> windowManager::getKeyStates()
+{
+	return this->keys;
+}
+
 void windowManager::enableCursor()
 {
 	glfwSetInputMode(this->currentWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

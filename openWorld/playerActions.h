@@ -3,13 +3,41 @@
 enum playerActions
 {
 	idle,
-	walking,
-	turning,
-	jogging,
-	sprinting,
-	jumping,
+
+	walkForward,
+	walkLeft,
+	walkRight,
+	walkBack,
+
+	turnLeft,
+	turnRight,
+
+	jogForward,
+	jogLeft,
+	jogRight,
+	jogBack,
+
+	sprintForward,
+	sprintLeft,
+	sprintRight,
+	
+	jumpForward,
+	jumpLeft,
+	jumpRight,
+	jumpBack,
+
+	aimPistol,
+
+	aimPistolUp,
+	aimPistolDown,
+	aimPistolRight,
+	aimPistolLeft,
+
 	climbing,
+
 	evading,
+	
 	falling,
+	
 	dying,
 };

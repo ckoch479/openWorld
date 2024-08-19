@@ -11,8 +11,14 @@
 #include "Entity.h"
 
 #include "ResourceManager.h"
-#include "objAnimator.h"
 
+#include "playerRenderer.h"
+#include "characterController.h"
+#include "objAnimator.h"
+#include "playerCollider.h"
+#include "playerAnimationController.h"
+#include "playerMotionController.h"
+#include "playerCameraController.h"
 #include "playerActions.h"
 #include "Model.h"
 #include "skeleton.h"
@@ -32,7 +38,8 @@ public:
 
 private:
 
-	playerActions currentAction;
+	playerActions currentAction; //set by character controller
+	std::string currentAnimation; //set by animation controller
 
 	Model* playerModel; //eventually will be replaced by a vector or array of models for each individual part
 	skeleton* playerSkeleton;
@@ -43,6 +50,19 @@ private:
 	glm::vec3* scale;
 
 	std::string* name;
+
+	// player classes
+	// playerHealthManager
+	// playerCameraController
+	// 
+
+	objAnimator* playerAnimator; //needs player Model in constructor and Dt during updates
+	playerRenderer* renderer; //needs shader, sceneObj, and model in constructor, also needs transform and animation matrices
+	characterController* playerController; //needs window manager passed into the constructor, returns player action during update
+	playerCollider* collider; //needs player skeleton, physics world, boneTransforms, and maybe more
+	playerAnimationController* animationController; //needs playerAnimator and playerAction(currentAction) in constructor and playerAction during state changes
+	playerMotionController* motionController; //needs player action, physicsWorld, and colliders
+	playerCameraController* cameraController; //needs inputs, scene, and to either create or be given a camera object
 	
 };
 

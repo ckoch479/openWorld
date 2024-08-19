@@ -9,6 +9,8 @@
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
 
+#include "Model.h"
+
 #include "Bone.h"
 #include "skeleton.h"
 
@@ -31,7 +33,7 @@ public:
 
 	void loadAnimation(std::string& animationName, std::string& animationFilePath, bool loopingAnimation);
 
-	void playAnimation(std::string& animationName);
+	void playAnimation(std::string animationName);
 
 	void playBlendAnimation(std::string animationA, std::string animationB, float blendFactor);
 
@@ -54,6 +56,9 @@ public:
 	void calculateFKblend(AssimpNodeData* node, glm::mat4& parentTransform);
 
 	void addModifier(std::string boneName, glm::quat rotation);
+
+	//sets is blend animation variable
+	void useBlendAnimations(bool setter);
 
 private:
 

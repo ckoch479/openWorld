@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #ifndef WINDOWMANAGER_H
 #define WINDOWMANAGER_H
@@ -34,6 +35,8 @@ public:
 	//this returns the entire keyVector if the simulation manager wants it
 	std::vector <int> getKeyVector();
 
+	std::unordered_map<int, bool> getKeyStates();
+
 	void enableCursor();
 
 	void disableCursor();
@@ -57,7 +60,9 @@ private:
 	int screenHeight =  1080;
 
 	//a bool array of keys each index is the key name/number as defined by GLFW
-	bool keys[348];
+	//bool keys[348];
+
+	std::unordered_map<int, bool> keys;
 	
 	//for the current mouse cursor position, only useful if the cursor is not diabled
 	double cursorX; 
