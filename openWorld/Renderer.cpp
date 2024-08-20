@@ -375,7 +375,7 @@ void renderer::renderScene(scene* currentScene)
 		Model* model = data[i]->model;
 
 		shader->use();
-		shader->SetVector3f("viewPos", camera->Position);
+		shader->SetVector3f("viewPos", camera->getPosition());
 
 		setShaderMatrices(*data[i]->transf, *shader, camera);
 		addLightUniformsToShader(currentScene, shader);
@@ -487,7 +487,7 @@ void renderer::setShaderMatrices(transform transf, Shader& shader, Camera* camer
 	glm::mat4 view(1.0f);
 	glm::mat4 projection(1.0f);
 
-	projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(camera->getZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	shader.SetMatrix4("projection", projection);
 
 	view = camera->GetViewMatrix();
@@ -513,9 +513,9 @@ void renderer::setCommonShaderUniforms(Shader& shader, Camera* camera)
 	shader.use();
 	glm::mat4 view(1.0f);
 	glm::mat4 projection(1.0f);
-	shader.SetVector3f("viewPos", camera->Position);
+	shader.SetVector3f("viewPos", camera->getPosition());
 
-	projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(camera->getZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	shader.SetMatrix4("projection", projection);
 
 	view = camera->GetViewMatrix();
@@ -735,7 +735,7 @@ void renderer::drawCubes(Camera* camera)
 	glm::mat4 projection(1.0f);
 	glm::mat4 view(1.0f);
 
-	projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(camera->getZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	this->cubeShader->SetMatrix4("projection", projection);
 
 	view = camera->GetViewMatrix();
@@ -825,7 +825,7 @@ void renderer::drawLines(Camera* camera)
 	glm::mat4 projection(1.0f);
 	glm::mat4 view(1.0f);
 
-	projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(camera->getZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	this->lineDrawShader->SetMatrix4("projection", projection);
 
 	view = camera->GetViewMatrix();

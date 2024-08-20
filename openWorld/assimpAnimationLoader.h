@@ -18,6 +18,8 @@
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
 
+#include "Model.h"
+
 #include "assimpGLMConverter.h"
 
 

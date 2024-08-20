@@ -158,15 +158,15 @@ void playerEntity::savePlayerFile()
 
 }
 
-void playerEntity::setPlayerAction(playerActions action)
-{
-	if(this->currentAction != action)
-	{
-		this->currentAction = action;
-		this->actionChange = true;
-		updateEntity();
-	}
-}
+//void playerEntity::setPlayerAction(playerActions action)
+//{
+//	if(this->currentAction != action)
+//	{
+//		this->currentAction = action;
+//		this->actionChange = true;
+//		updateEntity();
+//	}
+//}
 
 //change player looks
 void playerEntity::setPlayerMeshes(playerParts part, Mesh* newMesh)
@@ -186,7 +186,7 @@ void playerEntity::updateEntity()
 	if (actionChange)
 	{
 		//update action parameters
-		updateActions();
+		//updateActions();
 		actionChange = false;
 	}
 
@@ -197,7 +197,7 @@ void playerEntity::updateEntity()
 		animationChange = false;
 	}
 
-	this->playerModel->animationMatrices = this->playerAnimator->getAnimationTransforms();
+	//this->playerModel->animationMatrices = this->playerAnimator->getAnimationTransforms();
 
 }
 
@@ -206,35 +206,35 @@ Model* playerEntity::getPlayerModel()
 	return this->playerModel;
 }
 
-void playerEntity::updateActions()
-{
-	if(this->currentAction == idle) //all idle animations
-	{
-		setIdleAnimation();
-	}
-
-	if (this->currentAction == walking) //all walking animations
-	{
-		setWalkingAnimation();
-	}
-	if(this->currentAction == jogging) //all jogging animations
-	{
-		setJoggingAnimation();
-	}
-	if(this->currentAction == turning) //turning animations
-	{
-		setTurningAnimation();
-	}
-	if(this->currentAction == sprinting) //sprinting animations
-	{
-		setSprintingAnimation();
-	}
-	if(this->currentAction == jumping)
-	{
-		setJumpingAnimation();
-	}
-
-}
+//void playerEntity::updateActions()
+//{
+//	if(this->currentAction == idle) //all idle animations
+//	{
+//		setIdleAnimation();
+//	}
+//
+//	if (this->currentAction == walking) //all walking animations
+//	{
+//		setWalkingAnimation();
+//	}
+//	if(this->currentAction == jogging) //all jogging animations
+//	{
+//		setJoggingAnimation();
+//	}
+//	if(this->currentAction == turning) //turning animations
+//	{
+//		setTurningAnimation();
+//	}
+//	if(this->currentAction == sprinting) //sprinting animations
+//	{
+//		setSprintingAnimation();
+//	}
+//	if(this->currentAction == jumping)
+//	{
+//		setJumpingAnimation();
+//	}
+//
+//}
 
 void playerEntity::addPlayerToScene(scene* scene, Shader* shader)
 {
@@ -263,10 +263,10 @@ relTransform* playerEntity::getPlayerRelativeTransform()
 	return &this->relativeTransf;
 }
 
-playerActions playerEntity::getPlayerAction()
-{
-	return this->currentAction;
-}
+//playerActions playerEntity::getPlayerAction()
+//{
+//	return this->currentAction;
+//}
 
 void playerEntity::calculateRelTransform()
 {
@@ -352,7 +352,7 @@ objAnimator* playerEntity::getPlayerAnimator()
 void playerEntity::setActionModifier(actionModifiers mod, bool setter)
 {
 	this->animationChange = true;
-	updateActions();
+	//updateActions();
 	switch(mod)
 	{
 	case(walkToggle):
@@ -363,9 +363,9 @@ void playerEntity::setActionModifier(actionModifiers mod, bool setter)
 		this->sprintToggled = setter;
 		break;
 
-	case(crouch):
+	/*case(crouch):
 		this->crouching = setter;
-		break;
+		break;*/
 
 	case(crawl):
 		this->crawling = setter;
@@ -421,9 +421,9 @@ bool playerEntity::getActionModifier(actionModifiers mod)
 		modif = this->sprintToggled;
 		break;
 
-	case(crouch):
+	/*case(crouch):
 		modif = this->crouching;
-		break;
+		break;*/
 
 	case(crawl):
 		modif = this->crawling;

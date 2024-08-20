@@ -12,17 +12,18 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Shader.h"
+#include "renderContext.h"
 
 #include "gameObjectManager.h"
-#include "thirdPersonCamera.h"
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
 #include "Level.h"
 
-#include "playerManager.h"
+#include "player.h"
 #include "npcManager.h"
+#include "renderContext.h"
 
 #include "ShapeGenerator.h"
 #include "guiManager.h"
@@ -74,9 +75,13 @@ public:
 
 	void setDeltaTime();
 
-	void playerInputTestFunction(playerEntity* player, windowManager* window);
+	//void playerInputTestFunction(playerEntity* player, windowManager* window);
+
+	
 
 private:
+
+	void loadAnimations();
 
 	scene* sceneObj;
 	renderer* gameRenderer;

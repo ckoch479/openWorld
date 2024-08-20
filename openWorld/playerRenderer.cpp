@@ -7,6 +7,13 @@ playerRenderer::playerRenderer(scene* sceneObj, Shader* playerShader, Model* pla
 	this->currentPlayerModel = playerModel;
 }
 
+playerRenderer::playerRenderer(renderContext* context, Model* playerModel)
+{
+	this->sceneObj = context->sceneObj;
+	this->playerShader = context->shader;
+	this->currentPlayerModel = playerModel;
+}
+
 playerRenderer::~playerRenderer()
 {
 

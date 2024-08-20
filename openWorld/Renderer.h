@@ -16,6 +16,10 @@
 #include "resourceManager.h"
 #include "animator.h"
 
+#include "Model.h"
+#include "Mesh.h"
+#include "Material.h"
+
 struct lineVert
 {
 	glm::vec3 pos;

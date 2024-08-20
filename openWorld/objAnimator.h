@@ -49,7 +49,7 @@ public:
 
 	void calculateFKTransforms(AssimpNodeData* node, glm::mat4& parentTransform);
 
-	std::vector <glm::mat4> getAnimationTransforms();
+	std::vector <glm::mat4>* getAnimationTransforms();
 
 	glm::mat4 getFinalBoneTransform(std::string boneName);
 

@@ -22,6 +22,8 @@
 #include "playerActions.h"
 #include "Model.h"
 #include "skeleton.h"
+#include "renderContext.h"
+#include "PhysicsWorld.h"
 
 
 #ifndef PLAYER_H
@@ -31,7 +33,8 @@ class player : public Entity
 {
 public:
 
-	player();
+	player(renderContext context, Model* newModel, windowManager* inputManager, PhysicsWorld* world);
+
 	~player();
 
 	void update(float dt);
@@ -39,15 +42,18 @@ public:
 private:
 
 	playerActions currentAction; //set by character controller
+	playerActions secondaryAction;
+
 	std::string currentAnimation; //set by animation controller
 
 	Model* playerModel; //eventually will be replaced by a vector or array of models for each individual part
 	skeleton* playerSkeleton;
+	renderContext renderData;
 
 	//these variables are stored in the Entity class under protected but are placed here for clarity (mainly for me because im sorta dumb)
-	glm::vec3* position;
-	glm::quat* orientation;
-	glm::vec3* scale;
+	glm::vec3* positionPtr;
+	glm::quat* orientationPtr;
+	glm::vec3* scalePtr;
 
 	std::string* name;
 

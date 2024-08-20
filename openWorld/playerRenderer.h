@@ -10,6 +10,7 @@
 #include "Model.h"
 #include "Scene.h"
 #include "Shader.h"
+#include "renderContext.h"
 
 #ifndef PLAYERRENDERER_H
 #define PLAYERRENDERER_H
@@ -17,6 +18,8 @@ class playerRenderer
 {
 public:
 	playerRenderer(scene* sceneObj, Shader* playerShader, Model* playerModel);
+	
+	playerRenderer(renderContext* context, Model* playerModel);
 
 	~playerRenderer();
 

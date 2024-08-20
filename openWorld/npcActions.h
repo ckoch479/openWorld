@@ -9,8 +9,8 @@ enum npcActions
 	shambleForward,
 	stumbleForward,
 
-	walkRight,
-	walkLeft,
+	//walkRight,
+	//walkLeft,
 
 	shambleLeft,
 	shambleRight,

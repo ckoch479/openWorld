@@ -137,6 +137,16 @@ void windowManager::getMousePosition(double* x, double* y)
 	*y = this->cursorY;
 }
 
+double windowManager::getMouseX()
+{
+	return this->cursorX;
+}
+
+double windowManager::getMouseY()
+{
+	return this->cursorY;
+}
+
 void windowManager::pollCursorPos()
 {
 	glfwGetCursorPos(this->currentWindow, &this->cursorX, &this->cursorY);

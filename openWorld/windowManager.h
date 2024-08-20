@@ -49,6 +49,10 @@ public:
 
 	void getScreenSize(int* width, int* height);
 
+	double getMouseX();
+
+	double getMouseY();
+
 	bool leftClick();
 	bool rightClick();
 	bool middleClick();

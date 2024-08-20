@@ -135,7 +135,7 @@ void npcEntity::updateEntity()
 		animationChange = false;
 	}
 
-	this->Model->animationMatrices = this->animator->getAnimationTransforms();
+	this->Model->animationMatrices = *this->animator->getAnimationTransforms();
 }
 
 void npcEntity::loadAnimations(std::string filePath)
@@ -216,7 +216,7 @@ void npcEntity::updateActions()
 		this->animationChange = true;
 		break;
 
-	case(walkRight):
+	/*case(walkRight):
 		this->activeAnim = "walkRight";
 		this->animationChange = true;
 		break;
@@ -224,7 +224,7 @@ void npcEntity::updateActions()
 	case(walkLeft):
 		this->activeAnim = "walkLeft";
 		this->animationChange = true;
-		break;
+		break;*/
 
 	case(shambleLeft):
 		this->activeAnim = "shambleLeft";

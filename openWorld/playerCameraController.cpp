@@ -1,5 +1,19 @@
 #include "playerCameraController.h"
 
+playerCameraController::playerCameraController(Camera* playerCamera, scene* sceneObj, windowManager* inputManager)
+{
+	this->playerCamera = playerCamera;
+	this->sceneObj = sceneObj;
+	this->inputManager = inputManager;
+}
+
+playerCameraController::playerCameraController(renderContext* context, windowManager* inputManager)
+{
+	this->playerCamera = context->camera;
+	this->sceneObj = context->sceneObj;
+	this->inputManager = inputManager;
+}
+
 playerCameraController::playerCameraController()
 {
 
@@ -10,7 +24,7 @@ playerCameraController::~playerCameraController()
 
 }
 
-void playerCameraController::updateController()
+void playerCameraController::updateController(float dt, glm::vec3 playerPos)
 {
 	/*if(inputManager->rightClick())
 		{
@@ -72,4 +86,25 @@ void playerCameraController::updateController()
 	//		this->cameraForward = true;
 	//	};
 	//}
+
+	this->targetPosition = playerPos;
+
+	float mouseX = inputManager->getMouseX() * dt;
+	float mouseY = inputManager->getMouseY() * dt;
+
+	yaw += mouseX * sensitivity;
+	pitch -= mouseY * sensitivity;
+	pitch = std::clamp(pitch, -30.0f,45.0f);
+	
+	glm::vec3 direction(1.0f);
+
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction = glm::normalize(direction);
+
+	glm::vec3 cameraPosition = targetPosition - direction * distanceFromTarget + offset;
+	this->playerCamera->setPosition(cameraPosition);
+	this->playerCamera->setTarget(this->targetPosition);
+	
 }

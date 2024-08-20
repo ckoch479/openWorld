@@ -21,6 +21,9 @@
 #include "renderingInfoDefinitions.h"
 #include "assimpGLMConverter.h"
 
+#include "Model.h"
+
+
 class assimpModelLoader
 {
 public:

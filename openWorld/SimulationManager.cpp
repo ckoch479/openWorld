@@ -36,6 +36,8 @@ void SimulationManager::Init()
 	this->subState = mainMenu;
 	dString = "gameState changed to active substate changed to mainMenu";
 	this->Debug->addEventData(dString);
+
+	loadAnimations();
 };
 
 void SimulationManager::shutDown()
@@ -73,9 +75,12 @@ void SimulationManager::run()
 	gameObjectManager newManager;
 	unsigned int gunId = newManager.createHandGun("resources/Assets/1911Edit.gltf","handGun",10,10);
 
-	//player manager:
-	playerManager newPlayer(this->sceneObj,this->world,this->WindowManager,animationShader, lightShader,"resources/player/playerEdit.gltf",&newCamera, &level1);
-	newPlayer.testItemSlots(newManager.getItemPTR(gunId));
+	//player data
+	renderContext playerContext(animationShader, this->sceneObj, &newCamera);
+
+	Model* playerModel = ResourceManager::getModel("playerModel");
+	//player
+	player newPlayer(playerContext, playerModel, this->WindowManager, this->world);
 
 	Entity* playerEntity = &newPlayer;
 	this->worldManager->addWorldEntity("player", playerEntity);
@@ -178,8 +183,9 @@ void SimulationManager::run()
 		//draw contents to actual game window
 		animator::updateAnimations(deltaTime);
 
-		glm::vec3 playerPos = newPlayer.player->getPlayersTransform()->position;
-		this->sceneObj->setFocusPos(playerPos);
+		//glm::vec3 playerPos = newPlayer.player->getPlayersTransform()->position;
+		//this->sceneObj->setFocusPos(playerPos);
+		newPlayer.update(this->deltaTime);
 
 		this->world->debugOBBs(this->gameRenderer);
 
@@ -213,6 +219,12 @@ void SimulationManager::setDeltaTime() //frame time
 	this->deltaTime = currentFrame - lastFrame;
 	this->lastFrame = currentFrame;
 	
+}
+
+void SimulationManager::loadAnimations()
+{
+	ResourceManager::loadModel("resources/player/playerEdit.gltf", "playerModel");
+	ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel");
 }
 
 //script testing function idea

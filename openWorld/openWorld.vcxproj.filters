@@ -512,6 +512,9 @@
     <ClInclude Include="playerCameraController.h">
       <Filter>Header Files\player</Filter>
     </ClInclude>
+    <ClInclude Include="renderContext.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\LightAndAnimationShader.fs">

@@ -14,7 +14,7 @@ class Entity
 public:
 	
 	//a name will need to be assigned to all entities however does not need to be assigned upon creation can be added later
-	Entity(std::string name) { this->name = name; }
+	Entity(std::string name) { this->entityName = name; }
 	
 	Entity();
 
@@ -44,7 +44,11 @@ protected:
 	glm::quat orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	glm::vec3 scale = glm::vec3(1.0f);
 
-	std::string name;
+	glm::vec3 front = glm::vec3(0,0,1);
+	glm::vec3 right = glm::vec3(1,0,0);
+	glm::vec3 up = glm::vec3(0,1,0);
+
+	std::string entityName;
 
 private:
 

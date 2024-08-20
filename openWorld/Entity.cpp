@@ -50,5 +50,5 @@ void Entity::setOrient(glm::quat orient)
 
 std::string Entity::getName()
 {
-	return this->name;
+	return this->entityName;
 }

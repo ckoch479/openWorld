@@ -35,7 +35,7 @@ public:
 
 	void savePlayerFile();//this will save players data to a .player file that can be used the next time a playerEntity is created
 
-	void setPlayerAction(playerActions action);
+	//void setPlayerAction(playerActions action);
 
 	void setActionModifier(actionModifiers mod, bool setter); //use this to update which modifiers are set to or false
 
@@ -56,7 +56,7 @@ public:
 
 	Model* getPlayerModel();
 
-	playerActions getPlayerAction();
+	//playerActions getPlayerAction();
 
 	void calculateRelTransform();
 
@@ -96,7 +96,7 @@ private:
 
 	void loadPlayerAnimations(std::string playerFilePath); //directory for player animations will be under the players file path in a file named animations
 
-	void updateActions();
+	//void updateActions();
 
 	objAnimator* playerAnimator;
 
@@ -147,7 +147,7 @@ private:
 
 	std::string activeAnim;//current active animation
 
-	playerActions currentAction;
+	//playerActions currentAction;
 
 	//rendering data
 	Model* playerModel;

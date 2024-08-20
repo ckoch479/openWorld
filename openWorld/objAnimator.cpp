@@ -58,7 +58,7 @@ void objAnimator::loadAnimation(std::string& animationName, std::string& animati
 void objAnimator::playAnimation(std::string animationName)
 {	//its ugly but it works :D
 	//still need to fix when two animations are attempting to play at once (decide who wins and is shown)
-	if(this->activeAnimation != animations[animationName])
+	if(this->activeAnimation != ResourceManager::getAnimation(animationName))
 	{	//if the current animation is a non looping animation it can not be changed until it is done playing
 		if (this->activeAnimation)
 		{
@@ -68,12 +68,12 @@ void objAnimator::playAnimation(std::string animationName)
 				if (animations[animationName]->looping == false)
 				{
 					this->returnAnimation = this->activeAnimation;
-					this->activeAnimation = animations[animationName];
+					this->activeAnimation = ResourceManager::getAnimation(animationName);
 				}
 				//handle looping animations
 				if (animations[animationName]->looping == true)
 				{
-					this->activeAnimation = animations[animationName];
+					this->activeAnimation = ResourceManager::getAnimation(animationName);
 				}
 
 				this->currentAnimationTime = 0.0f; //reset the animation time and start from scratch for the new one
@@ -82,7 +82,7 @@ void objAnimator::playAnimation(std::string animationName)
 		}
 		if(!this->activeAnimation)
 		{
-			this->activeAnimation = animations[animationName];
+			this->activeAnimation = ResourceManager::getAnimation(animationName);
 		}
 
 	}
@@ -617,9 +617,9 @@ float objAnimator::calculateScaleFactor(float lastTimeStamp, float nextTimeStamp
 	return scaleFactor;
 }
 
-std::vector <glm::mat4> objAnimator::getAnimationTransforms()
+std::vector <glm::mat4>* objAnimator::getAnimationTransforms()
 {
-	return this->finalMatricies;
+	return &this->finalMatricies;
 }
 
 glm::mat4 objAnimator::getFinalBoneTransform(std::string boneName)

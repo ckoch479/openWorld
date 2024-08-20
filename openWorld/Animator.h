@@ -13,6 +13,8 @@
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
 
+#include "Model.h"
+
 #include "Shader.h"
 
 //this is the last animation key used for the current animation

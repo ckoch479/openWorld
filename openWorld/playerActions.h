@@ -25,6 +25,9 @@ enum playerActions
 	jumpLeft,
 	jumpRight,
 	jumpBack,
+	jump,
+
+	crouch,
 
 	aimPistol,
 

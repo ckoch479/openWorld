@@ -2,6 +2,10 @@
 
 #include "renderingInfoDefinitions.h"
 
+#include "Model.h"
+#include "Mesh.h"
+#include "material.h"
+
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 

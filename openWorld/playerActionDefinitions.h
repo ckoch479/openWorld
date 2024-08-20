@@ -17,7 +17,7 @@ enum actionModifiers
 {
 walkToggle,
 sprintToggle,
-crouch,
+//crouch,
 crawl,
 aim,
 shoot,

@@ -3,8 +3,7 @@
 characterController::characterController(windowManager* manager)
 {
 	this->inputManager = manager;
-	setDefaultMappings();
-	
+	//setDefaultMappings();
 }
 
 characterController::~characterController()
@@ -181,20 +180,50 @@ playerActions characterController::updateController()
 	{
 		currentAction = walkForward;
 	}
+	else if(keyStates[87] && keyStates[340]) //w and LShift
+	{
+		currentAction = jogForward;
+	}
+
 	else if (keyStates[65]) //a
 	{
 		currentAction = walkLeft;
 	}
+	else if (keyStates[65] && keyStates[340]) //a and LShift
+	{
+		currentAction = jogLeft;
+	}
+
 	else if (keyStates[83]) //s
 	{
 		currentAction = walkBack;
 	}
+	else if (keyStates[83] && keyStates[340]) //s and LShift
+	{
+		currentAction = jogBack;
+	}
+
 	else if (keyStates[68]) //d
 	{
 		currentAction = walkRight;
 	}
+	else if (keyStates[68] && keyStates[340]) //d and LShift
+	{
+		currentAction = jogRight;
+	}
 
-
+	else if(keyStates[32]) //space
+	{
+		currentAction = jump;
+	}
+	else if(keyStates[341])//Lcrtl
+	{
+		currentAction = crouch;
+	}
+	else if(keyStates[342]) //Lalt
+	{
+		currentAction = evading;
+	}
 
 	return currentAction;
 }
