@@ -50,7 +50,7 @@ void objAnimator::loadAnimation(std::string& animationName, std::string& animati
 	std::cout << "loading animation: " << animationName << std::endl;
 	animation* newAnim = ResourceManager::loadAnimation(animationFilePath, animationName, this->animModel->name);
 	newAnim->looping = loopingAnimation;
-	this->animations[animationName] = newAnim;
+	//this->animations[animationName] = newAnim;
 
 }
 
@@ -65,13 +65,13 @@ void objAnimator::playAnimation(std::string animationName)
 			if (this->activeAnimation->looping == true)
 			{
 				//handle non looping animations
-				if (animations[animationName]->looping == false)
+				if (ResourceManager::getAnimation(animationName)->looping == false)
 				{
 					this->returnAnimation = this->activeAnimation;
 					this->activeAnimation = ResourceManager::getAnimation(animationName);
 				}
 				//handle looping animations
-				if (animations[animationName]->looping == true)
+				if (ResourceManager::getAnimation(animationName)->looping == true)
 				{
 					this->activeAnimation = ResourceManager::getAnimation(animationName);
 				}
@@ -93,10 +93,10 @@ void objAnimator::playBlendAnimation(std::string animationA, std::string animati
 {
 	this->blendFactor = blendFactor;
 
-	if (this->activeAnimation != animations[animationA] && this->blendAnimation != animations[animationB])
+	if (this->activeAnimation != ResourceManager::getAnimation(animationA) && this->blendAnimation != ResourceManager::getAnimation(animationB))
 	{
-		this->activeAnimation = animations[animationA];
-		this->blendAnimation = animations[animationB];
+		this->activeAnimation = ResourceManager::getAnimation(animationA);
+		this->blendAnimation = ResourceManager::getAnimation(animationB);
 		this->isblendAnimation = true;
 	}
 }
@@ -167,7 +167,14 @@ void objAnimator::update(float deltaTime)
 		}
 	}
 	
-	
+	//if(this->activeAnimation)
+	//{
+	//	std::cout << "active animation is: " << this->activeAnimation->name << std::endl;
+	//}
+	//else 
+	//{
+	//	std::cout << "no active animation is playing!\n";
+	//}
 }
 
 void objAnimator::applyInverseKinematics(std::string& endEffectorName, glm::vec3& targetPosition)

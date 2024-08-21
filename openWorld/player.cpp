@@ -19,9 +19,16 @@ player::player(renderContext context, Model* newModel, windowManager* inputManag
 	this->playerController = new characterController(inputManager);
 	this->playerAnimator = new objAnimator(this->playerModel);
 	this->cameraController = new playerCameraController(&this->renderData,inputManager);
+
 	this->renderer = new playerRenderer(&this->renderData,this->playerModel);
-	this->collider = new playerCollider(); //need to add more data to this later
-	this->motionController = new playerMotionController(); //add more data to this later
+	this->renderer->setTransform(this->positionPtr, this->orientationPtr, this->scalePtr);
+	this->renderer->addPlayerToScene();
+	
+	this->collider = new playerCollider(world,this->playerSkeleton,this->playerAnimator,this->positionPtr,this->orientationPtr); //create player main and bone colliders
+
+	this->motionController = new playerMotionController(this->collider->getMainBox(),&this->currentAction); //set the main collider in movement controller for world collisions
+	this->motionController->setPlayerTransforms(this->positionPtr,this->orientationPtr,this->scalePtr,&this->front,&this->right,&this->up);
+
 	this->animationController = new playerAnimationController(this->playerAnimator, &this->currentAction);
 
 }
@@ -47,6 +54,8 @@ void player::update(float dt)
 	this->renderer->updatePlayerRender();
 
 	//collider
-	//motionController
-	
+	this->collider->updateColliders(dt);
+	this->motionController->updatePlayerMotion(dt, &this->currentAction);
+	//this->motionController->handleRotation(dt, this->cameraController->getCamera());
+
 }

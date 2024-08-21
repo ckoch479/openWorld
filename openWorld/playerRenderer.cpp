@@ -22,6 +22,7 @@ playerRenderer::~playerRenderer()
 void playerRenderer::setAnimTransforms(std::vector <glm::mat4>* animMats)
 {
 	this->animMats = animMats;
+	this->currentPlayerModel->animationMatrices = *this->animMats;
 }
 
 void playerRenderer::setTransform(glm::vec3* pos, glm::quat* Orient, glm::vec3* scale)

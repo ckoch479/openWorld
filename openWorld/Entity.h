@@ -6,6 +6,8 @@
 #include "Includes/glm/gtc/type_ptr.hpp"
 #include <glm/gtx/string_cast.hpp>
 
+#include "debugger.h"
+
 #ifndef ENTITY_H
 #define ENTITY_H
 
@@ -37,6 +39,7 @@ public:
 
 	std::string getName();
 
+
 protected:
 
 	//all game Entities are required to have a position, orientation, and scale
@@ -45,7 +48,7 @@ protected:
 	glm::vec3 scale = glm::vec3(1.0f);
 
 	glm::vec3 front = glm::vec3(0,0,1);
-	glm::vec3 right = glm::vec3(1,0,0);
+	glm::vec3 right = glm::vec3(-1,0,0);
 	glm::vec3 up = glm::vec3(0,1,0);
 
 	std::string entityName;

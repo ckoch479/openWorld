@@ -69,6 +69,16 @@ private:
 	playerAnimationController* animationController; //needs playerAnimator and playerAction(currentAction) in constructor and playerAction during state changes
 	playerMotionController* motionController; //needs player action, physicsWorld, and colliders
 	playerCameraController* cameraController; //needs inputs, scene, and to either create or be given a camera object
+
+	//
+	// playerAnimator - should already be mostly done for testing purposes at least, animations are really fast for some reason(fixed, was updating the player twice per frame)
+	// renderer -works now for testing purposes at least, should be mostly good
+	// playerController -has some basic implimentation able to test and use
+	// collider implimented player now has one main collider and a vector of colliders that follow bones from animation
+	// animationController -has some very basic implimentation
+	// motionController -needs implimentation
+	// cameraController -has most implimentation for basics done, can be used for testing properly
+	//
 	
 };
 

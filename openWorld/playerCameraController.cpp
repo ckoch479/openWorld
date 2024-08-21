@@ -87,14 +87,25 @@ void playerCameraController::updateController(float dt, glm::vec3 playerPos)
 	//	};
 	//}
 
+	//set zoom level:
+
+	float scrollOffset = this->inputManager->getMouseScroll();
+	this->mouseScroll = this->lastScroll - scrollOffset;
+	this->playerCamera->setZoomLevel(this->mouseScroll);
+
+	//camera position/orientation
 	this->targetPosition = playerPos;
 
-	float mouseX = inputManager->getMouseX() * dt;
-	float mouseY = inputManager->getMouseY() * dt;
+	float mouseX = inputManager->getMouseX() - lastX;
+	float mouseY = inputManager->getMouseY() - lastY;
+
+	this->lastX = inputManager->getMouseX();
+	this->lastY = inputManager->getMouseY();
+
 
 	yaw += mouseX * sensitivity;
 	pitch -= mouseY * sensitivity;
-	pitch = std::clamp(pitch, -30.0f,45.0f);
+	pitch = std::clamp(pitch, -80.0f, 80.0f);
 	
 	glm::vec3 direction(1.0f);
 
@@ -103,8 +114,19 @@ void playerCameraController::updateController(float dt, glm::vec3 playerPos)
 	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	direction = glm::normalize(direction);
 
-	glm::vec3 cameraPosition = targetPosition - direction * distanceFromTarget + offset;
+	glm::vec3 front = direction;
+	glm::vec3 right = glm::normalize(glm::cross(glm::vec3(0, 1, 0), front));
+	glm::vec3 up = glm::normalize(glm::cross(front, right));
+
+	glm::vec3 cameraPosition = targetPosition - direction * distanceFromTarget;// +offset;
 	this->playerCamera->setPosition(cameraPosition);
-	this->playerCamera->setTarget(this->targetPosition);
+	this->playerCamera->setTarget(this->targetPosition + glm::vec3(0,1.3,0) + (right * -0.2f));
+
+	this->playerCamera->update(dt);
 	
+}
+
+Camera* playerCameraController::getCamera()
+{
+	return this->playerCamera;
 }

@@ -30,7 +30,7 @@ void playerAnimationController::updateAnimationState()
 		break;
 
 	case(walkForward):
-		//this->playerAnimator->playAnimation("walkForward");
+		this->playerAnimator->playAnimation("walkForward");
 		break;
 	case(walkLeft):
 		//this->playerAnimator->playAnimation("walkLeft");
@@ -43,7 +43,7 @@ void playerAnimationController::updateAnimationState()
 		break;
 
 	case(jogForward):
-		//this->playerAnimator->playAnimation("jogForward");
+		this->playerAnimator->playAnimation("jogForward");
 		break;
 	case(jogLeft):
 		//this->playerAnimator->playAnimation("jogLeft");
@@ -56,7 +56,7 @@ void playerAnimationController::updateAnimationState()
 		break;
 
 	case(jump):
-		//this->playerAnimator->playAnimation("jump");
+		this->playerAnimator->playAnimation("jump");
 		break;
 	case(crouch):
 		//this->playerAnimator->playAnimation("crouch");

@@ -53,6 +53,8 @@ public:
 
 	double getMouseY();
 
+	float getMouseScroll();
+
 	bool leftClick();
 	bool rightClick();
 	bool middleClick();
@@ -77,7 +79,7 @@ private:
 	bool middleMouse;
 	bool rightMouse;
 
-	double scrollOffset = 0;
+	double scrollOffset;
 
 	//this string will report all keys pressed this cycle and push them into this vector
 	//it is the responsibility of the simulation manager to iterate through each keystroke and clear the keystrokes at the end of simulation manager processing the data

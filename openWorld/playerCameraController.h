@@ -26,6 +26,8 @@ public:
 
 	playerCameraController();
 
+	Camera* getCamera();
+
 
 	~playerCameraController();
 
@@ -38,13 +40,19 @@ private:
 	windowManager* inputManager;
 	
 
-	float distanceFromTarget = 5.0f;
+	float distanceFromTarget = 4.0f;
+
+	float lastX = 0.0f;
+	float lastY = 0.0f;
+
+	float mouseScroll = 45.0f;
+	float lastScroll = 45.0f;
 
 	float pitch = 10.0f;
 	float yaw = -90.0f;
 
 	float sensitivity = 0.1f;
-	glm::vec3 offset = glm::vec3(0,2,distanceFromTarget);
+	glm::vec3 offset = glm::vec3(0,2,0);
 	glm::vec3 targetPosition = glm::vec3(0,0,0);
 };
 

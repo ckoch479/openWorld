@@ -8,7 +8,7 @@ void key_callback(GLFWwindow* window, int key, int scanCode, int action, int mod
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-double mouseScrollY;
+double mouseScrollY = 0.0f;
 
 windowManager::windowManager()
 {
@@ -42,6 +42,7 @@ windowManager::windowManager()
 	glfwSetErrorCallback(errorCallback);
 
 	glfwSetInputMode(this->currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	this->scrollOffset = 0.0f;
 }
 
 void windowManager::setScreenSize(int width, int height)
@@ -169,8 +170,7 @@ void windowManager::pollMouseButtons()
 
 void windowManager::pollScroll()
 {
-	this->scrollOffset += mouseScrollY;
-	mouseScrollY = 0;
+	this->scrollOffset = mouseScrollY;
 }
 
 bool windowManager::leftClick()
@@ -184,6 +184,11 @@ bool windowManager::rightClick()
 bool windowManager::middleClick()
 {
 	return this->middleMouse;
+}
+
+float windowManager::getMouseScroll()
+{
+	return this->scrollOffset;
 }
 
 //these as far as i know right now cannot be class methods 
@@ -207,5 +212,10 @@ void key_callback(GLFWwindow* window, int key, int scanCode, int action, int mod
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	mouseScrollY = yoffset;
+	mouseScrollY += yoffset;
+
+	//30 and -45
+
+	if (mouseScrollY > 30) { mouseScrollY = 30; }
+	if (mouseScrollY < -45) { mouseScrollY = -45; }
 }

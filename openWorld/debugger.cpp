@@ -19,7 +19,15 @@ void debugger::updateDebugger()
 {
 
 	drawWorldLines();
+
+	for(int i = 0; i < this->debuggingLines.size(); i++)
+	{
+		debugerLines* tempLine = &debuggingLines[i];
+		this->gameRenderer->addLine(tempLine->pointA, tempLine->pointB, tempLine->color);
+	}
+	this->debuggingLines.clear();
 }
+
 
 void debugger::drawWorldLines()
 {
@@ -108,4 +116,14 @@ float debugger::getTimeStamp()
 {
 	float currentTime = glfwGetTime();
 	return currentTime;
+}
+
+void debugger::addDebugLine(glm::vec3 pointA, glm::vec3 pointB)
+{
+	debugerLines newLine;
+	newLine.pointA = pointA;
+	newLine.pointB = pointB;
+	newLine.color = glm::vec4(1.0, 0.2, 0.7,0.8);
+	
+	this->debuggingLines.push_back(newLine);
 }

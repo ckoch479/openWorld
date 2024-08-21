@@ -12,6 +12,13 @@
 
 #include "Renderer.h"
 
+struct debugerLines
+{
+	glm::vec3 pointA;
+	glm::vec3 pointB;
+	glm::vec4 color;
+};
+
 //change to singleton later:
 class debugger
 {
@@ -38,6 +45,8 @@ public:
 
 	void updateDebugger();
 
+	void addDebugLine(glm::vec3 pointA, glm::vec3 pointB);
+
 private:
 
 	void dumpDatatoFile();
@@ -61,5 +70,7 @@ private:
 	std::string eventData;
 
 	renderer* gameRenderer;
+
+	std::vector <debugerLines> debuggingLines;
 };
 

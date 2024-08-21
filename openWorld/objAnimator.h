@@ -73,7 +73,7 @@ private:
 
 	animation* returnAnimation; //animation to return to after playing a non looping animation
 
-	std::unordered_map<std::string, animation*> animations;
+	//std::unordered_map<std::string, animation*> animations;
 	std::map <std::string, glm::quat> forwardKinematicRotations;
 	std::vector <inverseKinematicChain> IKchains;
 	std::vector <glm::mat4> finalMatricies; //should be exactly 100 due to max bones being 100

@@ -3,6 +3,7 @@
 #include "glad/glad.h"
 #include "Includes/glm/glm.hpp"
 #include "Includes/glm/gtc/matrix_transform.hpp"
+#include <glm/gtx/string_cast.hpp>
 
 #include <vector>
 #include <iostream>
@@ -28,9 +29,6 @@ const float ZOOM = 45.0f;
 class Camera
 {
 public:
-   
-
-    glm::mat4 viewMatrix;
 
     // constructor with vectors
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
@@ -58,13 +56,18 @@ public:
 
     void setOrientation(float newYaw, float newPitch);
 
+    glm::vec3* getFront();
 
 private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     Mode cameraMode = thirdPerson;
-    glm::vec3 position;
-    glm::vec3 target;
-    glm::vec3 offset;
+    glm::vec3 position = target - offset;
+    glm::vec3 target = glm::vec3(0,0,0);
+    glm::vec3 offset = glm::vec3(0,2,5);
+
+    glm::vec3 front;
+    glm::vec3 up;
+    glm::vec3 right;
     // euler Angles
     float Yaw;
     float Pitch;
@@ -72,6 +75,8 @@ private:
     float Zoom = 45.0f;
     float minZoom = 10;
     float maxZoom = 90;
+
+    glm::mat4 viewMatrix;
 
     void updatePosition();
 

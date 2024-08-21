@@ -2,12 +2,19 @@
 
 Camera::Camera(glm::vec3 position, float yaw, float pitch)
 {
-    position = position;
+    //position = position;
+    this->offset = position;
+    this->position = target - offset * Zoom;
 
     Yaw = yaw;
     Pitch = pitch;
 
-    this->viewMatrix = glm::mat4(1.0f);
+    this->front = glm::vec3(0, 0, -1);
+    this->up = glm::vec3(0, 1, 0);
+    this->right = glm::vec3(1, 0, 0);
+
+
+    lookAt(target);
 }
 
 Camera::Camera()
@@ -27,6 +34,11 @@ void Camera::update(float dt)
 {
     updatePosition();
     this->lookAt(this->target);
+
+   // std::cout << " camera debug\n camera position: " << glm::to_string(this->position) << std::endl;
+   // std::cout << " camera target: " << glm::to_string(this->target) << std::endl;
+   // std::cout << " pitch: " << this->Pitch << " yaw: " << this->Yaw << std::endl;
+   // std::cout << " camera offset: " << glm::to_string(this->offset) << std::endl;
 }
 
 void Camera::switchMode(Mode newMode)
@@ -70,6 +82,11 @@ void Camera::setOrientation(float newYaw, float newPitch)
     this->Pitch = std::clamp(newPitch, -89.0f,89.0f);
 }
 
+glm::vec3* Camera::getFront()
+{
+    return &this->front;
+}
+
 void Camera::updatePosition()
 {
     if (cameraMode == Mode::firstPerson) {
@@ -77,13 +94,16 @@ void Camera::updatePosition()
     }
     else if (cameraMode == Mode::thirdPerson) 
     {
-       /* glm::vec3 direction;
+        glm::vec3 direction; //direction is front
         direction.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
         direction.y = sin(glm::radians(Pitch));
         direction.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
         direction = glm::normalize(direction);
 
-        position = target - direction * Zoom + offset;*/
+       /* position = target - direction * Zoom + offset;*/
+        this->front = direction;
+        this->right = glm::normalize(glm::cross(glm::vec3(0, 1, 0), direction));
+        this->up = glm::normalize(glm::cross(direction, this->right));
     }
 
     lookAt(target);
@@ -91,5 +111,5 @@ void Camera::updatePosition()
 
 void Camera::lookAt(glm::vec3 point)
 {
-    this->viewMatrix = glm::lookAt(this->position, point, glm::vec3(0, 1, 0));
+    this->viewMatrix = glm::lookAt(this->position, this->target, glm::vec3(0,1,0));
 }

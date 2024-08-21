@@ -64,7 +64,7 @@ void SimulationManager::run()
 	level1.setLevelModel("resources/Terrain/citySceneOneModel.gltf");
 	level1.renderMap(lightShader);
 
-	Camera newCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+	Camera newCamera(glm::vec3(0.0f, 2.0f, 3.0f),0,0);
 
 	this->sceneObj->setCamera(&newCamera);
 
@@ -86,7 +86,7 @@ void SimulationManager::run()
 	this->worldManager->addWorldEntity("player", playerEntity);
 	
 	//npc testing no AI yet:
-	npcManager newNPC(this->sceneObj, this->world, animationShader, "resources/NPC/Zombie/zombieHolder.gltf", "swatZombie");
+	//npcManager newNPC(this->sceneObj, this->world, animationShader, "resources/NPC/Zombie/zombieHolder.gltf", "swatZombie");
 
 	this->state = debug; //game state overwrite for testing
 
@@ -109,7 +109,7 @@ void SimulationManager::run()
 		}
 
 		//newPlayer.updateManager(deltaTime);
-		newNPC.updateManager(deltaTime, &level1);
+		//newNPC.updateManager(deltaTime, &level1);
 
 		//update physics
 		accumulator += deltaTime;
@@ -170,7 +170,7 @@ void SimulationManager::run()
 		this->WindowManager->getMousePosition(&x, &y);
 
 		//newPlayer.updateManager(deltaTime);
-		newNPC.updateManager(deltaTime, &level1);
+		//newNPC.updateManager(deltaTime, &level1);
 
 		//update physics
 		accumulator += deltaTime;
@@ -181,17 +181,17 @@ void SimulationManager::run()
 		}
 
 		//draw contents to actual game window
-		animator::updateAnimations(deltaTime);
+		//animator::updateAnimations(deltaTime);
 
 		//glm::vec3 playerPos = newPlayer.player->getPlayersTransform()->position;
 		//this->sceneObj->setFocusPos(playerPos);
-		newPlayer.update(this->deltaTime);
-
-		this->world->debugOBBs(this->gameRenderer);
-
-		this->gameRenderer->drawScene(this->sceneObj);
+		//newPlayer.update(this->deltaTime);
 
 		this->worldManager->update(deltaTime);
+		this->world->debugOBBs(this->gameRenderer);
+		this->gameRenderer->drawScene(this->sceneObj);
+
+		
 		
 		//shutdown key check (esc)----------------------------
 		if (this->WindowManager->checkKey(256))
@@ -224,7 +224,27 @@ void SimulationManager::setDeltaTime() //frame time
 void SimulationManager::loadAnimations()
 {
 	ResourceManager::loadModel("resources/player/playerEdit.gltf", "playerModel");
+
 	ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel");
+
+	ResourceManager::loadAnimation("resources/player/animations/walking.gltf", "walkForward", "playerModel");
+	//ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel"); //walk left
+	//ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel"); //walk right
+	//ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel"); //walk back
+
+	ResourceManager::loadAnimation("resources/player/animations/jogging.gltf", "jogForward", "playerModel");
+	//ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel"); //jog left
+	//ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel"); //jog right
+	//ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel"); //jog back
+
+
+	ResourceManager::loadAnimation("resources/player/animations/jump.gltf", "jump", "playerModel");
+
+	//ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "crouch", "playerModel");
+
+
+
+
 }
 
 //script testing function idea
