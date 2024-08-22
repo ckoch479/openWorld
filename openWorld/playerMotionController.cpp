@@ -28,8 +28,14 @@ void playerMotionController::updatePlayerMotion(float dt, playerActions* newActi
 {
 	this->currentAction = newAction;
 
+	recalculateDirections();
 	determineMovement(dt);
 	applyMovement();
+}
+
+void playerMotionController::recalculateDirections()
+{
+	*this->playerFront = glm::normalize(glm::vec4(0, 0, 1, 0.0) * glm::toMat4(*this->playerOrientation));
 }
 
 void playerMotionController::handleRotation(float dt, Camera* playerCamera)
@@ -39,7 +45,7 @@ void playerMotionController::handleRotation(float dt, Camera* playerCamera)
 	float angleDifference = calculateAngleDifference(cameraFront,this->playerFront);
 	
 	//check the camera/player front difference
-	if(abs(angleDifference) > freeRotationSlop || *currentAction == aimPistol)
+	if(*currentAction == aiming)
 	{
 		rotatePlayerToCameraFront(this->cameraFront,dt);
 	}

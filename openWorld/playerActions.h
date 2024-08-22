@@ -36,6 +36,8 @@ enum playerActions
 	aimPistolRight,
 	aimPistolLeft,
 
+	aiming,
+
 	climbing,
 
 	evading,

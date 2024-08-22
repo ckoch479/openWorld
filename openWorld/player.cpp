@@ -56,6 +56,6 @@ void player::update(float dt)
 	//collider
 	this->collider->updateColliders(dt);
 	this->motionController->updatePlayerMotion(dt, &this->currentAction);
-	//this->motionController->handleRotation(dt, this->cameraController->getCamera());
+	this->motionController->handleRotation(dt, this->cameraController->getCamera());
 
 }

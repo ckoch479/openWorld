@@ -13,8 +13,6 @@
 #include "playerActions.h"
 
 
-
-
 #ifndef PLAYERMOTIONCONTROLLER_H
 #define PLAYERMOTIONCONTROLLER_H
 
@@ -33,6 +31,8 @@ public:
 	void changeMovementSpeed(float speed);
 
 	void handleRotation(float dt, Camera* playerCamera);
+
+	void recalculateDirections();
 
 private:
 

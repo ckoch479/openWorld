@@ -93,6 +93,10 @@ playerActions characterController::updateController()
 	{
 		currentAction = evading;
 	}
+	if(this->inputManager->rightClick())
+	{
+		currentAction = aiming;
+	}
 
 	return currentAction;
 }
