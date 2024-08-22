@@ -127,3 +127,8 @@ void debugger::addDebugLine(glm::vec3 pointA, glm::vec3 pointB)
 	
 	this->debuggingLines.push_back(newLine);
 }
+
+void debugger::addDebugBox(glm::vec3 point, glm::quat orient, glm::vec4 color, glm::vec3 halfExtents)
+{
+	this->gameRenderer->addCube(point, orient, halfExtents, color);
+}

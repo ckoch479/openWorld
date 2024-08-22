@@ -7,6 +7,7 @@
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 #include "Includes/glm/gtc/quaternion.hpp"
+#include <glm/gtx/string_cast.hpp>
 
 #include "Entity.h"
 
@@ -25,7 +26,7 @@
 #include "renderContext.h"
 #include "PhysicsWorld.h"
 
-
+#include "debugger.h"
 #ifndef PLAYER_H
 #define PLAYER_H
 
@@ -38,6 +39,8 @@ public:
 	~player();
 
 	void update(float dt);
+
+	void debugDirections(debugger* debug);
 
 private:
 

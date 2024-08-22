@@ -47,6 +47,8 @@ public:
 
 	void addDebugLine(glm::vec3 pointA, glm::vec3 pointB);
 
+	void addDebugBox(glm::vec3 point, glm::quat orient, glm::vec4 color, glm::vec3 halfExtents);
+
 private:
 
 	void dumpDatatoFile();
@@ -72,5 +74,6 @@ private:
 	renderer* gameRenderer;
 
 	std::vector <debugerLines> debuggingLines;
+
 };
 

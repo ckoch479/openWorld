@@ -141,9 +141,6 @@
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files\PhysicsandDynamicsBody</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>Source Files\GameObjectBody</Filter>
-    </ClCompile>
     <ClCompile Include="Includes\glad\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -291,6 +288,9 @@
     <ClCompile Include="playerCameraController.cpp">
       <Filter>Source Files\player</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -322,9 +322,6 @@
     </ClInclude>
     <ClInclude Include="RigidBody.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>Header Files\GameObjectHeaders</Filter>
     </ClInclude>
     <ClInclude Include="reactPhysicsListener.h">
       <Filter>Header Files\PhysicsAndDynamicsHeaders</Filter>
@@ -514,6 +511,9 @@
     </ClInclude>
     <ClInclude Include="renderContext.h">
       <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

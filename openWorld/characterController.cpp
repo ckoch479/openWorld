@@ -45,51 +45,33 @@ playerActions characterController::updateController()
 
 	playerActions currentAction = idle;
 
-	if (keyStates[87] && !keyStates[340]) //w and LShift
+	//single key presses:
+	if (keyStates[87]) //w
 	{
 		currentAction = walkForward;
 	}
-	else if (keyStates[87]) //w
-	{
-		currentAction = jogForward;
-	}
-
-	else if (keyStates[65] && keyStates[340]) //a
-	{
-		currentAction = jogLeft;
-	}
-	else if (keyStates[65] ) //a and LShift
+	if (keyStates[65] ) //a and LShift
 	{
 		currentAction = walkLeft;
 	}
-
-	else if (keyStates[83] && keyStates[340]) //s
-	{
-		currentAction = jogBack ;
-	}
-	else if (keyStates[83] ) //s and LShift
+	if (keyStates[83] ) //s and LShift
 	{
 		currentAction = walkBack;
 	}
-
-	else if (keyStates[68] && keyStates[340]) //d
-	{
-		currentAction = jogRight ;
-	}
-	else if (keyStates[68] ) //d and LShift
+	if (keyStates[68] ) //d and LShift
 	{
 		currentAction = walkRight;
 	}
 
-	else if(keyStates[32]) //space
+	if(keyStates[32]) //space
 	{
 		currentAction = jump;
 	}
-	else if(keyStates[341])//Lcrtl
+	if(keyStates[341])//Lcrtl
 	{
 		currentAction = crouch;
 	}
-	else if(keyStates[342]) //Lalt
+	if(keyStates[342]) //Lalt
 	{
 		currentAction = evading;
 	}
@@ -97,6 +79,80 @@ playerActions characterController::updateController()
 	{
 		currentAction = aiming;
 	}
+
+	//2 key presses:
+	if (keyStates[87] && keyStates[340]) //w and LShift
+	{
+		currentAction = jogForward;
+	}
+	if (keyStates[68] && keyStates[340]) //d
+	{
+		currentAction = jogRight;
+	}
+	if (keyStates[65] && keyStates[340]) //a
+	{
+		currentAction = jogLeft;
+	}
+	if (keyStates[83] && keyStates[340]) //s
+	{
+		currentAction = jogBack;
+	}
+
+	if (keyStates[87] && keyStates[65]) //w and a
+	{
+		currentAction = walkForwardLeft;
+	}
+	if (keyStates[87] && keyStates[68]) //w and d
+	{
+		currentAction = walkForwardRight;
+	}
+	if (keyStates[83] && keyStates[65]) //s and a
+	{
+		currentAction = walkBackLeft;
+	}
+	if (keyStates[83] && keyStates[68]) //s and d
+	{
+		currentAction = walkBackRight;
+	}
+
+	if (this->inputManager->rightClick() && keyStates[87]) //w and right click
+	{
+		currentAction = walkAiming;
+	}
+	if (this->inputManager->rightClick() && keyStates[65])//a and right click
+	{
+		currentAction = aimingStepLeft;
+	}
+	if (this->inputManager->rightClick() && keyStates[83])//s and right click
+	{
+		currentAction = aimingStepBack;
+	}
+	if (this->inputManager->rightClick() && keyStates[68])//d and right click
+	{
+		currentAction = aimingStepRight;
+	}
+
+	//3 key presses
+	if (keyStates[87] && keyStates[65] && keyStates[340]) //w and a
+	{
+		currentAction = jogForwardLeft;
+	}
+	if (keyStates[87] && keyStates[68] && keyStates[340]) //w and d
+	{
+		currentAction = jogForwardRight;
+	}
+	if (keyStates[83] && keyStates[65] && keyStates[340]) //s and a
+	{
+		currentAction = jogBackLeft;
+	}
+	if (keyStates[83] && keyStates[68] && keyStates[340]) //s and d
+	{
+		currentAction = jogBackRight;
+	}
+
+	
+
+	
 
 	return currentAction;
 }

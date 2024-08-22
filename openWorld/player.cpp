@@ -47,7 +47,7 @@ void player::update(float dt)
 
 	this->playerAnimator->update(dt);
 
-	this->cameraController->updateController(dt, this->position);
+	this->cameraController->updateController(dt, this->position,&this->front);
 
 	this->renderer->setTransform(this->positionPtr, this->orientationPtr, this->scalePtr);
 	this->renderer->setAnimTransforms(this->playerAnimator->getAnimationTransforms());
@@ -58,4 +58,19 @@ void player::update(float dt)
 	this->motionController->updatePlayerMotion(dt, &this->currentAction);
 	this->motionController->handleRotation(dt, this->cameraController->getCamera());
 
+	//transforms are really fucked up, had to inverse the orientation in collider and render to get things to match up correctly
+
+}
+
+void player::debugDirections(debugger* debug)
+{
+
+	glm::vec3 frontA = *this->positionPtr + glm::vec3(0, 1, 0);
+	glm::vec3 frontB = frontA + this->front * 1.0f;
+	debug->addDebugLine(frontA, frontB);
+
+	//draw target position
+
+	glm::vec3 targetPos = *this->cameraController->getTargetPosition();
+	debug->addDebugBox(targetPos, glm::quat(1.0, 0.0, 0.0, 0.0), glm::vec4(1.0, 1.0, 1.0, 0.9), glm::vec3(0.1, 0.1, 0.1));
 }

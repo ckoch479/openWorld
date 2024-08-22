@@ -31,7 +31,9 @@ public:
 
 	~playerCameraController();
 
-	void updateController(float dt, glm::vec3 playerPos);
+	void updateController(float dt, glm::vec3 playerPos, glm::vec3* playerFront);
+
+	glm::vec3* getTargetPosition();
 
 private:
 

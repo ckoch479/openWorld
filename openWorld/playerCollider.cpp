@@ -21,7 +21,7 @@ playerCollider::~playerCollider()
 void playerCollider::generateMainPlayerCollider()
 {
 	this->mainBoxId = this->world->createOBB(glm::vec3(0.6, 1.7, 0.6));
-	this->world->updateOBBtransform(*this->playerPos + glm::vec3(0, 0.85, 0), *this->playerOrient, this->mainBoxId);
+	this->world->updateOBBtransform(*this->playerPos + glm::vec3(0, 0.85, 0), glm::inverse(*this->playerOrient), this->mainBoxId);
 }
 
 void playerCollider::generateBoneColliders()
@@ -97,11 +97,11 @@ void playerCollider::generateBoneColliders()
 
 void playerCollider::updateColliders(float dt)
 {
-	this->world->updateOBBtransform(*this->playerPos + glm::vec3(0, 0.85, 0), *this->playerOrient, this->mainBoxId);
+	this->world->updateOBBtransform(*this->playerPos + glm::vec3(0, 0.85, 0), glm::inverse(*this->playerOrient), this->mainBoxId);
 
 	glm::mat4 playerMat(1.0f);
 	playerMat = glm::translate(playerMat, *this->playerPos);
-	playerMat = playerMat * glm::toMat4(*this->playerOrient);
+	playerMat = playerMat * glm::toMat4(glm::inverse(*this->playerOrient));
 	playerMat = glm::scale(playerMat, glm::vec3(1.0f));
 
 	for (int i = 0; i < this->OBBids.size(); i++)
@@ -122,7 +122,6 @@ void playerCollider::updateColliders(float dt)
 		glm::quat orientation;
 		glm::vec3 scale;
 		glm::decompose(handMat, scale, orientation, position, skew, perspective); //decompose mat4
-
 		this->world->updateOBBtransform(position, orientation, OBBids[i]);
 	}
 	

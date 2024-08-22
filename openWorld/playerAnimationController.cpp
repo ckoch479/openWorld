@@ -33,26 +33,26 @@ void playerAnimationController::updateAnimationState()
 		this->playerAnimator->playAnimation("walkForward");
 		break;
 	case(walkLeft):
-		//this->playerAnimator->playAnimation("walkLeft");
+		this->playerAnimator->playAnimation("walkForward");
 		break;
 	case(walkRight):
-		//this->playerAnimator->playAnimation("walkRight");
+		this->playerAnimator->playAnimation("walkForward");
 		break;
 	case(walkBack):
-		//this->playerAnimator->playAnimation("walkBack");
+		this->playerAnimator->playAnimation("walkForward");
 		break;
 
 	case(jogForward):
 		this->playerAnimator->playAnimation("jogForward");
 		break;
 	case(jogLeft):
-		//this->playerAnimator->playAnimation("jogLeft");
+		this->playerAnimator->playAnimation("jogForward");
 		break;
 	case(jogRight):
-		//this->playerAnimator->playAnimation("jogRight");
+		this->playerAnimator->playAnimation("jogForward");
 		break;
 	case(jogBack):
-		//this->playerAnimator->playAnimation("jogBack");
+		this->playerAnimator->playAnimation("jogForward");
 		break;
 
 	case(jump):
@@ -64,5 +64,42 @@ void playerAnimationController::updateAnimationState()
 	case(evading):
 		//this->playerAnimator->playAnimation("evade");
 		break;
+
+	case(aiming):
+		this->playerAnimator->playAnimation("aimPistol");
+		break;
+
+	case(walkAiming):
+		this->playerAnimator->playAnimation("aimWalkForward");
+		break;
+
+	case(aimingStepBack):
+		this->playerAnimator->playAnimation("aimWalkBack");
+		break;
+
+	case(aimingStepLeft):
+		this->playerAnimator->playAnimation("aimWalkLeft");
+		break;
+
+	case(aimingStepRight):
+		this->playerAnimator->playAnimation("aimWalkRight");
+		break;
+
+	case(jogForwardLeft):
+		this->playerAnimator->playAnimation("jogForward");
+		break;
+
+	case(jogForwardRight):
+		this->playerAnimator->playAnimation("jogForward");
+		break;
+
+	case(jogBackLeft):
+		this->playerAnimator->playAnimation("jogForward");
+		break;
+
+	case(jogBackRight):
+		this->playerAnimator->playAnimation("jogForward");
+		break;
+
 	}
 }

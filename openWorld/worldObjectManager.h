@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "Entity.h"
+#include "debugger.h"
 
 #ifndef WORLDOBJECTMANAGER_H
 #define WORLDOBJECTMANAGER_H
@@ -13,7 +14,7 @@ class worldObjectManager
 {
 public:
 
-	worldObjectManager();
+	worldObjectManager(debugger* worldDebugger);
 
 	void addWorldEntity(std::string name, Entity* newEntity);
 
@@ -31,6 +32,8 @@ private:
 	std::unordered_map<std::string, unsigned int> nameToIDmap;
 
 	std::vector <unsigned int> entityIds;
+
+	debugger* worldDebugger;
 };
 
 #endif

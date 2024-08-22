@@ -245,11 +245,15 @@ Model ResourceManager::loadModelFromFile(std::string filePath)
 
 	assimpModelLoader loader(filePath); //load model using the assimp model loading class
 	newModel = loader.getModel();
+
+
+	std::cout << "loading model: " << newModel.name << std::endl;
 	//textures still need to be added to the resource manager
 	//iterate through each mesh and load in their textures
 	for (unsigned int i = 0; i < newModel.meshes.size(); i++)
 	{
 		Mesh* mesh = &newModel.meshes[i];
+		std::cout << "model meshes: " << i << std::endl;
 
 		mesh->material.diffuse0 = ResourceManager::loadTexture(mesh->material.diffuseData.filePath.c_str(), true, mesh->material.diffuseData.uniqueName.c_str());
 

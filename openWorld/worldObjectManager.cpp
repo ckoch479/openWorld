@@ -1,8 +1,8 @@
 #include "worldObjectManager.h"
 
-worldObjectManager::worldObjectManager()
+worldObjectManager::worldObjectManager(debugger* worldDebugger)
 {
-
+	this->worldDebugger = worldDebugger;
 }
 
 void worldObjectManager::addWorldEntity(std::string name, Entity* newEntity)
@@ -35,7 +35,7 @@ void worldObjectManager::update(float dt)
 	for(unsigned int i = 0; i < this->entityIds.size(); i++)
 	{
 		this->worldEntities[entityIds[i]]->update(dt);
-		//std::cout << "updating entities of: " << i << std::endl;
+		this->worldEntities[entityIds[i]]->debugDirections(this->worldDebugger);
 	}
 }
 

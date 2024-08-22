@@ -9,6 +9,11 @@ enum playerActions
 	walkRight,
 	walkBack,
 
+	walkForwardLeft,
+	walkForwardRight,
+	walkBackLeft,
+	walkBackRight,
+
 	turnLeft,
 	turnRight,
 
@@ -17,10 +22,15 @@ enum playerActions
 	jogRight,
 	jogBack,
 
+	jogForwardLeft,
+	jogForwardRight,
+	jogBackLeft,
+	jogBackRight,
+
 	sprintForward,
 	sprintLeft,
 	sprintRight,
-	
+
 	jumpForward,
 	jumpLeft,
 	jumpRight,
@@ -37,6 +47,12 @@ enum playerActions
 	aimPistolLeft,
 
 	aiming,
+
+	walkAiming,
+	aimingStepBack, 
+	aimingStepLeft, //found
+	aimingStepRight,//found
+
 
 	climbing,
 

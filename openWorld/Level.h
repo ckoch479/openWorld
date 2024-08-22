@@ -5,11 +5,14 @@
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
+#include "Includes/glm/gtc/quaternion.hpp"
+#include "includes/glm/gtx/quaternion.hpp"
 
 //#include "PhysicsWorld.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 #include "Shader.h"
+#include "PhysicsWorld.h"
 
 //level objects are objects that may or may not be dynamically simulation but does not include things like enemies or the player
 struct levelObject
@@ -78,7 +81,7 @@ public:
 	
 	Level();
 
-	Level(std::string filePath, std::string levelName,Shader* shader);
+	Level(std::string filePath, std::string levelName,Shader* shader, PhysicsWorld* world);
 
 	~Level();
 
@@ -107,6 +110,8 @@ public:
 
 	float getHeightAtPosition(glm::vec3 position);
 
+	
+
 	//--------------------------------------
 private:
 
@@ -121,6 +126,8 @@ private:
 
 	Shader* levelShader;
 	scene* levelScene;
+	PhysicsWorld* world;
+	
 
 	void parseLevelFile(std::string filePath);
 	

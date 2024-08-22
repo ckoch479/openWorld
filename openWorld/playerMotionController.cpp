@@ -36,16 +36,19 @@ void playerMotionController::updatePlayerMotion(float dt, playerActions* newActi
 void playerMotionController::recalculateDirections()
 {
 	*this->playerFront = glm::normalize(glm::vec4(0, 0, 1, 0.0) * glm::toMat4(*this->playerOrientation));
+	*this->playerRight = glm::normalize(glm::vec4(1, 0, 0, 0.0) * glm::toMat4(*this->playerOrientation));
 }
 
 void playerMotionController::handleRotation(float dt, Camera* playerCamera)
 {
 	this->cameraFront = playerCamera->getFront();
+	this->cameraRight = playerCamera->getRight();
+	this->cameraUp = playerCamera->getUp();
 	//get the angle difference between player front and camera front
-	float angleDifference = calculateAngleDifference(cameraFront,this->playerFront);
+	//float angleDifference = calculateAngleDifference(cameraFront,this->playerFront);
 	
 	//check the camera/player front difference
-	if(*currentAction == aiming)
+	if(*currentAction == aiming || *currentAction == walkForward || *currentAction == jogForward)
 	{
 		rotatePlayerToCameraFront(this->cameraFront,dt);
 	}
@@ -62,18 +65,77 @@ void playerMotionController::determineMovement(float dt)
 		this->movementVector = glm::vec3(0, 0, 0);
 		break;
 	case(walkForward):
-		this->movementVector = *this->playerFront * movementSpeed * dt;
+		this->movementVector = glm::vec3(this->cameraFront->x,0.0,this->cameraFront->z) * movementSpeed * dt;
 		break;
 	case(walkLeft):
-		this->movementVector = *this->playerRight * -1.0f * movementSpeed * dt;
+		this->movementVector = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z) * -1.0f * movementSpeed * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
 		break;
 
 	case(walkRight):
-		this->movementVector = *this->playerRight * movementSpeed * dt;
+		this->movementVector = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z)  * movementSpeed * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
 		break;
 
 	case(walkBack):
-		this->movementVector = *this->playerFront * -1.0f * movementSpeed * dt;
+		this->movementVector = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * -1.0f * movementSpeed * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(walkForwardLeft):
+		glm::vec3 frontVec = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z);
+		glm::vec3 leftVec = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z) * -1.0f ;
+		this->movementVector = glm::mix(frontVec,leftVec,0.5) * movementSpeed * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(walkForwardRight):
+		frontVec = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z);
+		leftVec = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z);
+		this->movementVector = glm::normalize(glm::mix(frontVec, leftVec, 0.5)) * movementSpeed * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(walkBackLeft):
+		frontVec = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * -1.0f;
+		leftVec = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z) * -1.0f;
+		this->movementVector = glm::normalize(glm::mix(frontVec, leftVec, 0.5)) * movementSpeed * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(walkBackRight):
+		frontVec = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * -1.0f;
+		leftVec = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z);
+		this->movementVector = glm::normalize(glm::mix(frontVec, leftVec, 0.5)) * movementSpeed * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(jogForwardLeft):
+		frontVec = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z);
+		leftVec = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z) * -1.0f;
+		this->movementVector = glm::normalize(glm::mix(frontVec, leftVec, 0.5)) * movementSpeed * 2.5f * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(jogForwardRight):
+		frontVec = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z);
+		leftVec = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z);
+		this->movementVector = glm::normalize(glm::mix(frontVec, leftVec, 0.5)) * movementSpeed * 2.5f * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(jogBackLeft):
+		frontVec = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * -1.0f;
+		leftVec = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z) * -1.0f;
+		this->movementVector = glm::normalize(glm::mix(frontVec, leftVec, 0.5)) * movementSpeed * 2.5f * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(jogBackRight):
+		frontVec = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * -1.0f;
+		leftVec = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z);
+		this->movementVector = glm::normalize(glm::mix(frontVec, leftVec, 0.5)) * movementSpeed * 2.5f * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
 		break;
 
 	case(turnLeft):
@@ -83,19 +145,23 @@ void playerMotionController::determineMovement(float dt)
 		break;
 
 	case(jogForward):
-		this->movementVector = *this->playerFront * movementSpeed * 2.0f * dt;
+		this->movementVector = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * movementSpeed * 2.5f * dt;
+
 		break;
 
 	case(jogLeft):
-		this->movementVector = *this->playerRight * -1.0f * movementSpeed * 2.0f * dt;
+		this->movementVector = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z) * -1.0f * movementSpeed * 2.5f * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
 		break;
 
 	case(jogRight):
-		this->movementVector = *this->playerRight * movementSpeed * 2.0f * dt;
+		this->movementVector = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z)  * movementSpeed * 2.5f * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
 		break;
 
 	case(jogBack):
-		this->movementVector = *this->playerFront * -1.0f * movementSpeed * 2.0f * dt;
+		this->movementVector = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * -1.0f * movementSpeed * 2.5f * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt); //this just orients the player to a specific direction over time
 		break;
 
 	case(sprintForward):
@@ -123,6 +189,31 @@ void playerMotionController::determineMovement(float dt)
 		break;
 
 	case(evading):
+		break;
+
+	case(aiming):
+		this->movementVector = glm::vec3(0, 0, 0);
+		rotatePlayerToCameraFront(this->cameraFront, dt);
+		break;
+
+	case(walkAiming):
+		this->movementVector = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * movementSpeed * dt;
+		rotatePlayerToCameraFront(&this->movementVector, dt);
+		break;
+
+	case(aimingStepBack):
+		this->movementVector = glm::vec3(this->cameraFront->x, 0.0, this->cameraFront->z) * -1.0f * movementSpeed * dt;
+		rotatePlayerToCameraFront(this->cameraFront, dt);
+		break;
+
+	case(aimingStepLeft):
+		this->movementVector = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z) * -1.0f * movementSpeed * dt;
+		rotatePlayerToCameraFront(this->cameraFront, dt);
+		break;
+
+	case(aimingStepRight):
+		this->movementVector = glm::vec3(this->cameraRight->x, 0.0, this->cameraRight->z) * movementSpeed * dt;
+		rotatePlayerToCameraFront(this->cameraFront, dt);
 		break;
 	}
 }
@@ -154,5 +245,6 @@ float playerMotionController::calculateAngleDifference(glm::vec3* cameraFront, g
 
 void playerMotionController::rotatePlayerToCameraFront(glm::vec3* cameraFront, float dt)
 {
-	*this->playerOrientation = glm::slerp(*playerOrientation, glm::quatLookAt(glm::normalize(*cameraFront), glm::vec3(0, 1, 0)), this->rotationspeed * dt);
+	glm::vec3 cameraDirection = glm::vec3(cameraFront->x, 0.0f, -cameraFront->z);
+	*this->playerOrientation = glm::slerp(*playerOrientation, glm::quatLookAt(glm::normalize(cameraDirection), glm::vec3(0, 1, 0)), this->rotationspeed * dt);
 }

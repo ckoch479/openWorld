@@ -5,10 +5,11 @@ Level::Level()
 	this->name = "level1";
 }
 
-Level::Level(std::string filePath, std::string levelName, Shader* shader)
+Level::Level(std::string filePath, std::string levelName, Shader* shader, PhysicsWorld* world)
 {
 	this->name = levelName;
 	this->levelShader = shader;
+	this->world = world;
 }
 
 Level::~Level()
@@ -40,10 +41,12 @@ bool Level::hasTriggerBeenActivated(std::string triggerName)
 void Level::renderMap(Shader* shader)
 {
 	
+	glm::mat4 correctionTransform(1.0f);
+	correctionTransform = glm::rotate(correctionTransform, glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	transform newTransform;
 	newTransform.position = glm::vec3(0.0f);
-	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	newTransform.scale = glm::vec3(0.4f,0.03,0.4f);
+	newTransform.orientation = glm::toQuat(correctionTransform);
+	newTransform.scale = glm::vec3(0.035f);
 
 	this->levelShader = shader;
 	this->levelScene->addStaticSceneObj(this->levelModel, newTransform, shader);
@@ -59,10 +62,10 @@ void Level::setLevelModel(std::string filepath)
 	{
 		this->levelMeshes.push_back(&levelModel->meshes[i]);
 	}
-	
+
 	//this->rigidBodyId = this->world->CreateRigidBody();
 	//createColliders();
-	generateHeightMapForPlayer();
+	//generateHeightMapForPlayer();
 	//this->rigidBodyId = world->createConcaveRigidbody(glm::vec3(0.0f), glm::quat(1.0, 0.0, 0.0, 0.0), this->vertices, this->indices);
 	
 }
@@ -94,6 +97,8 @@ void Level::setLevelScene(scene* scene)
 {
 	this->levelScene = scene;
 }
+
+
 
 
 //------------------------------------------------------
@@ -204,3 +209,4 @@ void Level::generateHeightMapForPlayer()
 
 
 }
+

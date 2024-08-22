@@ -9,7 +9,7 @@ Camera::Camera(glm::vec3 position, float yaw, float pitch)
     Yaw = yaw;
     Pitch = pitch;
 
-    this->front = glm::vec3(0, 0, -1);
+    this->front = glm::vec3(0, 0, 1);
     this->up = glm::vec3(0, 1, 0);
     this->right = glm::vec3(1, 0, 0);
 
@@ -87,6 +87,16 @@ glm::vec3* Camera::getFront()
     return &this->front;
 }
 
+glm::vec3* Camera::getRight()
+{
+    return &this->right;
+}
+
+glm::vec3* Camera::getUp()
+{
+    return &this->up;
+}
+
 void Camera::updatePosition()
 {
     if (cameraMode == Mode::firstPerson) {
@@ -102,10 +112,10 @@ void Camera::updatePosition()
 
        /* position = target - direction * Zoom + offset;*/
         this->front = direction;
-        this->right = glm::normalize(glm::cross(glm::vec3(0, 1, 0), direction));
+        this->right = glm::normalize(glm::cross(direction,glm::vec3(0, 1, 0)));
         this->up = glm::normalize(glm::cross(direction, this->right));
     }
-
+   // std::cout <<" Zoom: " << this->Zoom << std::endl;
     lookAt(target);
 }
 

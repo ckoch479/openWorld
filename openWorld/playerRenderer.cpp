@@ -50,7 +50,7 @@ void playerRenderer::updatePlayerRender()
 {
 	transform playerTransfom;
 	playerTransfom.position = *this->playerPos;
-	playerTransfom.orientation = *this->playerOrient;
+	playerTransfom.orientation = glm::inverse(*this->playerOrient); //inversing this does work for the mesh but still not the colliders
 	playerTransfom.scale = *this->playerScale;
 	this->sceneObj->updateTransform(this->sceneId, playerTransfom);
 }

@@ -25,6 +25,8 @@ public:
 	//update will update the entity state (could be rendering, animation, simulation, health, ect)
 	virtual void update(float dt);
 
+	virtual void debugDirections(debugger* debug) {};
+
 	 glm::vec3* getPosition();
 
 	 glm::quat* getOrient();
@@ -47,8 +49,8 @@ protected:
 	glm::quat orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 	glm::vec3 scale = glm::vec3(1.0f);
 
-	glm::vec3 front = glm::vec3(0,0,1);
-	glm::vec3 right = glm::vec3(-1,0,0);
+	glm::vec3 front = glm::vec3(0,0,1); //should be negative z
+	glm::vec3 right = glm::vec3(1,0,0);
 	glm::vec3 up = glm::vec3(0,1,0);
 
 	std::string entityName;

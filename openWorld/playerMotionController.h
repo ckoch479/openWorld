@@ -54,13 +54,15 @@ private:
 	glm::quat* playerOrientation;
 	glm::vec3* playerScale;
 
-	glm::vec3* playerFront;
-	glm::vec3* playerRight;
-	glm::vec3* playerUp;
+	glm::vec3* playerFront;//needs to be changed to camera front
+	glm::vec3* playerRight;//needs to be changed to camera right
+	glm::vec3* playerUp; //needs to be changed to camera up
 
 	glm::vec3* cameraFront;
+	glm::vec3* cameraRight;
+	glm::vec3* cameraUp;
 
-	float rotationspeed = 2.0f;
+	float rotationspeed = 3.0f;
 	float freeRotationSlop = 2.0f;
 
 	orientedBoundingBox* playerMainColldier;
