@@ -39,14 +39,6 @@ public:
 
 private:
 
-	playerEntity* currentPlayer;
-	Shader* itemShader;
-	scene* currentScene;
-
-	//player slots:
-
-	playerHandSlot* leftHand;
-	playerHandSlot* rightHand;
 
 
 };

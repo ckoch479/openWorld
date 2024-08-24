@@ -23,19 +23,19 @@ public:
 	gameObjectManager() {};
 	~gameObjectManager() {};
 
-	unsigned int createHandGun(std::string filePath, std::string name, float mass, float volume);
+	/*unsigned int createHandGun(std::string filePath, std::string name, float mass, float volume);
 	
-	std::shared_ptr<item> getItemPTR(unsigned int id) { return worldItems[id]; }
+	std::shared_ptr<item> getItemPTR(unsigned int id) { return worldItems[id]; }*/
 
 private:
 
-	unsigned int IDCounter = 0;
+	/*unsigned int IDCounter = 0;
 
 	unsigned int getUniqueID();
 
 	std::unordered_map <unsigned int, handGun> handGuns;
 
-	std::unordered_map <unsigned int, std::shared_ptr<item>> worldItems;
+	std::unordered_map <unsigned int, std::shared_ptr<item>> worldItems;*/
 		 
 
 };

@@ -42,6 +42,8 @@ public:
 
 	void debugDirections(debugger* debug);
 
+	glm::vec3* getPosition();
+
 private:
 
 	playerActions currentAction; //set by character controller

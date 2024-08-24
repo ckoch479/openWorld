@@ -74,3 +74,8 @@ void player::debugDirections(debugger* debug)
 	glm::vec3 targetPos = *this->cameraController->getTargetPosition();
 	debug->addDebugBox(targetPos, glm::quat(1.0, 0.0, 0.0, 0.0), glm::vec4(1.0, 1.0, 1.0, 0.9), glm::vec3(0.1, 0.1, 0.1));
 }
+
+glm::vec3* player::getPosition()
+{
+	return this->positionPtr;
+}

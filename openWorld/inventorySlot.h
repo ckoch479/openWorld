@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "item.h"
+//#include "item.h"
 
 #ifndef INVENTORYSLOT_H
 #define INVENTORYSLOT_H
@@ -12,17 +12,17 @@ class inventorySlot
 {
 public:
 	
-	void addItem(const std::shared_ptr<item> newItem);
+	//void addItem(const std::shared_ptr<item> newItem);
 
-	void removeItem();
+	//void removeItem();
 
-	void useItem();
+	//void useItem();
 
-	std::shared_ptr <item> swapItem(std::shared_ptr<item> newItem); 
+	//std::shared_ptr <item> swapItem(std::shared_ptr<item> newItem); 
 	//return the current item in this slot and takes the method argument and places it in the currentItem slot
 
 private:
-	std::shared_ptr<item> currentItem; //item, if one that currently occupies this slot
+	//std::shared_ptr<item> currentItem; //item, if one that currently occupies this slot
 
 };
 

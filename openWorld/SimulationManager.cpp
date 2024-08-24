@@ -54,6 +54,7 @@ void SimulationManager::run()
 	Shader* depthShader = ResourceManager::loadShader("Shaders/shadowShader.vs", "Shaders/shadowShader.fs", nullptr, "depthShader");
 	Shader* debugDepthQuad = ResourceManager::loadShader("Shaders/debugDepthQuad.vs", "Shaders/debugDepthQuad.fs", nullptr, "depthQuad");
 	Shader* animationShader = ResourceManager::loadShader("Shaders/animationShader.vs", "Shaders/animationShader.fs", nullptr, "animShader");
+	Shader* lightAnimShader = ResourceManager::loadShader("Shaders/LightAndAnimationShader.vs","Shaders/LightAndAnimationShader.fs",nullptr,"lightAnimshader");
 	//Shader* physicsDebugShader = ResourceManager::loadShader("Shaders/PhysicsTestShader.vs","Shaders/PhysicsTestShader.fs",nullptr,"physicsDebug");
 	//Game objects go here for testing independent parts of the engine--------------------------------------
 
@@ -72,9 +73,6 @@ void SimulationManager::run()
 	this->sceneObj->setDepthShader(depthShader);
 	this->gameRenderer->setDebugDepthQuadShader(debugDepthQuad);
 
-	//item testing:
-	gameObjectManager newManager;
-	unsigned int gunId = newManager.createHandGun("resources/Assets/1911Edit.gltf","handGun",10,10);
 
 	//player data
 	renderContext playerContext(animationShader, this->sceneObj, &newCamera);
@@ -184,7 +182,7 @@ void SimulationManager::run()
 		//draw contents to actual game window
 		//animator::updateAnimations(deltaTime);
 
-		glm::vec3 playerPos = glm::vec3(0.0f);
+		glm::vec3 playerPos = *newPlayer.getPosition();
 		this->sceneObj->setFocusPos(playerPos);
 		//newPlayer.update(this->deltaTime);
 

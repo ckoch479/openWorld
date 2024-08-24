@@ -63,7 +63,7 @@ void playerCameraController::updateController(float dt, glm::vec3 playerPos, glm
 	this->playerCamera->setPosition(cameraPosition);
 	this->playerCamera->setTarget(this->targetPosition  /*+ (right * 0.3f)*/);
 	this->playerCamera->setOrientation(this->yaw, this->pitch);
-	this->playerCamera->setZoomLevel(25);
+	this->playerCamera->setZoomLevel(30);
 
 
 	this->playerCamera->update(dt);

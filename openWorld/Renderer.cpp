@@ -80,11 +80,6 @@ void renderer::drawModel(renderInfo* model, scene* currentScene, Shader* shader)
 				shader->SetMatrix4(matrixString.c_str(), transform);
 			}
 		
-		
-			//animator::setAnimationMatrices(model->model, shader);
-		
-		
-
 		glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(model->model->meshes[i].indices.size()), GL_UNSIGNED_INT, 0);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -340,12 +335,12 @@ void renderer::drawScene(scene* scene)
 
 
 	//shadow debug 
-	/*this->debugDepthQuad->use();
-	this->debugDepthQuad->SetFloat("near_plane",near_plane);
-	this->debugDepthQuad->SetFloat("far_plane",far_plane);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	renderScreenQuad();*/
+	//this->debugDepthQuad->use();
+	//this->debugDepthQuad->SetFloat("near_plane",near_plane);
+	//this->debugDepthQuad->SetFloat("far_plane",far_plane);
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, depthMap);
+	//renderScreenQuad();
 
 	/*glBindBuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);

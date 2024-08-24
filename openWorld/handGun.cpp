@@ -17,25 +17,25 @@ handGun::handGun(std::string filePath, std::string name, float mass, float volum
 	this->objectTransform = newTran;
 }
 
-handGun::~handGun()
-{
+//handGun::~handGun()
+//{
+//
+//}
 
-}
-
-void handGun::addToScene(scene* scene, Shader* shader)
-{
-	transform newTransform;
-	newTransform.position = glm::vec3(0.0f);
-	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
-	newTransform.scale = glm::vec3(0.01);
-
-	this->sceneID = scene->addStaticSceneObj(this->model, newTransform, shader);
-
-	std::cout << "handgun being added to scene\n";
-}
-
-void handGun::updateTransform(scene* scene, transform newTransform)
-{	
-	scene->updateTransform(this->sceneID, newTransform);
-}
+//void handGun::addToScene(scene* scene, Shader* shader)
+//{
+//	transform newTransform;
+//	newTransform.position = glm::vec3(0.0f);
+//	newTransform.orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
+//	newTransform.scale = glm::vec3(0.01);
+//
+//	this->sceneID = scene->addStaticSceneObj(this->model, newTransform, shader);
+//
+//	std::cout << "handgun being added to scene\n";
+//}
+//
+//void handGun::updateTransform(scene* scene, transform newTransform)
+//{	
+//	scene->updateTransform(this->sceneID, newTransform);
+//}
 

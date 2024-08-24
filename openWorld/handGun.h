@@ -21,24 +21,24 @@ class handGun : public item
 public:
 	handGun(std::string filePath, std::string name, float mass, float volume);
 
-	~handGun() override;
+	//~handGun() override;
 
-	std::string getName() const override { return this->name; }
+	//std::string getName() const override { return this->name; }
 
-	bool isEquipable() const override { return true; }
-	bool isStackable() const override { return false; }
-	bool isConsumable() const override { return false; }
+	//bool isEquipable() const override { return true; }
+	//bool isStackable() const override { return false; }
+	//bool isConsumable() const override { return false; }
 
-	float getMass() const override { return this->mass; }
-	float getVolume() const override { return this->volume; }
+	//float getMass() const override { return this->mass; }
+	//float getVolume() const override { return this->volume; }
 
-	void addToScene(scene* scene, Shader* shader); 
-	void updateTransform(scene* scene, transform newTransform);
-	glm::mat4 getTransform() { return this->objectTransform; }
+	//void addToScene(scene* scene, Shader* shader); 
+	//void updateTransform(scene* scene, transform newTransform);
+	//glm::mat4 getTransform() { return this->objectTransform; }
 
-	void shoot(); //create projectile in the world
+	//void shoot(); //create projectile in the world
 
-	void setLocalTransform(glm::mat4 newTransform) { this->objectTransform = newTransform; }
+	//void setLocalTransform(glm::mat4 newTransform) { this->objectTransform = newTransform; }
 
 private:
 	//local points on the object that is used for player/entity animations

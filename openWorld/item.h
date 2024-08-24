@@ -2,6 +2,14 @@
 
 #include <iostream>
 
+#include "includes/glm/glm.hpp"
+#include "Includes/glm/gtc/type_ptr.hpp"
+#include "Includes/glm/gtc/quaternion.hpp"
+#include <glm/gtx/string_cast.hpp>
+
+#include "Entity.h"
+
+#include "Model.h"
 
 #ifndef ITEM_H
 #define ITEM_H
@@ -12,17 +20,15 @@ class item
 
 public:
 
-	virtual ~item() {}
 
-	virtual std::string getName() const = 0;
 
-	virtual bool isEquipable() const = 0;
-	virtual bool isStackable() const = 0;
-	virtual bool isConsumable() const = 0;
+protected:
+	
+	glm::vec3* positionPtr;
+	glm::quat* orientPtr;
+	glm::vec3* scalePtr;
 
-	virtual float getMass() const = 0;
-	virtual float getVolume() const = 0;
-
+	Model* itemModel;
 
 private:
 

@@ -103,6 +103,12 @@
     <Filter Include="Source Files\Entity\component">
       <UniqueIdentifier>{529a0c1e-39e2-40d9-9dd1-e247ee311f7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\itemManagement">
+      <UniqueIdentifier>{a58ab45c-7e8b-4374-acd3-8adaf5345e7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\itemManagement">
+      <UniqueIdentifier>{6298ca00-931a-421e-aa1e-fbd4f263e01f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -160,9 +166,6 @@
       <Filter>Source Files\loadingUtilites</Filter>
     </ClCompile>
     <ClCompile Include="handGun.cpp">
-      <Filter>Source Files\GameObjectBody\worldItems</Filter>
-    </ClCompile>
-    <ClCompile Include="item.cpp">
       <Filter>Source Files\GameObjectBody\worldItems</Filter>
     </ClCompile>
     <ClCompile Include="inventorySlot.cpp">
@@ -291,6 +294,12 @@
     <ClCompile Include="player.cpp">
       <Filter>Source Files\player</Filter>
     </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Source Files\itemManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="itemSlot.cpp">
+      <Filter>Source Files\itemManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -363,9 +372,6 @@
       <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
     </ClInclude>
     <ClInclude Include="inventorySlot.h">
-      <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
-    </ClInclude>
-    <ClInclude Include="item.h">
       <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
     </ClInclude>
     <ClInclude Include="playerHandSlot.h">
@@ -514,6 +520,12 @@
     </ClInclude>
     <ClInclude Include="player.h">
       <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>Header Files\itemManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="itemSlot.h">
+      <Filter>Header Files\itemManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

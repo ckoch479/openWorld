@@ -179,6 +179,7 @@
     <ClCompile Include="Includes\glad\glad.c" />
     <ClCompile Include="inventorySlot.cpp" />
     <ClCompile Include="item.cpp" />
+    <ClCompile Include="itemSlot.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="lightEmitter.cpp" />
     <ClCompile Include="lookup_table.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="Includes\glad\glad.h" />
     <ClInclude Include="inventorySlot.h" />
     <ClInclude Include="item.h" />
+    <ClInclude Include="itemSlot.h" />
     <ClInclude Include="keyDefinitions.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="lightEmitter.h" />
