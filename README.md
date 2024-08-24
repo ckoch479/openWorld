@@ -15,3 +15,5 @@ I used various sources to learn from while putting this together such as:
 
 
 libraries used: C++, GLFW, glm, Assimp, stb_image, reactPhysics3d.
+
+Models, animations, and textures were provided from mixamo and sketchfab. These assets are for testing and will not be used permanently.
