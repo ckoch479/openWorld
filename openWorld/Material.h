@@ -2,6 +2,7 @@
 
 #include "Texture.h"
 
+//not the best way to do this i think but it works for now will revisit later
 struct textureData //named such to differentiate between just the data and an actual texture object
 {
 	std::string filePath;	//path to load the texture from

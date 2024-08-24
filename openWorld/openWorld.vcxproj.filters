@@ -168,19 +168,10 @@
     <ClCompile Include="handGun.cpp">
       <Filter>Source Files\GameObjectBody\worldItems</Filter>
     </ClCompile>
-    <ClCompile Include="inventorySlot.cpp">
-      <Filter>Source Files\GameObjectBody\worldItems</Filter>
-    </ClCompile>
-    <ClCompile Include="gameObjectManager.cpp">
-      <Filter>Source Files\GameObjectBody\worldItems</Filter>
-    </ClCompile>
     <ClCompile Include="playerHandSlot.cpp">
       <Filter>Source Files\GameObjectBody\worldItems</Filter>
     </ClCompile>
     <ClCompile Include="characterController.cpp">
-      <Filter>Source Files\player</Filter>
-    </ClCompile>
-    <ClCompile Include="playerEntity.cpp">
       <Filter>Source Files\player</Filter>
     </ClCompile>
     <ClCompile Include="playerManager.cpp">
@@ -203,9 +194,6 @@
     </ClCompile>
     <ClCompile Include="Bone.cpp">
       <Filter>Source Files\RenderingandSceneBody\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="programTimer.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="worldMap.cpp">
       <Filter>Source Files\gameWorld</Filter>
@@ -300,6 +288,9 @@
     <ClCompile Include="itemSlot.cpp">
       <Filter>Source Files\itemManagement</Filter>
     </ClCompile>
+    <ClCompile Include="playerModelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -341,12 +332,6 @@
     <ClInclude Include="thirdPersonCamera.h">
       <Filter>Header Files\RenderingandSceneHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="playerActionDefinitions.h">
-      <Filter>Header Files\definitionHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="keyDefinitions.h">
-      <Filter>Header Files\definitionHeaders</Filter>
-    </ClInclude>
     <ClInclude Include="renderingInfoDefinitions.h">
       <Filter>Header Files\definitionHeaders</Filter>
     </ClInclude>
@@ -365,22 +350,13 @@
     <ClInclude Include="testingBoxMeshFunctions.h">
       <Filter>Header Files\loadingUtilities</Filter>
     </ClInclude>
-    <ClInclude Include="gameObjectManager.h">
-      <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
-    </ClInclude>
     <ClInclude Include="handGun.h">
-      <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
-    </ClInclude>
-    <ClInclude Include="inventorySlot.h">
       <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
     </ClInclude>
     <ClInclude Include="playerHandSlot.h">
       <Filter>Header Files\GameObjectHeaders\worldItems</Filter>
     </ClInclude>
     <ClInclude Include="characterController.h">
-      <Filter>Header Files\player</Filter>
-    </ClInclude>
-    <ClInclude Include="playerEntity.h">
       <Filter>Header Files\player</Filter>
     </ClInclude>
     <ClInclude Include="playerManager.h">
@@ -403,9 +379,6 @@
     </ClInclude>
     <ClInclude Include="Bone.h">
       <Filter>Header Files\RenderingandSceneHeaders\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="programTimer.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="worldMap.h">
       <Filter>Header Files\gameWorld</Filter>
@@ -526,6 +499,12 @@
     </ClInclude>
     <ClInclude Include="itemSlot.h">
       <Filter>Header Files\itemManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="playerModelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderableModel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

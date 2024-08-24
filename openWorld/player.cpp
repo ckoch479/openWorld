@@ -58,7 +58,8 @@ void player::update(float dt)
 	this->motionController->updatePlayerMotion(dt, &this->currentAction);
 	this->motionController->handleRotation(dt, this->cameraController->getCamera());
 
-	//transforms are really fucked up, had to inverse the orientation in collider and render to get things to match up correctly
+	//transforms are really messed up, had to inverse the orientation in collider and render to get things to match up correctly, cant really find where i messed up my math so this will
+	//have to do for now until i can either fix it or impliment a class that manages corrections applied to imported models and such
 
 }
 
@@ -69,8 +70,7 @@ void player::debugDirections(debugger* debug)
 	glm::vec3 frontB = frontA + this->front * 1.0f;
 	debug->addDebugLine(frontA, frontB);
 
-	//draw target position
-
+	//draw target position, just a box where the camera target is
 	glm::vec3 targetPos = *this->cameraController->getTargetPosition();
 	debug->addDebugBox(targetPos, glm::quat(1.0, 0.0, 0.0, 0.0), glm::vec4(1.0, 1.0, 1.0, 0.9), glm::vec3(0.1, 0.1, 0.1));
 }

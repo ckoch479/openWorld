@@ -25,6 +25,7 @@
 #include "skeleton.h"
 #include "renderContext.h"
 #include "PhysicsWorld.h"
+#include "playerModelManager.h"
 
 #include "debugger.h"
 #ifndef PLAYER_H
@@ -51,11 +52,11 @@ private:
 
 	std::string currentAnimation; //set by animation controller
 
-	Model* playerModel; //eventually will be replaced by a vector or array of models for each individual part
+	Model* playerModel; //eventually will be replaced by a vector or array of models for each individual part and moved to model manager
 	skeleton* playerSkeleton;
 	renderContext renderData;
 
-	//these variables are stored in the Entity class under protected but are placed here for clarity (mainly for me because im sorta dumb)
+	//these variables are stored in the Entity class under protected but are placed here for clarity (mainly for me because if i dont see it, it doesnt exsist)
 	glm::vec3* positionPtr;
 	glm::quat* orientationPtr;
 	glm::vec3* scalePtr;
@@ -66,7 +67,7 @@ private:
 	// playerHealthManager
 	// playerCameraController
 	// 
-
+	playerModelManager* modelManager;
 	objAnimator* playerAnimator; //needs player Model in constructor and Dt during updates
 	playerRenderer* renderer; //needs shader, sceneObj, and model in constructor, also needs transform and animation matrices
 	characterController* playerController; //needs window manager passed into the constructor, returns player action during update

@@ -5,13 +5,14 @@
 
 #include "renderingInfoDefinitions.h"
 #include "animationDataDefinitions.h"
-#include "playerActionDefinitions.h"
+
 
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
 #include "Renderer.h"
 
+//not implimented very well as of now, will add alot more later
 struct debugerLines
 {
 	glm::vec3 pointA;

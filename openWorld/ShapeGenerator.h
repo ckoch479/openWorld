@@ -7,7 +7,7 @@
 
 #include "renderingInfoDefinitions.h"
 
-
+//sorta not super amazing way to write letters in 2d with triangles, wasted too much time on this instead of using textures with simple polygons
 #ifndef SHAPEGENERATOR_H
 #define SHAPEGENERATOR_H
 

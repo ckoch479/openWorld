@@ -7,6 +7,9 @@
 #include <map>
 #include <unordered_map>
 
+#include "Bone.h"
+#include "skeleton.h"
+
 struct KeyPosition
 {
 	glm::vec3 position;
@@ -39,7 +42,7 @@ struct animBone
 	std::vector <keyRotation> rotations;
 	std::vector <keyScale> scales;
 
-	// bellow was added due to issues with timesteps in animation hopefully will be resolved
+	// bellow was added due to issues with timesteps in animation hopefully will be resolved (sorta resolved i think i fixed the time step issues mostly)
 	int currentPosition = 0;
 	int currentRotation = 0;
 	int currentScale = 0;

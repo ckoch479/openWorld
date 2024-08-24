@@ -2,7 +2,7 @@
 
 playerManager::playerManager(scene* newScene, PhysicsWorld* newWorld, windowManager* newManager, Shader* playerShader,Shader* itemShader, std::string modelFilePath, Camera* newCamera, Level* currentLevel)
 {
-	this->player = new playerEntity(modelFilePath);
+	
 	//this->currentScene = newScene;
 	//this->currentWorld = newWorld;
 	//this->currentManager = newManager;
@@ -30,15 +30,6 @@ void playerManager::update(float dt)
 
 	//this->player->getPlayerAnimator()->update(dt);
 
-	if (this->testSignal == true)
-	{
-		transform playerTransform = *this->player->getPlayersTransform();
-		glm::vec3 targetPosition = player->getPlayerRelativeTransform()->front;
-
-		std::string endEffectorName = "mixamorig:RightHand";
-		glm::vec3 target = targetPosition;
-		this->player->getPlayerAnimator()->applyInverseKinematics(endEffectorName, target);
-	}
 
 //	this->player->updatePlayerScene(this->currentScene); //had to be ordered this way because hand items would lag behind if didnt and would not be placed correctly
 	//this->inventoryManager->updateInventoryStatus();

@@ -14,13 +14,18 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-
 class item
 {
 
 public:
 
+	virtual void update() {};
 
+	virtual void equip() {};
+
+	virtual void unEquip() {};
+
+	virtual void use() {};
 
 protected:
 	

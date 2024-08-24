@@ -1,5 +1,8 @@
-
 #pragma once
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -7,39 +10,46 @@
 #include "glm/gtc/quaternion.hpp"
 #include "includes/glm/gtx/quaternion.hpp"
 
-#include "playerEntity.h"
+#include "player.h"
 
 #include "item.h"
-#include "gameObjectManager.h"
-#include "playerHandSlot.h"
-#include "inventorySlot.h"
-
-#include "scene.h"
-#include "shader.h"
+#include "itemSlot.h"
 
 #ifndef PLAYERINVENTORYMANAGER_H
 #define PLAYERINVENTORYMANAGER_H
-
-enum inventorySlots
-{
-	LEFTHAND,
-	RIGHTHAND,
-};
 
 class PlayerInventoryManager
 {
 public:
 
-	PlayerInventoryManager(playerEntity* newPlayer, scene* newScene, Shader* newShader);
+	enum class Slot
+	{
+	Head,
+	Torso,
+	Legs,
+	Hands,
+	Feet,
+	RightHand,
+	LeftHand,
+	Back,
+	};
+
+	PlayerInventoryManager();
 	~PlayerInventoryManager();
 
-	void equipSlot(inventorySlots slot, std::shared_ptr<item> newItem);
+	void equipItem(Slot slot, item* newItem);
 
-	void updateInventoryStatus();
+	void unEquipItem(Slot slot);
+
+	item* getEquipedItem(Slot slot);
+
+	void updatePlayerState();
 
 private:
 
+	void updatePlayerAnimations();
 
+	std::unordered_map<Slot, itemSlot> equippedItems;
 
 };
 

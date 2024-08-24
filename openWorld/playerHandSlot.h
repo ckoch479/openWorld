@@ -9,7 +9,7 @@
 
 
 #include "item.h"
-#include "gameObjectManager.h"
+
 
 #include "handGun.h"
 
@@ -19,6 +19,8 @@ class playerHandSlot
 {
 public:
 
+	//only reason this is still here is because the math to move an object to the players hand is here and i know it worked so id rather just recopy that instead of losing it and 
+	//messing the math up
 	playerHandSlot(glm::mat4 boneOffsetMatrix);
 	~playerHandSlot();
 

@@ -2,70 +2,13 @@
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 
-#include "Texture.h"
-#include "skeleton.h"
-
 #include <vector>
 #include <string>
 #include <map>
 #include <unordered_map>
 
-//struct Vertex
-//{
-//	glm::vec3 vertexPosition;
-//	glm::vec3 normal;
-//	glm::vec2 textureCoordinates;
-//
-//	glm::vec3 tangent;
-//	glm::vec3 bitTangent;
-//
-//	int boneIDs[4];
-//	float boneWeights[4];
-//};
-
-//struct textureData //named such to differentiate between just the data and an actual texture object
-//{
-//	std::string filePath;	//path to load the texture from
-//	std::string uniqueName; //for resource manager, textures arent attached fully to mesh allows reused textures to only be loaded once
-//};
-//
-//struct Material
-//{
-//	Texture* diffuse0;
-//	textureData diffuseData;
-//	Texture* specular0;
-//	textureData specularData;
-//	Texture* normalMap0;
-//	textureData normalData;
-//
-//	float shininess;
-//};
-
-//struct Mesh
-//{
-//	std::vector <Vertex> vertices;
-//	std::vector <unsigned int> indices;
-//	Material material; //will replace textureData vector
-//	unsigned int VAO;//for rendering
-//	unsigned int VBO;
-//	unsigned int EBO;
-//};
-
-//struct Bone
-//{
-//	int id;
-//	glm::mat4 offsetMatrix;
-//	std::string name;
-//};
-
-//struct Model
-//{
-//	std::vector <Mesh> meshes;
-//	skeleton* skeleton;
-//	std::string name;
-//	std::vector <glm::mat4> animationMatrices; //temporary im thinking
-//	
-//};
+//this file is from when i thought adding all data related to rendering to one large header file, im working on moving things to their own files/classes, lights being a good example of
+//something that will be a child class of entity later
 
 struct pointLight
 {
@@ -120,6 +63,7 @@ struct relTransform
 	glm::vec3 right;
 };
 
+//triangle based letter rendering was never a good idea but i may be able to resuse some of this code later, here to remind me to never spend that much time on this again
 //2d rendering
 struct Vertex2D
 {

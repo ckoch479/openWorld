@@ -12,6 +12,7 @@ playerRenderer::playerRenderer(renderContext* context, Model* playerModel)
 	this->sceneObj = context->sceneObj;
 	this->playerShader = context->shader;
 	this->currentPlayerModel = playerModel;
+
 }
 
 playerRenderer::~playerRenderer()
@@ -50,7 +51,43 @@ void playerRenderer::updatePlayerRender()
 {
 	transform playerTransfom;
 	playerTransfom.position = *this->playerPos;
-	playerTransfom.orientation = glm::inverse(*this->playerOrient); //inversing this does work for the mesh but still not the colliders
+	playerTransfom.orientation = glm::inverse(*this->playerOrient); //had to do this due to an error somewhere in my math when it comes to the player camera, player front and mesh orientation
 	playerTransfom.scale = *this->playerScale;
 	this->sceneObj->updateTransform(this->sceneId, playerTransfom);
+}
+
+void playerRenderer::updatePlayerModels()
+{
+
+}
+
+void playerRenderer::addRightHandItem(renderableModel newItem)
+{
+	this->rightHandModel = newItem.model;
+	this->handShader = newItem.modelShader;
+
+	this->rightHandPos = newItem.pos;
+	this->rightHandOrient = newItem.orient;
+	this->rightHandScale = newItem.scale;
+
+	transform handTransform;
+	handTransform.position = *this->rightHandPos;
+	handTransform.orientation = *this->rightHandOrient;
+	handTransform.scale = *this->rightHandScale;
+
+	this->rightHandSceneId = this->sceneObj->addStaticSceneObj(this->rightHandModel, handTransform, this->handShader);
+}
+
+void playerRenderer::updateRightHandTransform(glm::vec3* pos, glm::quat* orient, glm::vec3* scale)
+{
+	this->rightHandPos = pos;
+	this->rightHandOrient = orient;
+	this->rightHandScale = scale;
+
+	transform handTransform;
+	handTransform.position = *this->rightHandPos;
+	handTransform.orientation = *this->rightHandOrient;
+	handTransform.scale = *this->rightHandScale;
+
+	this->sceneObj->updateTransform(this->rightHandSceneId, handTransform);
 }

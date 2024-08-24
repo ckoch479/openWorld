@@ -1,5 +1,6 @@
 #pragma once
 
+//actions the player can take may be modified for clarity since it is so large
 enum playerActions
 {
 	idle,
@@ -50,8 +51,8 @@ enum playerActions
 
 	walkAiming,
 	aimingStepBack, 
-	aimingStepLeft, //found
-	aimingStepRight,//found
+	aimingStepLeft, 
+	aimingStepRight,
 
 
 	climbing,

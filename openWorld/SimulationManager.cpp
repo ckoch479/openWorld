@@ -55,9 +55,7 @@ void SimulationManager::run()
 	Shader* debugDepthQuad = ResourceManager::loadShader("Shaders/debugDepthQuad.vs", "Shaders/debugDepthQuad.fs", nullptr, "depthQuad");
 	Shader* animationShader = ResourceManager::loadShader("Shaders/animationShader.vs", "Shaders/animationShader.fs", nullptr, "animShader");
 	Shader* lightAnimShader = ResourceManager::loadShader("Shaders/LightAndAnimationShader.vs","Shaders/LightAndAnimationShader.fs",nullptr,"lightAnimshader");
-	//Shader* physicsDebugShader = ResourceManager::loadShader("Shaders/PhysicsTestShader.vs","Shaders/PhysicsTestShader.fs",nullptr,"physicsDebug");
-	//Game objects go here for testing independent parts of the engine--------------------------------------
-
+	
 	this->sceneObj->setDirectionalLight(glm::vec3(-1.0f, -1.0f, -0.5f), glm::vec3(0.1, 0.1, 0.1), glm::vec3(0.4, 0.4, 0.5), glm::vec3(0.3, 0.3, 0.3));
 
 	Level level1;
@@ -65,32 +63,30 @@ void SimulationManager::run()
 	level1.setLevelModel("resources/Terrain/hangarScene.gltf");
 	level1.renderMap(lightShader);
 	
-
+	//create main camera, as of right now only one camera is allowed per scene
 	Camera newCamera(glm::vec3(0.0f, 2.0f, 3.0f),0,0);
-
 	this->sceneObj->setCamera(&newCamera);
 
+	//add depth and debug shaders to the scene/renderer for shadows, these will be refactored later for better code, was mainly attempting to test dynamic shadows
 	this->sceneObj->setDepthShader(depthShader);
 	this->gameRenderer->setDebugDepthQuadShader(debugDepthQuad);
 
 
 	//player data
 	renderContext playerContext(animationShader, this->sceneObj, &newCamera);
-
 	Model* playerModel = ResourceManager::getModel("playerModel");
-	//player
 	player newPlayer(playerContext, playerModel, this->WindowManager, this->world);
 
+	//this will be done differently later however for now all entities will be passed in like so until i decide exactly how i want to impliment loading in data that isnt hard coded 
+	//(maybe custom file types?)
 	Entity* playerEntity = &newPlayer;
 	this->worldManager->addWorldEntity("player", playerEntity);
-	
-	//npc testing no AI yet:
-	//npcManager newNPC(this->sceneObj, this->world, animationShader, "resources/NPC/Zombie/zombieHolder.gltf", "swatZombie");
 
 	this->state = debug; //game state overwrite for testing
 
 	//main loop this will start on the game menu and and such
 	//game loop and refresh/rendering loop is controlled here, actual rendering is done with the renderer
+	//plan is to have this section actually start as the game menu/ how the game would start up normally and the debug state is so i can jump directly to certain portions
 	while (this->state == active)
 	{
 		setDeltaTime(); //update deltaTime for this loop
@@ -103,12 +99,9 @@ void SimulationManager::run()
 		}
 
 		if (this->WindowManager->checkKey(341)) 
-		{
+		{	//left ctrl
 			this->WindowManager->disableCursor();
 		}
-
-		//newPlayer.updateManager(deltaTime);
-		//newNPC.updateManager(deltaTime, &level1);
 
 		//update physics
 		accumulator += deltaTime;
@@ -119,8 +112,6 @@ void SimulationManager::run()
 		}
 		
 		//draw contents to actual game window
-		animator::updateAnimations(deltaTime);
-
 		this->gameRenderer->drawScene(this->sceneObj);
 
 		//shutdown key check (esc)----------------------------
@@ -130,22 +121,6 @@ void SimulationManager::run()
 		}
 
 		//----------------------------------------------------
-		this->WindowManager->pollWindowEvents();
-	}
-
-	//level editor is active:
-	while(state == editor)
-	{
-		setDeltaTime();
-
-
-		this->gameRenderer->drawScene(this->sceneObj);
-
-		if (this->WindowManager->checkKey(256))
-		{
-			this->state = shutdown;
-		}
-
 		this->WindowManager->pollWindowEvents();
 	}
 
@@ -165,11 +140,6 @@ void SimulationManager::run()
 			this->gameRenderer->setDebugLines(true);
 		}
 
-		double x = 0, y = 0;
-		this->WindowManager->getMousePosition(&x, &y);
-
-		//newPlayer.updateManager(deltaTime);
-		//newNPC.updateManager(deltaTime, &level1);
 
 		//update physics
 		accumulator += deltaTime;
@@ -180,18 +150,10 @@ void SimulationManager::run()
 		}
 
 		//draw contents to actual game window
-		//animator::updateAnimations(deltaTime);
-
-		glm::vec3 playerPos = *newPlayer.getPosition();
-		this->sceneObj->setFocusPos(playerPos);
-		//newPlayer.update(this->deltaTime);
-
 		this->worldManager->update(deltaTime);
 		this->world->debugOBBs(this->gameRenderer);
 		this->gameRenderer->drawScene(this->sceneObj);
 
-		
-		
 		//shutdown key check (esc)----------------------------
 		if (this->WindowManager->checkKey(256))
 		{
@@ -220,6 +182,7 @@ void SimulationManager::setDeltaTime() //frame time
 	
 }
 
+//this function preloads animations that are available for use for all humanoid models, thank you mixamo for the animations for testing, you are appreciated greatly
 void SimulationManager::loadAnimations()
 {
 	ResourceManager::loadModel("resources/player/playerEdit.gltf", "playerModel");
@@ -243,6 +206,8 @@ void SimulationManager::loadAnimations()
 
 }
 
+//this below is a rough idea of what i initally thought i wanted to impliment keeping it here to see how far ive come
+// 
 //script testing function idea
 //
 // setup section (what to load and preform for this level)-------------------------------------------------------------------------

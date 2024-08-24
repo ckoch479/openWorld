@@ -14,8 +14,6 @@
 #include "Shader.h"
 #include "renderContext.h"
 
-#include "gameObjectManager.h"
-
 #include "includes/glm/glm.hpp"
 #include "Includes/glm/gtc/type_ptr.hpp"
 

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "playerEntity.h"
+
 #include "characterController.h"
 #include "PlayerInventoryManager.h"
 
@@ -29,7 +29,6 @@ public:
 
 	void testItemSlots(std::shared_ptr<item> newItem);
 
-	playerEntity* player;
 
 private:
 

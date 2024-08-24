@@ -1,5 +1,6 @@
 #pragma once
 
+//similar to player actions, not fully implimented, very rough i know
 enum npcActions
 {
 	npcIdle,
