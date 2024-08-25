@@ -82,6 +82,15 @@ void SimulationManager::run()
 	Entity* playerEntity = &newPlayer;
 	this->worldManager->addWorldEntity("player", playerEntity);
 
+	//create an item for testing the inventory system
+
+	Model* gunModel = ResourceManager::loadModel("resources/Assets/1911Edit.gltf", "handGun");
+	oneHandedRangedWeapon newWeapon(glm::vec3(0.0,0.0,0.0),glm::quat(1.0,0.0,0.0,0.0),glm::vec3(0.01),"handGun", gunModel, lightShader);
+	item* weaponPtr = &newWeapon;
+	//add this item to the player for testing
+	newPlayer.equipItem(weaponPtr);
+
+
 	this->state = debug; //game state overwrite for testing
 
 	//main loop this will start on the game menu and and such

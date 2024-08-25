@@ -5,6 +5,11 @@ PlayerInventoryManager::PlayerInventoryManager()
 
 }
 
+PlayerInventoryManager::PlayerInventoryManager(playerModelManager* modelManager)
+{
+	this->modelManager = modelManager;
+}
+
 PlayerInventoryManager::~PlayerInventoryManager()
 {
 
@@ -13,7 +18,8 @@ PlayerInventoryManager::~PlayerInventoryManager()
 void PlayerInventoryManager::equipItem(Slot slot, item* newItem)
 {
 	this->equippedItems[slot].storeItem(newItem);
-	updatePlayerState();
+	this->modelManager->setEquipedItem(newItem);
+	//updatePlayerState();
 }
 
 void PlayerInventoryManager::unEquipItem(Slot slot)
@@ -37,12 +43,20 @@ item* PlayerInventoryManager::getEquipedItem(Slot slot)
 
 void PlayerInventoryManager::updatePlayerState()
 {
-
+	
 }
 
 void PlayerInventoryManager::updatePlayerAnimations()
-{
-	
+{	
+	//for testing not the true implimentation
+	if(!this->equippedItems[Slot::RightHand].isEmpty())
+	{
+		this->modelManager->setEquipedItem(this->equippedItems[Slot::RightHand].getItem());
+	}
+	else 
+	{
+		this->modelManager->removeEquipedItem();
+	}
 }
 
 //void PlayerInventoryManager::equipSlot()

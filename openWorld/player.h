@@ -25,7 +25,11 @@
 #include "skeleton.h"
 #include "renderContext.h"
 #include "PhysicsWorld.h"
+
 #include "playerModelManager.h"
+#include "PlayerInventoryManager.h"
+
+#include "item.h"
 
 #include "debugger.h"
 #ifndef PLAYER_H
@@ -44,6 +48,8 @@ public:
 	void debugDirections(debugger* debug);
 
 	glm::vec3* getPosition();
+
+	void equipItem(item* newItem);
 
 private:
 
@@ -68,6 +74,7 @@ private:
 	// playerCameraController
 	// 
 	playerModelManager* modelManager;
+	PlayerInventoryManager* invManager;
 	objAnimator* playerAnimator; //needs player Model in constructor and Dt during updates
 	playerRenderer* renderer; //needs shader, sceneObj, and model in constructor, also needs transform and animation matrices
 	characterController* playerController; //needs window manager passed into the constructor, returns player action during update

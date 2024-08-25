@@ -10,7 +10,7 @@
 #include "glm/gtc/quaternion.hpp"
 #include "includes/glm/gtx/quaternion.hpp"
 
-#include "player.h"
+#include "playerModelManager.h"
 
 #include "item.h"
 #include "itemSlot.h"
@@ -35,6 +35,7 @@ public:
 	};
 
 	PlayerInventoryManager();
+	PlayerInventoryManager(playerModelManager* modelManager);
 	~PlayerInventoryManager();
 
 	void equipItem(Slot slot, item* newItem);
@@ -51,6 +52,7 @@ private:
 
 	std::unordered_map<Slot, itemSlot> equippedItems;
 
+	playerModelManager* modelManager;
 };
 
 #endif // !PLAYERINVENTORYMANAGER_H

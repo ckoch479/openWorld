@@ -6,7 +6,7 @@ playerModelManager::playerModelManager(Model* defaultModel, objAnimator* playerA
 	this->playerModel = defaultModel;
 	this->playerAnimator = playerAnimator;
 	this->renderer = renderer;
-
+	//add default model to renderer
 }
 
 playerModelManager::~playerModelManager()
@@ -33,7 +33,8 @@ void playerModelManager::setEquipedItem(item* newItem)
 	this->equipedOrient = newItem->getOrient();
 	this->equipedScale = newItem->getScale();
 	this->handShader = newItem->getShader();
-	//this->renderer->addRightHandItem();
+	renderableModel itemModel(playerHandModel, this->equipedPos, this->equipedOrient, this->equipedScale, this->handShader);
+	this->renderer->addRightHandItem(itemModel);
 }
 
 void playerModelManager::removeEquipedItem()
@@ -48,16 +49,18 @@ void playerModelManager::removeEquipedItem()
 
 void playerModelManager::updateManager()
 {
-	//update player model first
-
-	this->renderer->setTransform(this->playerTransform, this->playerOrient, this->playerScale);
 
 	//update player equipment if it exists //used handModel and shader because these two are absolutely needed
-	if(this->playerHandModel && handShader)
+	if (this->playerHandModel && handShader)
 	{
 		updateEquipedItemTransform();
 		this->renderer->updateRightHandTransform(this->equipedPos, this->equipedOrient, this->equipedScale);
 	}
+
+	//update player model
+	this->renderer->setTransform(this->playerTransform, this->playerOrient, this->playerScale);
+	this->renderer->updatePlayerRender();
+	
 
 }
 
@@ -68,23 +71,29 @@ void playerModelManager::updateEquipedItemTransform()
 	glm::mat4 rightHandMatrix = this->playerAnimator->getFinalBoneTransform(boneName);
 	glm::mat4 rightHandOffset = this->playerModel->skeleton->getBone(boneName)->getOffsetMat();
 	
-    //		glm::mat4 localTransform = weapon->getTransform(); // this was for a local correction transform
+	glm::mat4 localTransform(1.0f); // this is for a local correction transform will be added instead to the item itself and so it can be fixed using a level editor
+	localTransform = glm::translate(localTransform, glm::vec3(0, 0, 0));
+	localTransform = glm::rotate(localTransform, glm::radians(95.0f), glm::vec3(1, 0, 0)); //90
+	localTransform = glm::rotate(localTransform, glm::radians(185.0f), glm::vec3(0, 1, 0)); //180 
+	localTransform = glm::rotate(localTransform, glm::radians(0.0f), glm::vec3(0, 0, 1));
+
+	rightHandMatrix = rightHandMatrix * glm::inverse(rightHandOffset);
 
 	glm::mat4 bonePos(1.0f);
 	
-		glm::mat4 playerMat(1.0f); //create player model matrix (model space to world space)
-		playerMat = glm::translate(playerMat, *this->playerTransform);
-		playerMat = playerMat * glm::toMat4(*this->playerOrient);
-		playerMat = glm::scale(playerMat, *this->playerScale);
+	glm::mat4 playerMat(1.0f); //create player model matrix (model space to world space)
+	playerMat = glm::translate(playerMat, *this->playerTransform);
+	playerMat = playerMat * glm::inverse(glm::toMat4(*this->playerOrient));
+	playerMat = glm::scale(playerMat, *this->playerScale);
 	
-		bonePos = playerMat * rightHandOffset * glm::inverse(rightHandMatrix); // from origin to model space, to bone space, then apply anim transform
+	bonePos = playerMat * rightHandMatrix; //mutliply the bone transform (in model local space) with the world space matrix; this is correct
 	
-		bonePos = playerMat * rightHandMatrix; //mutliply the bone transform (in model local space) with the world space matrix; this is correct
-	
-		glm::mat4 Transform(1.0f);
-		Transform = bonePos;// *localTransform;
+	glm::mat4 Transform(1.0f);
+	Transform = bonePos * localTransform;
 			
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		glm::decompose(Transform, *this->playerScale, *this->playerOrient, *this->playerTransform, skew, perspective); //decompose mat4			
+	glm::vec3 skew;
+	glm::vec4 perspective;
+	glm::vec3 scale;
+	glm::decompose(Transform, scale, *this->equipedOrient, *this->equipedPos, skew, perspective); //decompose mat4			
+		
 }

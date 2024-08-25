@@ -17,6 +17,16 @@ struct renderableModel
 	std::vector <glm::mat4>* animationMatrices;
 	bool hasAnimations = false; //for ease of processing/use and peace of mind
 	Shader* modelShader;
+
+	renderableModel(Model* model, glm::vec3* pos, glm::quat* orient, glm::vec3* scale, Shader* modelShader)
+	{
+		this->model = model;
+		this->pos = pos;
+		this->orient = orient;
+		this->scale = scale;
+		this->modelShader = modelShader;
+		this->hasAnimations = false;
+	}
 };
 
 

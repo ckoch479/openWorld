@@ -75,7 +75,8 @@ void playerRenderer::addRightHandItem(renderableModel newItem)
 	handTransform.orientation = *this->rightHandOrient;
 	handTransform.scale = *this->rightHandScale;
 
-	this->rightHandSceneId = this->sceneObj->addStaticSceneObj(this->rightHandModel, handTransform, this->handShader);
+	this->rightHandSceneId = this->sceneObj->addObjectToScene(this->rightHandModel, handTransform, this->handShader);
+	std::cout << "right hand item ID: " << this->rightHandSceneId << std::endl;
 }
 
 void playerRenderer::updateRightHandTransform(glm::vec3* pos, glm::quat* orient, glm::vec3* scale)

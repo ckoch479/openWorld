@@ -186,6 +186,7 @@
     <ClCompile Include="npcEntity.cpp" />
     <ClCompile Include="npcManager.cpp" />
     <ClCompile Include="objAnimator.cpp" />
+    <ClCompile Include="oneHandedRangedWeapon.cpp" />
     <ClCompile Include="orientedBoundingBox.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="player.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="npcEntity.h" />
     <ClInclude Include="npcManager.h" />
     <ClInclude Include="objAnimator.h" />
+    <ClInclude Include="oneHandedRangedWeapon.h" />
     <ClInclude Include="orientedBoundingBox.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="player.h" />

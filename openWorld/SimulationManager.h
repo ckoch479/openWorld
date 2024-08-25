@@ -29,6 +29,9 @@
 #include "debugger.h"
 #include "worldObjectManager.h"
 
+//for testing:
+#include "oneHandedRangedWeapon.h"
+
 //#include "programTimer.h"
 
 #ifndef SIMULATIONMANAGER_H

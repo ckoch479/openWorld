@@ -291,6 +291,9 @@
     <ClCompile Include="playerModelManager.cpp">
       <Filter>Source Files\player</Filter>
     </ClCompile>
+    <ClCompile Include="oneHandedRangedWeapon.cpp">
+      <Filter>Source Files\itemManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -500,11 +503,14 @@
     <ClInclude Include="itemSlot.h">
       <Filter>Header Files\itemManagement</Filter>
     </ClInclude>
-    <ClInclude Include="renderableModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="playerModelManager.h">
       <Filter>Header Files\player</Filter>
+    </ClInclude>
+    <ClInclude Include="renderableModel.h">
+      <Filter>Header Files\definitionHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="oneHandedRangedWeapon.h">
+      <Filter>Header Files\itemManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

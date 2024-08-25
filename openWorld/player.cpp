@@ -31,6 +31,10 @@ player::player(renderContext context, Model* newModel, windowManager* inputManag
 
 	this->animationController = new playerAnimationController(this->playerAnimator, &this->currentAction);
 
+	this->modelManager = new playerModelManager(this->playerModel, this->playerAnimator, this->renderer);
+	this->modelManager->setPlayerTransform(this->positionPtr, this->orientationPtr, this->scalePtr);
+	invManager = new PlayerInventoryManager(this->modelManager);
+
 }
 
 player::~player() 
@@ -51,12 +55,15 @@ void player::update(float dt)
 
 	this->renderer->setTransform(this->positionPtr, this->orientationPtr, this->scalePtr);
 	this->renderer->setAnimTransforms(this->playerAnimator->getAnimationTransforms());
-	this->renderer->updatePlayerRender();
+	//this->renderer->updatePlayerRender();
 
 	//collider
-	this->collider->updateColliders(dt);
+	
 	this->motionController->updatePlayerMotion(dt, &this->currentAction);
 	this->motionController->handleRotation(dt, this->cameraController->getCamera());
+
+	this->modelManager->updateManager();
+	this->collider->updateColliders(dt);
 
 	//transforms are really messed up, had to inverse the orientation in collider and render to get things to match up correctly, cant really find where i messed up my math so this will
 	//have to do for now until i can either fix it or impliment a class that manages corrections applied to imported models and such
@@ -78,4 +85,9 @@ void player::debugDirections(debugger* debug)
 glm::vec3* player::getPosition()
 {
 	return this->positionPtr;
+}
+
+void player::equipItem(item* newItem)
+{
+	this->invManager->equipItem(PlayerInventoryManager::Slot::RightHand, newItem);
 }
