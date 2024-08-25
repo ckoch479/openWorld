@@ -14,10 +14,15 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-class item
+class item : public Entity
 {
-
 public:
+
+	item();
+
+	item(Model* model, Shader* itemShader);
+
+	~item();
 
 	virtual void update() {};
 
@@ -27,6 +32,16 @@ public:
 
 	virtual void use() {};
 
+	virtual Model* getModel() { return this->itemModel; }
+
+	virtual glm::vec3* getPos() { return this->positionPtr; };
+
+	virtual glm::quat* getOrient() { return this->orientPtr;};
+
+	virtual glm::vec3* getScale() { return this->scalePtr; };
+
+	virtual Shader* getShader() { return this->itemShader; }
+
 protected:
 	
 	glm::vec3* positionPtr;
@@ -34,6 +49,7 @@ protected:
 	glm::vec3* scalePtr;
 
 	Model* itemModel;
+	Shader* itemShader; //needed for rendering unless i keep all shaders in scene/renderer
 
 private:
 

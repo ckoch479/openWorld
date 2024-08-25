@@ -42,7 +42,7 @@ void PlayerInventoryManager::updatePlayerState()
 
 void PlayerInventoryManager::updatePlayerAnimations()
 {
-
+	
 }
 
 //void PlayerInventoryManager::equipSlot()

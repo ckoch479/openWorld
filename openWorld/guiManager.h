@@ -14,6 +14,7 @@
 #ifndef GUIMANAGER_H
 #define GUIMANAGER_H
 
+//was a work in progress sorta isnt very good
 struct menuButton
 {
 	bool isPressable = false; //using this so i can "gray" out menu buttons that have no functionality at the time

@@ -289,7 +289,7 @@
       <Filter>Source Files\itemManagement</Filter>
     </ClCompile>
     <ClCompile Include="playerModelManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -500,11 +500,11 @@
     <ClInclude Include="itemSlot.h">
       <Filter>Header Files\itemManagement</Filter>
     </ClInclude>
-    <ClInclude Include="playerModelManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="renderableModel.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="playerModelManager.h">
+      <Filter>Header Files\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
