@@ -17,3 +17,8 @@ oneHandedRangedWeapon::oneHandedRangedWeapon(glm::vec3 pos, glm::quat orient, gl
 	this->name = &this->entityName;
 
 }
+
+void oneHandedRangedWeapon::use()
+{
+
+}

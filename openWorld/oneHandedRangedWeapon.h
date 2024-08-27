@@ -11,6 +11,8 @@ public:
 
 	oneHandedRangedWeapon(glm::vec3 pos, glm::quat orient, glm::vec3 scale, std::string name, Model* model, Shader* shader);
 
+	void use();
+
 private:
 
 	std::string* name;

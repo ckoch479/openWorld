@@ -109,6 +109,12 @@
     <Filter Include="Source Files\itemManagement">
       <UniqueIdentifier>{6298ca00-931a-421e-aa1e-fbd4f263e01f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\itemManagement\itemSubtypes">
+      <UniqueIdentifier>{3b75eebb-ac89-4cb4-a71b-1ecde8f5ec0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\itemManagement\itemSubTypes">
+      <UniqueIdentifier>{dd90bdf7-a1b8-4914-aa16-ad2d90f09998}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -292,7 +298,7 @@
       <Filter>Source Files\player</Filter>
     </ClCompile>
     <ClCompile Include="oneHandedRangedWeapon.cpp">
-      <Filter>Source Files\itemManagement</Filter>
+      <Filter>Source Files\itemManagement\itemSubTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -510,7 +516,7 @@
       <Filter>Header Files\definitionHeaders</Filter>
     </ClInclude>
     <ClInclude Include="oneHandedRangedWeapon.h">
-      <Filter>Header Files\itemManagement</Filter>
+      <Filter>Header Files\itemManagement\itemSubtypes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
