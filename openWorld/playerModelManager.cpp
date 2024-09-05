@@ -73,9 +73,9 @@ void playerModelManager::updateEquipedItemTransform()
 	
 	glm::mat4 localTransform(1.0f); // this is for a local correction transform will be added instead to the item itself and so it can be fixed using a level editor
 	localTransform = glm::translate(localTransform, glm::vec3(0, 0, 0));
-	localTransform = glm::rotate(localTransform, glm::radians(95.0f), glm::vec3(1, 0, 0)); //90
-	localTransform = glm::rotate(localTransform, glm::radians(185.0f), glm::vec3(0, 1, 0)); //180 
-	localTransform = glm::rotate(localTransform, glm::radians(0.0f), glm::vec3(0, 0, 1));
+	localTransform = glm::rotate(localTransform, glm::radians(90.0f), glm::vec3(1, 0, 0)); //95
+	localTransform = glm::rotate(localTransform, glm::radians(180.0f), glm::vec3(0, 1, 0)); //185 
+	localTransform = glm::rotate(localTransform, glm::radians(90.0f), glm::vec3(0, 0, 1));
 
 	rightHandMatrix = rightHandMatrix * glm::inverse(rightHandOffset);
 

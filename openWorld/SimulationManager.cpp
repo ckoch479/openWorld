@@ -194,7 +194,8 @@ void SimulationManager::setDeltaTime() //frame time
 //this function preloads animations that are available for use for all humanoid models, thank you mixamo for the animations for testing, you are appreciated greatly
 void SimulationManager::loadAnimations()
 {
-	ResourceManager::loadModel("resources/player/playerEdit.gltf", "playerModel");
+	//ResourceManager::loadModel("resources/player/playerEdit.gltf", "playerModel");
+	ResourceManager::loadModel("resources/Assets/testModel/soliderScanBetter.gltf", "playerModel");
 
 	ResourceManager::loadAnimation("resources/player/animations/idle.gltf", "idle", "playerModel");
 
